@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
@@ -20,7 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import java.awt.Window.Type;
 
-public class Starter extends JFrame {
+public class LoginPage extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -31,26 +32,14 @@ public class Starter extends JFrame {
 	private JLabel passwordLabel;
 	private JButton loginButton;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Starter frame = new Starter();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private Controller myController;
 
 	/**
 	 * Create the frame.
 	 */
-	public Starter() {
+	public LoginPage(Controller controller) {
+		myController = controller;
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(500, 230, 0, 0);
 		setMinimumSize(new Dimension(500,250));
@@ -122,6 +111,15 @@ public class Starter extends JFrame {
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("login button pressed");
+				String username = usernameField.getText();
+				char[] password = passwordField.getPassword();
+				if (username.isEmpty()) {
+					showInformation("Inserire email utente", "Email mancante");
+				}
+				else if (password.length == 0) {
+					showInformation("Inserire password", "Password mancante");
+				}
+				myController.loginButtonPressed(username, password);
 			}
 		});
 		GridBagConstraints gbc_loginButton = new GridBagConstraints();
@@ -131,6 +129,9 @@ public class Starter extends JFrame {
 		gbc_loginButton.gridx = 0;
 		gbc_loginButton.gridy = 2;
 		panel.add(loginButton, gbc_loginButton);
-		
+	}
+	
+	private void showInformation(String testo, String titolo) {
+		JOptionPane.showMessageDialog(this, testo, titolo, JOptionPane.INFORMATION_MESSAGE);
 	}
 }
