@@ -13,15 +13,15 @@ public class Controller {
 	}
 	
 	Controller(){
-//TODO un-commentare quando si risolve il problema		
-//		if (!attemptConnection()) {
-//			//TODO popup errore
-//		}
-//		else {
+		if (!attemptConnection()) {
+			System.out.println("ERRORE DI CONNESSIONE");
+			//TODO popup
+		}
+		else {
 			loginPage = new LoginPage(this);
 			
 			loginPage.setVisible(true);
-//		}
+		}
 	}
 	
 	protected void loginButtonPressed(String username, char[] password)
@@ -33,8 +33,8 @@ public class Controller {
 	private void openConnection() throws ClassNotFoundException, SQLException {
 		
 		Class.forName("org.postgresql.Driver");
-		String url = "jdbc:posgresql://localhost:5432/uninadelivery";
-		connessione = DriverManager.getConnection(url, "fab", "egg");
+		String url = "jdbc:postgresql://localhost:5432/postgres";
+		connessione = DriverManager.getConnection(url, "postgres", "egg");
 		System.out.println("Connessione OK");
 		connessione.close();
 	}
