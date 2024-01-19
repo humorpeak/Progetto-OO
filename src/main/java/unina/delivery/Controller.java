@@ -11,8 +11,8 @@ public class Controller {
 		
 		try {
 			Class.forName("org.postgresql.Driver");
-			String url = "jdbc:postgresql://localhost:5432/postgres";
-			Connection conn = DriverManager.getConnection(url, "postgres", "egg");
+			String url = "jdbc:posgresql://localhost:5432/uninadelivery";
+			Connection conn = DriverManager.getConnection(url, "fab", "egg");
 			System.out.println("Connessione OK");
 			conn.close();
 		}
