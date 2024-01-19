@@ -2,7 +2,7 @@ package unina.delivery;
 
 import java.sql.*;
 
-class Controller {
+public class Controller {
 
 	LoginPage loginPage;
 	
