@@ -8,14 +8,14 @@ public class OperatoreDAO {
 	
 	Controller controller;
 	
-	public boolean isOperatoreValid(Operatore operatore) {
+	public boolean isOperatoreValid(String email, String password) {
 		
 		try
 		{
 			String query = "SELECT * FROM operatore WHERE email = ? AND password = ?";
 			PreparedStatement ps = controller.myconnection.prepareStatement(query);
-			ps.setString(1, operatore.getEmail());
-			ps.setString(2, operatore.getPassword());
+			ps.setString(1, email);
+			ps.setString(2, password);
 			
 			ResultSet rs = ps.executeQuery();
 			int numOperatoriCorrispondenti = 0;
@@ -26,7 +26,7 @@ public class OperatoreDAO {
 			
 			if (numOperatoriCorrispondenti == 1)
 			{
-				return true; //TODO salvare la sede
+				return true;
 			}
 		}
 		catch (Exception e)
@@ -36,7 +36,7 @@ public class OperatoreDAO {
 		return false;
 	}
 	
-	public int getSede(Operatore operatore) {
+	public int getSede(String email, String password) {
 		
 		int numerosede = 0;
 		
@@ -44,8 +44,8 @@ public class OperatoreDAO {
 		{
 			String query = "SELECT * FROM operatore WHERE email = ? AND password = ?";
 			PreparedStatement ps = controller.myconnection.prepareStatement(query);
-			ps.setString(1, operatore.getEmail());
-			ps.setString(2, operatore.getPassword());
+			ps.setString(1, email);
+			ps.setString(2, password);
 			
 			ResultSet rs = ps.executeQuery();
 			while (rs.next())

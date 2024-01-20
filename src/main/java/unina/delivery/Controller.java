@@ -58,22 +58,20 @@ public class Controller {
 	
 	protected void loginButtonPressed(String email, String password) {
 
-		operatore = new Operatore(email, password);
 		operatoredao = new OperatoreDAO(this);
 		
-		if (operatoredao.isOperatoreValid(operatore))
+		if (operatoredao.isOperatoreValid(email, password))
 		{
 			System.out.println("valido");
 			loginPage.setVisible(false);
-			//TODO mostrare pagina di scelta e settare sede a operatore
-			int sede = operatoredao.getSede(operatore);
-			operatore.setSede(sede);
-			System.out.println(operatore.getEmail() + operatore.getPassword() + sede);
+			int sede = operatoredao.getSede(email, password);
+			operatore = new Operatore(email, password, sede);
+			System.out.println(operatore.getEmail() + operatore.getPassword() + operatore.getSede());
+			//TODO mostrare homepage
 		}
 		else
 		{
 			loginPage.showErrore("Le credenziali inserite non sono corrette. La invitiamo a riprovare.", "Credenziali errate");
-			operatore = null; //ok ?
 		}
 	}
 }
