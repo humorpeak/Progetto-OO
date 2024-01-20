@@ -60,16 +60,20 @@ public class Controller {
 
 		operatore = new Operatore(email, password);
 		operatoredao = new OperatoreDAO(this);
-		if (operatoredao.isOperatoreValid(operatore)) {
+		
+		if (operatoredao.isOperatoreValid(operatore))
+		{
 			System.out.println("valido");
 			loginPage.setVisible(false);
-			//TODO mostrare pagina di scelta
+			//TODO mostrare pagina di scelta e settare sede a operatore
+			int sede = operatoredao.getSede(operatore);
+			operatore.setSede(sede);
+			System.out.println(operatore.getEmail() + operatore.getPassword() + sede);
 		}
-		else {
+		else
+		{
 			loginPage.showErrore("Le credenziali inserite non sono corrette. La invitiamo a riprovare.", "Credenziali errate");
+			operatore = null; //ok ?
 		}
-		System.out.println("finito");
 	}
-	
-
 }

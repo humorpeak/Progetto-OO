@@ -4,6 +4,7 @@ public class Operatore {
 	
 	private String email;
 	private String password;
+	private int sede;
 	
 	Operatore(String e, String p) {
 		email = e;
@@ -15,5 +16,8 @@ public class Operatore {
 	}
 	public String getPassword() {
 		return password;
+	}
+	public void setSede(int s) {
+		sede = s;
 	}
 }
