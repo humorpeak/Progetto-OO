@@ -4,13 +4,13 @@ import java.time.*;
 
 public class Ordine {
 	private LocalDate data;
-	private LocalDateTime orarioinizio;
-	private LocalDateTime orariofine;
+	private LocalTime orarioinizio;
+	private LocalTime orariofine;
 	private String acquirente;
 	private String indirizzo;
 	//TODO peso
 	
-	Ordine(LocalDate d, LocalDateTime oi, LocalDateTime of, String a, String i) {
+	Ordine(LocalDate d, LocalTime oi, LocalTime of, String a, String i) {
 		data = d;
 		orarioinizio = oi;
 		orariofine = of;

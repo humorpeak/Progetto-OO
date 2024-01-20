@@ -143,7 +143,7 @@ public class LoginPage extends JFrame {
 		JOptionPane.showMessageDialog(this, testo, titolo, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
-	public void showErrore(String testo, String titolo) {
+	protected void showError(String testo, String titolo) {
 		JOptionPane.showMessageDialog(this, testo, titolo, JOptionPane.ERROR_MESSAGE);
 	}
 }

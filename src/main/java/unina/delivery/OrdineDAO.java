@@ -10,6 +10,11 @@ public class OrdineDAO {
 	
 	Controller controller;
 	
+	/**
+	 * Calls a SQL function to get ready to ship orders of sede and arranges them in an ArrayList
+	 * @param sede
+	 * @return ArrayList of orders, empty if there are no orders to ship
+	 */
 	public ArrayList<Ordine> getOrdiniDaSpedireUnfiltered (int sede) {
 		
 
@@ -22,7 +27,7 @@ public class OrdineDAO {
 		System.out.println(sede);
 		try
 		{	
-			String query = "SELECT uninadelivery.get_ordini_da_spedire_by_sede(null, null, null, ?)";
+			String query = "SELECT * FROM uninadelivery.get_ordini_da_spedire_by_sede(null, null, null, ?)";
 			//TODO funzione get peso!
 			PreparedStatement ps = controller.myconnection.prepareStatement(query);
 			ps.setInt(1, sede);
@@ -30,13 +35,13 @@ public class OrdineDAO {
 			
 			while (rs.next())
 			{	
-			//TODO FIXARE NECESSARIAMENTE get_ordini_da_spedire_by_sede
 				Ordine ordine = new Ordine (
 								rs.getDate("data").toLocalDate(),
-								rs.getTimestamp("orarioinizio").toLocalDateTime(),
-								rs.getTimestamp("orariofine").toLocalDateTime(),
+								rs.getTimestamp("orarioinizio").toLocalDateTime().toLocalTime(),
+								rs.getTimestamp("orariofine").toLocalDateTime().toLocalTime(),
 								rs.getString("emailacquirente"),
-								"da fare");
+								getIndirizzo(rs.getString("cap"), rs.getString("città"), rs.getString("via"), rs.getString("civico"), rs.getString("edificio"))
+								);
 				
 				System.out.println(ordine.toString());
 				listaordini.add(ordine);
@@ -49,8 +54,20 @@ public class OrdineDAO {
 		return listaordini;
 	}
 	
-	//TODO get indirizzo
-	
+
+	private String getIndirizzo(String cap, String città, String via, String civico, String edificio) {
+		
+		String indirizzo;
+		//TODO testare
+		if (edificio == null) {
+			indirizzo = cap + " " + città + ", " + via + ", n° " + civico;
+		}
+		else {
+			indirizzo = cap + " " + città + ", " + via + ", " + civico + ", Edificio " + edificio;
+		}
+		
+		return indirizzo;
+	}
 	
 	OrdineDAO(Controller c){
 		controller = c;

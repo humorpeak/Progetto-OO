@@ -12,7 +12,7 @@ public class Controller {
 	Operatore operatore;
 	OperatoreDAO operatoredao; //deve essere istanziato o metodi statici?
 	OrdineDAO ordinedao;
-	List<Ordine> listaordini;
+	ArrayList<Ordine> listaordini;
 	
 	public static void main(String[] args) {
 		
@@ -84,7 +84,7 @@ public class Controller {
 		}
 		else
 		{
-			loginPage.showErrore("Le credenziali inserite non sono corrette. La invitiamo a riprovare.", "Credenziali errate");
+			loginPage.showError("Le credenziali inserite non sono corrette. La invitiamo a riprovare.", "Credenziali errate");
 		}
 	}
 	
@@ -93,6 +93,16 @@ public class Controller {
 		//TODO mostrare shipment page con le info della sede: ordini confermati
 		ordinedao = new OrdineDAO(this);
 		listaordini = ordinedao.getOrdiniDaSpedireUnfiltered(operatore.getSede());
+		
+		if (listaordini.isEmpty())
+		{
+			homePage.showInformation("Non sono presenti nuovi ordini da spedire.", "Nessun nuovo ordine");
+		}
+		else
+		{
+			System.out.println("ci sono ordini");
+			//TODO mostrare page ordini
+		}
 	}
 	
 	/**

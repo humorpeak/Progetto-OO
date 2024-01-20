@@ -1,6 +1,7 @@
 package unina.delivery;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.GridLayout;
 import javax.swing.JPanel;
@@ -75,5 +76,9 @@ public class HomePage extends JFrame {
 		gbc_reportButton.gridy = 2;
 		reportButton.setToolTipText("Clicca qui per visualizzare i report statistici mensili.");
 		panel.add(reportButton, gbc_reportButton);
+	}
+	
+	protected void showInformation(String testo, String titolo) {
+		JOptionPane.showMessageDialog(this, testo, titolo, JOptionPane.INFORMATION_MESSAGE);
 	}
 }
