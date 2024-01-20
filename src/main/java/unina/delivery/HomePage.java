@@ -5,6 +5,7 @@ import javax.swing.JButton;
 import java.awt.GridLayout;
 import javax.swing.JPanel;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionListener;
@@ -16,6 +17,9 @@ public class HomePage extends JFrame {
 	public HomePage(Controller controller) {
 		mycontroller = controller;
 		getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		setBounds(500, 230, 0, 0);
+		setMinimumSize(new Dimension(500,250));
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new EmptyBorder(100, 0, 0, 0));
