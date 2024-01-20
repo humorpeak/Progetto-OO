@@ -6,6 +6,7 @@ import javax.swing.*;
 public class Controller {
 
 	LoginPage loginPage;
+	HomePage homePage;
 	Connection myconnection;
 	Operatore operatore;
 	OperatoreDAO operatoredao; //deve essere instanziato o metodi statici?
@@ -22,7 +23,8 @@ public class Controller {
 		}
 		else
 		{
-			loginPage = new LoginPage(this);			
+			loginPage = new LoginPage(this);
+			homePage = new HomePage(this);
 			loginPage.setVisible(true);
 		}
 	}
@@ -75,7 +77,7 @@ public class Controller {
 			int sede = operatoredao.getSede(email, password);
 			operatore = new Operatore(email, password, sede);
 			System.out.println(operatore.getEmail() + operatore.getPassword() + operatore.getSede());
-			//TODO mostrare homepage
+			homePage.setVisible(true);
 		}
 		else
 		{
@@ -83,13 +85,18 @@ public class Controller {
 		}
 	}
 	
+	protected void newSpedizioneButtonPressed()
+	{
+		//todo
+		System.out.println("newSpedizioneButton pressed");
+	}
 	
 	/**
 	 * exit button pressed
 	 * closes connection
 	 * kills program
 	 */
-	public void exit() {
+	protected void exit() {
 		// prova a chiudere la connessione, se la connessione non era stata aperta cattura un'eccezione
 		try {
 			myconnection.close();

@@ -108,6 +108,7 @@ public class LoginPage extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("login button pressed");
 				String email = usernameField.getText();
+				@SuppressWarnings("deprecation")
 				String password = passwordField.getText();
 				//c'era getPassword e si usava char[], ma i prepared statement hanno solo getString
 				if (email.isEmpty()) {
