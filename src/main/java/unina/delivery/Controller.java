@@ -7,6 +7,8 @@ public class Controller {
 
 	LoginPage loginPage;
 	Connection myconnection;
+	Operatore operatore;
+	OperatoreDAO operatoredao;
 	
 	public static void main(String[] args) {
 		
@@ -25,18 +27,13 @@ public class Controller {
 		}
 	}
 	
-	protected void loginButtonPressed(String username, char[] password) {
-		
-		loginPage.setVisible(false);
-	}
-	
 	private void openConnection() throws ClassNotFoundException, SQLException {
 		
 		Class.forName("org.postgresql.Driver");
-		String url = "jdbc:postgresql://localhost:5432/postgres";
+		String url = "jdbc:postgresql://localhost:5432/postgres?currentSchema=uninadelivery";
 		myconnection = DriverManager.getConnection(url, "postgres", "egg");
 		System.out.println("Connessione OK");
-		myconnection.close();
+		// myconnection.close();
 	}
 	
 	private boolean attemptConnection() {
@@ -58,4 +55,21 @@ public class Controller {
 		}
 		return false;
 	}
+	
+	protected void loginButtonPressed(String email, String password) {
+
+		operatore = new Operatore(email, password);
+		operatoredao = new OperatoreDAO(this);
+		if (operatoredao.isOperatoreValid(operatore)) {
+			System.out.println("valido");
+			loginPage.setVisible(false);
+			//TODO mostrare pagina di scelta
+		}
+		else {
+			loginPage.showErrore("Le credenziali inserite non sono corrette. La invitiamo a riprovare.", "Credenziali errate");
+		}
+		System.out.println("finito");
+	}
+	
+
 }

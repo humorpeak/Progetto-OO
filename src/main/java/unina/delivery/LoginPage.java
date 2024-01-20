@@ -107,16 +107,17 @@ public class LoginPage extends JFrame {
 			
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("login button pressed");
-				String username = usernameField.getText();
-				char[] password = passwordField.getPassword();
-				if (username.isEmpty()) {
+				String email = usernameField.getText();
+				String password = passwordField.getText();
+				//c'era getPassword e si usava char[], ma i prepared statement hanno solo getString
+				if (email.isEmpty()) {
 					showInformation("Inserire email utente", "Email mancante");
 				}
-				else if (password.length == 0) {
+				else if (password.isEmpty()) {
 					showInformation("Inserire password", "Password mancante");
 				}
 				else {
-					myController.loginButtonPressed(username, password);
+					myController.loginButtonPressed(email, password);
 				}
 			}
 			
@@ -133,5 +134,9 @@ public class LoginPage extends JFrame {
 	
 	private void showInformation(String testo, String titolo) {
 		JOptionPane.showMessageDialog(this, testo, titolo, JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public void showErrore(String testo, String titolo) {
+		JOptionPane.showMessageDialog(this, testo, titolo, JOptionPane.ERROR_MESSAGE);
 	}
 }
