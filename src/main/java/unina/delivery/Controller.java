@@ -5,27 +5,27 @@ import java.sql.*;
 public class Controller {
 
 	LoginPage loginPage;
-	Connection connessione;
+	Connection myconnection;
 	
 	public static void main(String[] args) {
-		Controller controller = new Controller();
 		
+		Controller controller = new Controller();
 	}
 	
-	Controller(){
-		if (!attemptConnection()) {
+	Controller() {
+		if (!attemptConnection())
+		{
 			System.out.println("ERRORE DI CONNESSIONE");
-			//TODO popup
+			//TODO popup ?
 		}
-		else {
-			loginPage = new LoginPage(this);
-			
+		else
+		{
+			loginPage = new LoginPage(this);			
 			loginPage.setVisible(true);
 		}
 	}
 	
-	protected void loginButtonPressed(String username, char[] password)
-	{
+	protected void loginButtonPressed(String username, char[] password) {
 		
 		loginPage.setVisible(false);
 	}
@@ -34,13 +34,15 @@ public class Controller {
 		
 		Class.forName("org.postgresql.Driver");
 		String url = "jdbc:postgresql://localhost:5432/postgres";
-		connessione = DriverManager.getConnection(url, "postgres", "egg");
+		myconnection = DriverManager.getConnection(url, "postgres", "egg");
 		System.out.println("Connessione OK");
-		connessione.close();
+		myconnection.close();
 	}
 	
 	private boolean attemptConnection() {
-		try {
+		
+		try
+		{
 			openConnection();
 			return true;
 		}

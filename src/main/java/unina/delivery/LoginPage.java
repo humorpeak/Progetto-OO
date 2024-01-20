@@ -42,7 +42,7 @@ public class LoginPage extends JFrame {
 
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{213, 0};
+		gbl_contentPane.columnWidths = new int[] {213, 0};
 		gbl_contentPane.rowHeights = new int[]{114, 0};
 		gbl_contentPane.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_contentPane.rowWeights = new double[]{1.0, Double.MIN_VALUE};
@@ -50,6 +50,7 @@ public class LoginPage extends JFrame {
 		
 		panel = new JPanel();
 		panel.setBorder(null);
+		//TODO sistemare il layout, i campi sono troppo decentrati
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.gridx = 0;
 		gbc_panel.gridy = 0;
@@ -72,7 +73,7 @@ public class LoginPage extends JFrame {
 		panel.add(usernameLabel, gbc_usernameLabel);
 		
 		usernameField = new JTextField();
-		usernameField.setHorizontalAlignment(SwingConstants.CENTER);
+		usernameField.setHorizontalAlignment(SwingConstants.LEFT);
 		usernameField.setColumns(10);
 		GridBagConstraints gbc_usernameField = new GridBagConstraints();
 		gbc_usernameField.anchor = GridBagConstraints.WEST;
@@ -93,7 +94,7 @@ public class LoginPage extends JFrame {
 		
 		passwordField = new JPasswordField();
 		passwordField.setColumns(10);
-		passwordField.setHorizontalAlignment(SwingConstants.CENTER);
+		passwordField.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_passwordField = new GridBagConstraints();
 		gbc_passwordField.anchor = GridBagConstraints.WEST;
 		gbc_passwordField.insets = new Insets(0, 0, 5, 0);
@@ -103,6 +104,7 @@ public class LoginPage extends JFrame {
 		
 		loginButton = new JButton("Log in");
 		loginButton.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("login button pressed");
 				String username = usernameField.getText();
@@ -113,9 +115,13 @@ public class LoginPage extends JFrame {
 				else if (password.length == 0) {
 					showInformation("Inserire password", "Password mancante");
 				}
-				myController.loginButtonPressed(username, password);
+				else {
+					myController.loginButtonPressed(username, password);
+				}
 			}
+			
 		});
+		
 		GridBagConstraints gbc_loginButton = new GridBagConstraints();
 		gbc_loginButton.anchor = GridBagConstraints.SOUTH;
 		gbc_loginButton.gridwidth = 2;
