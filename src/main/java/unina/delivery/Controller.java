@@ -8,7 +8,7 @@ public class Controller {
 	LoginPage loginPage;
 	Connection myconnection;
 	Operatore operatore;
-	OperatoreDAO operatoredao;
+	OperatoreDAO operatoredao; //deve essere instanziato o metodi statici?
 	
 	public static void main(String[] args) {
 		
@@ -27,6 +27,12 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Opens connection to the database
+	 * TODO store credentials in config file
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	private void openConnection() throws ClassNotFoundException, SQLException {
 		
 		Class.forName("org.postgresql.Driver");
@@ -35,6 +41,9 @@ public class Controller {
 		System.out.println("Connessione OK");
 	}
 	
+	/**
+	 * @return true if connection was successful, false otherwise
+	 */
 	private boolean attemptConnection() {
 		
 		try
@@ -74,8 +83,14 @@ public class Controller {
 		}
 	}
 	
+	
+	/**
+	 * exit button pressed
+	 * closes connection
+	 * kills program
+	 */
 	public void exit() {
-		// prova a chiudere la connessione, se trova un errore probabilmente la connessione non era stata aperta
+		// prova a chiudere la connessione, se la connessione non era stata aperta cattura un'eccezione
 		try {
 			myconnection.close();
 		} catch (SQLException e) {
