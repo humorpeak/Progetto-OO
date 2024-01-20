@@ -9,7 +9,7 @@ public class Controller {
 	HomePage homePage;
 	Connection myconnection;
 	Operatore operatore;
-	OperatoreDAO operatoredao; //deve essere instanziato o metodi statici?
+	OperatoreDAO operatoredao; //deve essere istanziato o metodi statici?
 	
 	public static void main(String[] args) {
 		
