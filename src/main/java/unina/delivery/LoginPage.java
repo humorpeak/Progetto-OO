@@ -123,6 +123,12 @@ public class LoginPage extends JFrame {
 			
 		});
 		
+		addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                myController.exit();
+            }
+        });
+		
 		GridBagConstraints gbc_loginButton = new GridBagConstraints();
 		gbc_loginButton.anchor = GridBagConstraints.SOUTH;
 		gbc_loginButton.gridwidth = 2;

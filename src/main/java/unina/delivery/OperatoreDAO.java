@@ -8,6 +8,12 @@ public class OperatoreDAO {
 	
 	Controller controller;
 	
+	/**
+	 * Checks whether the table Operatore contains a row with given email and password
+	 * @param email
+	 * @param password
+	 * @return
+	 */
 	public boolean isOperatoreValid(String email, String password) {
 		
 		try
@@ -18,16 +24,8 @@ public class OperatoreDAO {
 			ps.setString(2, password);
 			
 			ResultSet rs = ps.executeQuery();
-			int numOperatoriCorrispondenti = 0;
-			while (rs.next())
-			{
-				numOperatoriCorrispondenti++;
-			}
-			
-			if (numOperatoriCorrispondenti == 1)
-			{
-				return true;
-			}
+			boolean hasResults = rs.isBeforeFirst();
+			return hasResults;
 		}
 		catch (Exception e)
 		{
@@ -36,6 +34,12 @@ public class OperatoreDAO {
 		return false;
 	}
 	
+	
+	/**
+	 * @param email
+	 * @param password
+	 * @return value of "sede" for the operatore with given credentials, 0 if the Operatore is not found
+	 */
 	public int getSede(String email, String password) {
 		
 		int numerosede = 0;

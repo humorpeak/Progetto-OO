@@ -33,7 +33,6 @@ public class Controller {
 		String url = "jdbc:postgresql://localhost:5432/postgres?currentSchema=uninadelivery";
 		myconnection = DriverManager.getConnection(url, "postgres", "egg");
 		System.out.println("Connessione OK");
-		// myconnection.close();
 	}
 	
 	private boolean attemptConnection() {
@@ -73,5 +72,15 @@ public class Controller {
 		{
 			loginPage.showErrore("Le credenziali inserite non sono corrette. La invitiamo a riprovare.", "Credenziali errate");
 		}
+	}
+	
+	public void exit() {
+		// prova a chiudere la connessione, se trova un errore probabilmente la connessione non era stata aperta
+		try {
+			myconnection.close();
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		System.exit(0);
 	}
 }
