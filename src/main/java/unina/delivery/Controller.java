@@ -1,6 +1,7 @@
 package unina.delivery;
 
 import java.sql.*;
+import javax.swing.*;
 
 public class Controller {
 
@@ -15,8 +16,7 @@ public class Controller {
 	Controller() {
 		if (!attemptConnection())
 		{
-			System.out.println("ERRORE DI CONNESSIONE");
-			//TODO popup ?
+			JOptionPane.showMessageDialog(null, "Non è stato possibile stabilire una connessione con il database.", "Connessione fallita", JOptionPane.ERROR_MESSAGE);
 		}
 		else
 		{
