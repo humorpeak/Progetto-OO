@@ -2,6 +2,7 @@ package unina.delivery;
 
 import java.sql.*;
 import javax.swing.*;
+import java.util.*;
 
 public class Controller {
 
@@ -10,6 +11,8 @@ public class Controller {
 	Connection myconnection;
 	Operatore operatore;
 	OperatoreDAO operatoredao; //deve essere istanziato o metodi statici?
+	OrdineDAO ordinedao;
+	List<Ordine> listaordini;
 	
 	public static void main(String[] args) {
 		
@@ -85,10 +88,11 @@ public class Controller {
 		}
 	}
 	
-	protected void newSpedizioneButtonPressed()
+	protected void shipmentButtonPressed()
 	{
-		//todo
-		System.out.println("newSpedizioneButton pressed");
+		//TODO mostrare shipment page con le info della sede: ordini confermati
+		ordinedao = new OrdineDAO(this);
+		listaordini = ordinedao.getOrdiniDaSpedireUnfiltered(operatore.getSede());
 	}
 	
 	/**

@@ -9,7 +9,7 @@ public class OperatoreDAO {
 	Controller controller;
 	
 	/**
-	 * Checks whether the table Operatore contains a row with given email and password
+	 * Checks whether the table operatore contains a row with given email and password
 	 * @param email
 	 * @param password
 	 * @return

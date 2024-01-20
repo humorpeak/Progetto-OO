@@ -57,6 +57,15 @@ public class HomePage extends JFrame {
 		gbc_shipmentButton.gridy = 0;
 		shipmentButton.setToolTipText("Clicca qui per generare una nuova spedizione.");
 		panel.add(shipmentButton, gbc_shipmentButton);
+			
+		shipmentButton.addActionListener(new ActionListener() {
+	
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("shipment button pressed");
+				mycontroller.shipmentButtonPressed();
+			}
+			
+		});
 		
 		reportButton = new JButton("Mostra report");
 		GridBagConstraints gbc_reportButton = new GridBagConstraints();
