@@ -8,6 +8,7 @@ public class Controller {
 
 	LoginPage loginPage;
 	HomePage homePage;
+	OrdiniPage ordiniPage;
 	Connection myconnection;
 	Operatore operatore;
 	OperatoreDAO operatoredao; //deve essere istanziato o metodi statici?
@@ -28,6 +29,7 @@ public class Controller {
 		{
 			loginPage = new LoginPage(this);
 			homePage = new HomePage(this);
+			ordiniPage = new OrdiniPage(this);
 			loginPage.setVisible(true);
 		}
 	}
@@ -71,6 +73,9 @@ public class Controller {
 	
 	protected void loginButtonPressed(String email, String password) {
 
+		if (!email.contains("@")) {
+			email = email + "@unina.delivery.it";
+		}
 		operatoredao = new OperatoreDAO(this);
 		
 		if (operatoredao.isOperatoreValid(email, password))
@@ -100,8 +105,9 @@ public class Controller {
 		}
 		else
 		{
-			System.out.println("ci sono ordini");
-			//TODO mostrare page ordini
+			homePage.setVisible(false);
+			ordiniPage.setVisible(true);
+			ordiniPage.setOrderList(listaordini);
 		}
 	}
 	

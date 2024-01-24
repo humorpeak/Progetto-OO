@@ -8,6 +8,27 @@ public class Ordine {
 	private LocalTime orariofine;
 	private String acquirente;
 	private String indirizzo;
+	
+	public LocalDate getData() {
+		return data;
+	}
+
+	public LocalTime getOrarioinizio() {
+		return orarioinizio;
+	}
+
+	public LocalTime getOrariofine() {
+		return orariofine;
+	}
+
+	public String getAcquirente() {
+		return acquirente;
+	}
+
+	public String getIndirizzo() {
+		return indirizzo;
+	}
+
 	//TODO peso
 	
 	Ordine(LocalDate d, LocalTime oi, LocalTime of, String a, String i) {
