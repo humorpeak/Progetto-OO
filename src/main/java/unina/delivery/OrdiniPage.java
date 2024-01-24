@@ -5,27 +5,17 @@ import javax.swing.table.*;
 
 import javax.swing.JFrame;
 import javax.swing.BoxLayout;
-import javax.swing.JList;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JTextField;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 
-import javax.swing.SwingConstants;
-
-import java.awt.FlowLayout;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 import java.awt.BorderLayout;
-import javax.swing.JInternalFrame;
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.JSeparator;
+import javax.swing.ListSelectionModel;
+import java.awt.Cursor;
 
 public class OrdiniPage extends JFrame {
 	private static final long serialVersionUID = 5710891036621600811L;
@@ -49,13 +39,20 @@ public class OrdiniPage extends JFrame {
 		
 		TableModel dataModel = createDataModelForOrdersTable();
 		ordersTable = new JTable(dataModel);
-		ordersTable.setBackground(new Color(143, 240, 164));
+		ordersTable.setRowSelectionAllowed(false);
+		ordersTable.setRequestFocusEnabled(false);
+		ordersTable.setFocusable(false);
+		ordersTable.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		ordersTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		ordersTable.setShowVerticalLines(false);
+		ordersTable.setShowGrid(false);
+		ordersTable.setForeground(new Color(36, 31, 49));
+		ordersTable.setBorder(null);
+		ordersTable.setBackground(new Color(246, 245, 244));
 		panel_1.add(ordersTable);
 		
 		scrollPane = new JScrollPane();
 		panel_1.add(scrollPane);
-		
-		
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(255, 163, 72));
@@ -75,6 +72,9 @@ public class OrdiniPage extends JFrame {
 		usernameField.setColumns(20);
 	}
 
+	/**
+	 * @return an appropriate AbstractTableModel for the table "ordersTable"
+	 */
 	private TableModel createDataModelForOrdersTable() {
 		return new AbstractTableModel() {
 			private String columnNames[] = { "Email", "Data", "Orario Inizio", "Orario Fine"  };
