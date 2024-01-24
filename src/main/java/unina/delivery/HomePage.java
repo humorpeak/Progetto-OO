@@ -20,7 +20,7 @@ import java.awt.Insets;
 import java.awt.BorderLayout;
 
 public class HomePage extends JFrame {
-	
+	private static final long serialVersionUID = 1L;
 	private Controller mycontroller;
 	private JPanel contentPane;
 	private JPanel panel;
