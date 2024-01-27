@@ -2,6 +2,8 @@ package unina.delivery;
 
 import java.sql.*;
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
+
 import java.util.*;
 
 public class Controller {
@@ -30,6 +32,8 @@ public class Controller {
 			loginPage = new LoginPage(this);
 			homePage = new HomePage(this);
 			ordiniPage = new OrdiniPage(this);
+			UIDesign uidesign = new UIDesign();
+			uidesign.setup();
 			loginPage.setVisible(true);
 		}
 	}
