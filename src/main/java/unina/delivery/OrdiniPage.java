@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -79,6 +81,7 @@ public class OrdiniPage extends JFrame {
 		        }
 		    }
 		});
+		ordersTable.getColumnModel().getColumn(0).setMaxWidth(30);
 		panel_1.add(ordersTable);
 		
 		scrollPane = new JScrollPane();
@@ -149,7 +152,7 @@ public class OrdiniPage extends JFrame {
 		            return Boolean.class;
 		        else return String.class;  //other columns accept String values
 		    }
-		 
+			
 		    @Override
 		      public boolean isCellEditable(int row, int col) {
 		        return col == 0;
