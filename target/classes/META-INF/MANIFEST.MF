@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Built-By: fab
-Build-Jdk: 17.0.9
+Built-By: maryd
+Build-Jdk: 21
 Created-By: Maven Integration for Eclipse
 
