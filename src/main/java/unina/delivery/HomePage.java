@@ -21,7 +21,7 @@ import java.awt.BorderLayout;
 
 public class HomePage extends JFrame {
 	private static final long serialVersionUID = 1L;
-	private Controller mycontroller;
+	private Controller myController;
 	private JPanel contentPane;
 	private JPanel panel;
 	private JButton shipmentButton;
@@ -30,7 +30,7 @@ public class HomePage extends JFrame {
 	
 	public HomePage(Controller controller) {
 		
-		mycontroller = controller;
+		myController = controller;
 		
 		setBounds(500, 230, 0, 0);
 		setMinimumSize(new Dimension(500,250));
@@ -63,7 +63,7 @@ public class HomePage extends JFrame {
 	
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("shipment button pressed");
-				mycontroller.shipmentButtonPressed();
+				myController.shipmentButtonPressed();
 			}
 			
 		});
@@ -76,6 +76,12 @@ public class HomePage extends JFrame {
 		gbc_reportButton.gridy = 2;
 		reportButton.setToolTipText("Clicca qui per visualizzare i report statistici mensili.");
 		panel.add(reportButton, gbc_reportButton);
+		
+		addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                myController.exit();
+            }
+        });
 	}
 	
 	protected void showInformation(String testo, String titolo) {

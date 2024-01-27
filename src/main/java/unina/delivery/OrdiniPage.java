@@ -21,7 +21,7 @@ import java.awt.Cursor;
 
 public class OrdiniPage extends JFrame {
 	private static final long serialVersionUID = 5710891036621600811L;
-	private Controller mycontroller;
+	private Controller myController;
 	private JTextField usernameField;
 	private JTable ordersTable;
 	private JScrollPane scrollPane;
@@ -30,7 +30,7 @@ public class OrdiniPage extends JFrame {
 	public OrdiniPage(Controller controller) {
 		orderList = new ArrayList<RigaOrdine>();
 		getContentPane().setBackground(new Color(0, 0, 0));
-		mycontroller = controller;
+		myController = controller;
 		setBounds(500, 230, 0, 0);
 		setMinimumSize(new Dimension(1200,550));
 		getContentPane().setLayout(new BorderLayout(0, 0));
@@ -83,6 +83,12 @@ public class OrdiniPage extends JFrame {
 		usernameField.setToolTipText("Inserisci una e-mail per filtrare i risultati in base all'utente che ha effettuato l'ordine.");
 		panel.add(usernameField);
 		usernameField.setColumns(20);
+		
+		addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                myController.exit();
+            }
+        });
 	}
 
 	/**
@@ -134,10 +140,9 @@ public class OrdiniPage extends JFrame {
 	public void setOrderList(ArrayList<Ordine> listaordini) {
 		OrdiniPage.orderList = new ArrayList<RigaOrdine>(listaordini.size());
 		System.out.println("Restart");
-		RigaOrdine nuovaRiga;
 		for (Ordine o : listaordini)
 		{
-			nuovaRiga = new RigaOrdine(o);
+			RigaOrdine nuovaRiga = new RigaOrdine(o);
 			orderList.add(nuovaRiga);
 		}
 	}
