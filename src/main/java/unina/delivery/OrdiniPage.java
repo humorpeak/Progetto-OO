@@ -3,7 +3,8 @@ package unina.delivery;
 import java.awt.Dimension;
 import javax.swing.table.*;
 
-import org.httprpc.sierra.DatePicker;
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.TimePicker;
 
 import javax.swing.JFrame;
 import javax.swing.BoxLayout;
@@ -21,7 +22,12 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
-import org.httprpc.sierra.TimePicker;
+import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.time.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class OrdiniPage extends JFrame {
 	private static final long serialVersionUID = 5710891036621600811L;
@@ -29,15 +35,17 @@ public class OrdiniPage extends JFrame {
 	private JTextField usernameField;
 	private JTable ordersTable;
 	private JScrollPane scrollPane;
-	private static ArrayList<RigaOrdine> orderList;
+	private static ArrayList<RigaOrdine> ordersList;
+	private static ArrayList<RigaOrdine> filteredOrdersRows;
 	private DatePicker datePicker;
 	private TimePicker initialTimePicker;
 	private JLabel initialTimePickerLabel;
 	private JLabel finalTimePickerLabel;
 	private TimePicker finalTimePicker;
+	private JButton applyButton;
 	
 	public OrdiniPage(Controller controller) {
-		orderList = new ArrayList<RigaOrdine>();
+		filteredOrdersRows = new ArrayList<RigaOrdine>();
 		getContentPane().setBackground(new Color(0, 0, 0));
 		myController = controller;
 		setBounds(500, 230, 0, 0);
@@ -67,7 +75,7 @@ public class OrdiniPage extends JFrame {
 		        int row = ordersTable.rowAtPoint(evt.getPoint());
 		        int col = ordersTable.columnAtPoint(evt.getPoint());
 		        if (row >= 0 && col == 0) {
-		        	orderList.get(row).toggle();
+		        	filteredOrdersRows.get(row).toggle();
 		        }
 		    }
 		});
@@ -108,6 +116,15 @@ public class OrdiniPage extends JFrame {
 		finalTimePicker = new TimePicker();
 		panel.add(finalTimePicker);
 		
+		applyButton = new JButton("Applica");
+		applyButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				applyFilters();
+			}
+		});
+		panel.add(applyButton);
+		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
                 myController.exit();
@@ -120,7 +137,7 @@ public class OrdiniPage extends JFrame {
 	 */
 	private TableModel createDataModelForOrdersTable() {
 		return new AbstractTableModel() {
-			private String columnNames[] = { "Email", "Data", "Orario Inizio", "Orario Fine"  };
+			private String columnNames[] = { "Selected", "Email", "Data", "Orario Inizio", "Orario Fine"  };
 			@Override
 			public String getColumnName(int index) {
 			    return columnNames[index];
@@ -139,9 +156,9 @@ public class OrdiniPage extends JFrame {
 		      }
 			
 		    public int getColumnCount() { return columnNames.length; }
-		    public int getRowCount() { if (OrdiniPage.orderList == null) return 0; else return OrdiniPage.orderList.size();}
+		    public int getRowCount() { if (OrdiniPage.filteredOrdersRows == null) return 0; else return OrdiniPage.filteredOrdersRows.size();}
 		    public Object getValueAt(int row, int col) { 
-		    	RigaOrdine riga = OrdiniPage.orderList.get(row);
+		    	RigaOrdine riga = OrdiniPage.filteredOrdersRows.get(row);
 		    	switch(col)
 		    	{
 		    	case 0:
@@ -162,12 +179,42 @@ public class OrdiniPage extends JFrame {
 	}
 
 	public void setOrderList(ArrayList<Ordine> listaordini) {
-		OrdiniPage.orderList = new ArrayList<RigaOrdine>(listaordini.size());
-		System.out.println("Restart");
+		OrdiniPage.ordersList = new ArrayList<RigaOrdine>(listaordini.size());
 		for (Ordine o : listaordini)
 		{
 			RigaOrdine nuovaRiga = new RigaOrdine(o);
-			orderList.add(nuovaRiga);
+			ordersList.add(nuovaRiga);
 		}
+		filteredOrdersRows = new ArrayList<>(ordersList);
+	}
+	
+
+	private boolean doesOrderSatisfyFilters(Ordine o) {
+		String username = usernameField.getText();
+		boolean sameEmail = username.isEmpty() || o.getAcquirente().equals(username);
+
+		LocalDate date = datePicker.getDate();
+		boolean sameDate = date == null || o.getData().equals(date);
+		
+		LocalTime initialTime = initialTimePicker.getTime();
+		boolean afterInitialTime = initialTime == null || o.getOrarioinizio().isAfter(initialTime);
+
+		LocalTime finalTime = finalTimePicker.getTime();
+		System.out.println(finalTime);
+		boolean afterFinalTime = finalTime == null || o.getOrariofine().isBefore(finalTime);
+		
+		return sameEmail && sameDate && afterInitialTime && afterFinalTime;
+	}
+	
+	private void applyFilters() {
+		filteredOrdersRows = new ArrayList<>();
+		for (RigaOrdine row : ordersList)
+		{
+			if (doesOrderSatisfyFilters(row.ordine))
+			{
+				filteredOrdersRows.add(row);
+			}
+		}
+		repaint();
 	}
 }
