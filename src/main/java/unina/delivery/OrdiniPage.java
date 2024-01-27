@@ -5,8 +5,10 @@ import javax.swing.table.*;
 
 import javax.swing.JFrame;
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -23,13 +25,14 @@ public class OrdiniPage extends JFrame {
 	private JTextField usernameField;
 	private JTable ordersTable;
 	private JScrollPane scrollPane;
-	private static ArrayList<Ordine> orderList;
+	private static ArrayList<RigaOrdine> orderList;
 	
 	public OrdiniPage(Controller controller) {
+		orderList = new ArrayList<RigaOrdine>();
 		getContentPane().setBackground(new Color(0, 0, 0));
 		mycontroller = controller;
 		setBounds(500, 230, 0, 0);
-		setMinimumSize(new Dimension(500,250));
+		setMinimumSize(new Dimension(1200,550));
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_1 = new JPanel();
@@ -49,6 +52,16 @@ public class OrdiniPage extends JFrame {
 		ordersTable.setForeground(new Color(36, 31, 49));
 		ordersTable.setBorder(null);
 		ordersTable.setBackground(new Color(246, 245, 244));
+		ordersTable.addMouseListener(new java.awt.event.MouseAdapter() {
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+		        int row = ordersTable.rowAtPoint(evt.getPoint());
+		        int col = ordersTable.columnAtPoint(evt.getPoint());
+		        if (row >= 0 && col == 0) {
+		        	orderList.get(row).toggle();
+		        }
+		    }
+		});
 		panel_1.add(ordersTable);
 		
 		scrollPane = new JScrollPane();
@@ -82,20 +95,35 @@ public class OrdiniPage extends JFrame {
 			public String getColumnName(int index) {
 			    return columnNames[index];
 			}
+			
+			@Override
+		      public Class getColumnClass(int col) {
+		        if (col == 0)       //second column accepts only Integer values
+		            return Boolean.class;
+		        else return String.class;  //other columns accept String values
+		    }
+		 
+		    @Override
+		      public boolean isCellEditable(int row, int col) {
+		        return col == 0;
+		      }
+			
 		    public int getColumnCount() { return columnNames.length; }
 		    public int getRowCount() { if (OrdiniPage.orderList == null) return 0; else return OrdiniPage.orderList.size();}
 		    public Object getValueAt(int row, int col) { 
-		    	Ordine ordine = OrdiniPage.orderList.get(row);
+		    	RigaOrdine riga = OrdiniPage.orderList.get(row);
 		    	switch(col)
 		    	{
 		    	case 0:
-		    		return ordine.getAcquirente();
+		    		return riga.selected;
 		    	case 1:
-		    		return ordine.getData().toString();
+		    		return riga.ordine.getAcquirente();
 		    	case 2:
-		    		return ordine.getOrarioinizio().toString();
+		    		return riga.ordine.getData().toString();
 		    	case 3:
-		    		return ordine.getOrariofine().toString();
+		    		return riga.ordine.getOrarioinizio().toString();
+		    	case 4:
+		    		return riga.ordine.getOrariofine().toString();
 		    	default:
 		    		return "error";
 		    	}
@@ -104,6 +132,13 @@ public class OrdiniPage extends JFrame {
 	}
 
 	public void setOrderList(ArrayList<Ordine> listaordini) {
-		OrdiniPage.orderList = listaordini;
+		OrdiniPage.orderList = new ArrayList<RigaOrdine>(listaordini.size());
+		System.out.println("Restart");
+		RigaOrdine nuovaRiga;
+		for (Ordine o : listaordini)
+		{
+			nuovaRiga = new RigaOrdine(o);
+			orderList.add(nuovaRiga);
+		}
 	}
 }

@@ -98,7 +98,7 @@ public class Controller {
 		//TODO mostrare shipment page con le info della sede: ordini confermati
 		ordinedao = new OrdineDAO(this);
 		listaordini = ordinedao.getOrdiniDaSpedireUnfiltered(operatore.getSede());
-		
+
 		if (listaordini.isEmpty())
 		{
 			homePage.showInformation("Non sono presenti nuovi ordini da spedire.", "Nessun nuovo ordine");
