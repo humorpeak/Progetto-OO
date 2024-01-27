@@ -3,6 +3,8 @@ package unina.delivery;
 import java.awt.Dimension;
 import javax.swing.table.*;
 
+import org.httprpc.sierra.DatePicker;
+
 import javax.swing.JFrame;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
@@ -18,6 +20,8 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import java.awt.Cursor;
+import java.awt.FlowLayout;
+import org.httprpc.sierra.TimePicker;
 
 public class OrdiniPage extends JFrame {
 	private static final long serialVersionUID = 5710891036621600811L;
@@ -26,6 +30,11 @@ public class OrdiniPage extends JFrame {
 	private JTable ordersTable;
 	private JScrollPane scrollPane;
 	private static ArrayList<RigaOrdine> orderList;
+	private DatePicker datePicker;
+	private TimePicker initialTimePicker;
+	private JLabel initialTimePickerLabel;
+	private JLabel finalTimePickerLabel;
+	private TimePicker finalTimePicker;
 	
 	public OrdiniPage(Controller controller) {
 		orderList = new ArrayList<RigaOrdine>();
@@ -69,11 +78,8 @@ public class OrdiniPage extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(255, 163, 72));
-		getContentPane().add(panel, BorderLayout.EAST);
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		
-		JLabel filtriLabel = new JLabel("Filtri");
-		panel.add(filtriLabel);
+		getContentPane().add(panel, BorderLayout.NORTH);
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JLabel usernameLabel = new JLabel("Username:");
 		panel.add(usernameLabel);
@@ -83,6 +89,24 @@ public class OrdiniPage extends JFrame {
 		usernameField.setToolTipText("Inserisci una e-mail per filtrare i risultati in base all'utente che ha effettuato l'ordine.");
 		panel.add(usernameField);
 		usernameField.setColumns(20);
+		
+		JLabel dateLabel = new JLabel("Data:");
+		panel.add(dateLabel);
+		
+		datePicker = new DatePicker();
+		panel.add(datePicker);
+		
+		initialTimePickerLabel = new JLabel("Orario inizio:");
+		panel.add(initialTimePickerLabel);
+		
+		initialTimePicker = new TimePicker();
+		panel.add(initialTimePicker);
+		
+		finalTimePickerLabel = new JLabel("Orario fine:");
+		panel.add(finalTimePickerLabel);
+		
+		finalTimePicker = new TimePicker();
+		panel.add(finalTimePicker);
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
