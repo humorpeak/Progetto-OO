@@ -37,8 +37,8 @@ public class OrdiniPage extends JFrame {
 	private JTextField usernameField;
 	private JTable ordersTable;
 	private JScrollPane scrollPane;
-	private static ArrayList<RigaOrdine> ordersList;
-	private static ArrayList<RigaOrdine> filteredOrdersRows;
+	protected static ArrayList<RigaOrdine> ordersList;
+	protected static ArrayList<RigaOrdine> filteredOrdersRows;
 	private DatePicker datePicker;
 	private TimePicker initialTimePicker;
 	private JLabel initialTimePickerLabel;
@@ -59,7 +59,7 @@ public class OrdiniPage extends JFrame {
 		getContentPane().add(panel_1, BorderLayout.CENTER);
 		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
 		
-		TableModel dataModel = createDataModelForOrdersTable();
+		TableModel dataModel = new OrdersTableModel();
 		ordersTable = new JTable(dataModel);
 		ordersTable.setRowSelectionAllowed(false);
 		ordersTable.setRequestFocusEnabled(false);
@@ -133,53 +133,9 @@ public class OrdiniPage extends JFrame {
                 myController.exit();
             }
         });
+		
 	}
 
-	/**
-	 * @return an appropriate AbstractTableModel for the table "ordersTable"
-	 */
-	private TableModel createDataModelForOrdersTable() {
-		return new AbstractTableModel() {
-			private String columnNames[] = { "Selected", "Email", "Data", "Orario Inizio", "Orario Fine"  };
-			@Override
-			public String getColumnName(int index) {
-			    return columnNames[index];
-			}
-			
-			@Override
-		      public Class getColumnClass(int col) {
-		        if (col == 0)       //second column accepts only Integer values
-		            return Boolean.class;
-		        else return String.class;  //other columns accept String values
-		    }
-			
-		    @Override
-		      public boolean isCellEditable(int row, int col) {
-		        return col == 0;
-		      }
-			
-		    public int getColumnCount() { return columnNames.length; }
-		    public int getRowCount() { if (OrdiniPage.filteredOrdersRows == null) return 0; else return OrdiniPage.filteredOrdersRows.size();}
-		    public Object getValueAt(int row, int col) { 
-		    	RigaOrdine riga = OrdiniPage.filteredOrdersRows.get(row);
-		    	switch(col)
-		    	{
-		    	case 0:
-		    		return riga.selected;
-		    	case 1:
-		    		return riga.ordine.getAcquirente();
-		    	case 2:
-		    		return riga.ordine.getData().toString();
-		    	case 3:
-		    		return riga.ordine.getOrarioinizio().toString();
-		    	case 4:
-		    		return riga.ordine.getOrariofine().toString();
-		    	default:
-		    		return "error";
-		    	}
-		    }
-		};
-	}
 
 	public void setOrderList(ArrayList<Ordine> listaordini) {
 		OrdiniPage.ordersList = new ArrayList<RigaOrdine>(listaordini.size());
@@ -203,7 +159,6 @@ public class OrdiniPage extends JFrame {
 		boolean afterInitialTime = initialTime == null || o.getOrarioinizio().isAfter(initialTime);
 
 		LocalTime finalTime = finalTimePicker.getTime();
-		System.out.println(finalTime);
 		boolean afterFinalTime = finalTime == null || o.getOrariofine().isBefore(finalTime);
 		
 		return sameEmail && sameDate && afterInitialTime && afterFinalTime;
@@ -220,4 +175,52 @@ public class OrdiniPage extends JFrame {
 		}
 		repaint();
 	}
+}
+
+class OrdersTableModel extends AbstractTableModel{
+	
+	private String columnNames[] = { "Selected", "Email", "Data", "Orario Inizio", "Orario Fine"  };
+	
+	@Override
+	public String getColumnName(int index) {
+	    return columnNames[index];
+	}
+	
+	@Override
+      public Class getColumnClass(int col) {
+        if (col == 0)       //first column accepts only Boolean values (checkbox)
+            return Boolean.class;
+        else return String.class;  //other columns accept String values
+    }
+	
+    @Override
+      public boolean isCellEditable(int row, int col) {
+        return col == 0;
+      }
+	
+    @Override
+    public int getColumnCount() { return columnNames.length; }
+    
+    @Override
+    public int getRowCount() { if (OrdiniPage.filteredOrdersRows == null) return 0; else return OrdiniPage.filteredOrdersRows.size();}
+    
+    @Override
+    public Object getValueAt(int row, int col) { 
+    	RigaOrdine riga = OrdiniPage.filteredOrdersRows.get(row);
+    	switch(col)
+    	{
+    	case 0:
+    		return riga.selected;
+    	case 1:
+    		return riga.ordine.getAcquirente();
+    	case 2:
+    		return riga.ordine.getData().toString();
+    	case 3:
+    		return riga.ordine.getOrarioinizio().toString();
+    	case 4:
+    		return riga.ordine.getOrariofine().toString();
+    	default:
+    		return "error";
+    	}
+    }
 }

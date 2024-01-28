@@ -11,6 +11,7 @@ public class Controller {
 	LoginPage loginPage;
 	HomePage homePage;
 	OrdiniPage ordiniPage;
+	ReportPage reportPage;
 	Connection myconnection;
 	Operatore operatore;
 	OperatoreDAO operatoredao; //deve essere istanziato o metodi statici?
@@ -32,6 +33,7 @@ public class Controller {
 			loginPage = new LoginPage(this);
 			homePage = new HomePage(this);
 			ordiniPage = new OrdiniPage(this);
+			reportPage = new ReportPage(this);
 			UIDesign uidesign = new UIDesign();
 			uidesign.setup();
 			loginPage.setVisible(true);
@@ -113,6 +115,12 @@ public class Controller {
 			ordiniPage.setVisible(true);
 			ordiniPage.setOrderList(listaordini);
 		}
+	}
+	
+	protected void reportButtonPressed()
+	{
+		homePage.setVisible(false);
+		reportPage.setVisible(true);
 	}
 	
 	/**

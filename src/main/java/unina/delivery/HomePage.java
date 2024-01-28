@@ -18,6 +18,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.BorderLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class HomePage extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -42,11 +44,6 @@ public class HomePage extends JFrame {
 		contentPane.add(panel, BorderLayout.CENTER);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWeights = new double[]{1.0};
-//TODO cancellare commenti
-//		gbl_panel.columnWidths = new int[] {300};
-//		gbl_panel.rowHeights = new int[] {0, 0, 0, 100};
-//		gbl_panel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-//		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		shipmentButton = new JButton("Genera spedizione");
@@ -68,6 +65,14 @@ public class HomePage extends JFrame {
 		});
 		
 		reportButton = new JButton("Mostra report");
+		reportButton.addActionListener(new ActionListener() {
+	
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("report button pressed");
+				myController.reportButtonPressed();
+			}
+			
+		});
 		GridBagConstraints gbc_reportButton = new GridBagConstraints();
 		gbc_reportButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_reportButton.insets = new Insets(0, 20, 10, 20);
