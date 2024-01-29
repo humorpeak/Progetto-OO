@@ -36,7 +36,7 @@ public class UIDesign {
 		UIManager.put("Button.font", FONT);
 		UIManager.put("Button.background", BUTTON_COLOR);
 		UIManager.put("Button.border", BUTTON_BORDER);
-		UIManager.put("Button.focus", BORDER_COLOR); //non capisco, rettangolo diventa nero
+		UIManager.put("Button.focus", BUTTON_COLOR); //non capisco, rettangolo diventa nero
 		UIManager.put("Button.select", PRESSED_COLOR);
 		
 		UIManager.put("Label.font", FONT);
@@ -46,7 +46,16 @@ public class UIDesign {
 
 		UIManager.put("PasswordField.border", new LineBorder(BORDER_COLOR, 2));
 		UIManager.put("PasswordField.selectionBackground", SECONDARY_BACKGROUND_COLOR);
-
+		
+		UIManager.put("ComboBox.background", Color.white);
+		UIManager.put("ComboBox.font", FONT);
+		UIManager.put("ComboBox.selectionBackground", SECONDARY_BACKGROUND_COLOR);
+	
+		UIManager.put("ScrollBar.border", Color.white);
+		UIManager.put("ScrollBar.background", Color.white);
+		//UIManager.put("ScrollBar.darkShadow", BORDER_COLOR);
+		//UIManager.put("ScrollBar.gradient", [0.3, 0.0, javax.swing.plaf.ColorUIResource[r=221,g=232,b=243], javax.swing.plaf.ColorUIResource[r=255,g=255,b=255], javax.swing.plaf.ColorUIResource[r=184,g=207,b=229]]);
+		
 		//test
 		System.out.println(UIManager.getDefaults());
 		}

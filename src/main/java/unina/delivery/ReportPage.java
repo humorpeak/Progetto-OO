@@ -1,6 +1,7 @@
 package unina.delivery;
 
 import java.awt.Dimension;
+import java.awt.Font;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
@@ -10,8 +11,11 @@ import java.awt.Component;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -21,87 +25,80 @@ import javax.swing.JLabel;
 import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.SwingConstants;
+import net.miginfocom.swing.MigLayout;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import java.awt.Rectangle;
+import javax.swing.DefaultComboBoxModel;
 
 public class ReportPage extends JFrame {
 	private Controller myController;
-	private JPanel yearPanel;
-	private JPanel monthPanel;
+	private JPanel panel;
+	private JLabel yearLabel;
+	private JComboBox yearBox;
+	private JLabel monthLabel;
+	private JComboBox monthBox;
+	private JButton calculateButton;
 	private JPanel resultsPanel;
-	private JLabel averageNumberOfOrdersLabel;
+	private JLabel actualAverageNumberOfOrdersLabel;
 	private Color selectedButtonColor = new Color(255,0,0);
 	private Color normalButtonColor = new Color(0,255,0);
 	private CallableStatement preparedStatementForAverageNumberOfOrders;
-	private JButton januaryButton;
-	private JButton februaryButton;
-	private JButton marchButton;
-	private JButton aprilButton;
-	private JButton mayButton;
-	private JButton juneButton;
-	private JButton julyButton;
-	private JButton augustButton;
-	private JButton septemberButton;
-	private JButton octoberButton;
-	private JButton novemberButton;
-	private JButton decemberButton;
 	
 	public ReportPage(Controller controller) {
 		myController = controller;
-		setBounds(500, 230, 0, 0);
-		setMinimumSize(new Dimension(1200,550));
 		
-		JPanel monthPickerPanel = new JPanel();
-		getContentPane().add(monthPickerPanel, BorderLayout.NORTH);
-		monthPickerPanel.setLayout(new BorderLayout(0, 0));
+		setIconImage(Toolkit.getDefaultToolkit().getImage((LoginPage.class.getResource("/unina/delivery/resources/logo.png"))));
+		setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));		
+		setTitle("UninaDelivery");
 		
-		yearPanel = new JPanel();
-		monthPickerPanel.add(yearPanel, BorderLayout.NORTH);
-		yearPanel.setLayout(new GridLayout(0, 4, 0, 0));
+		panel = new JPanel();
+		setContentPane(panel);
+		panel.setMinimumSize(new Dimension(640, 400));
+		panel.setForeground(new Color(0, 0, 0));
+		panel.setLayout(new MigLayout("", "[][][grow][][][grow][][][]", "[][][][grow][]"));
 		
+		yearLabel = new JLabel("Anno: ");
+		panel.add(yearLabel, "cell 1 1,alignx right");
 		
-		monthPanel = new JPanel();
-		monthPickerPanel.add(monthPanel, BorderLayout.SOUTH);
-		monthPanel.setLayout(new GridLayout(0, 12, 0, 0));
+		yearBox = new JComboBox();
+		yearBox.setModel(new DefaultComboBoxModel(new String[] {"2024", "2023", "2022", "2021"}));
+		yearBox.setToolTipText("Seleziona l'anno di cui desideri visualizzare i report.");
+		panel.add(yearBox, "cell 2 1,growx");
 		
-		januaryButton = new JButton("Gen");
-		januaryButton.setBackground(new Color(153, 193, 241));
-		januaryButton.setRequestFocusEnabled(false);
-		januaryButton.setFocusPainted(false);
-		januaryButton.setFocusable(false);
-		monthPanel.add(januaryButton);
+		monthLabel = new JLabel("Mese: ");
+		panel.add(monthLabel, "cell 4 1,alignx right");
 		
-		februaryButton = new JButton("Feb");
-		monthPanel.add(februaryButton);
+		monthBox = new JComboBox();
+		monthBox.setModel(new DefaultComboBoxModel(new String[] {"Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"}));
+		monthBox.setToolTipText("Seleziona il mese di cui desideri visualizzare i report.");
+		panel.add(monthBox, "cell 5 1,growx");
 		
-		marchButton = new JButton("Mar");
-		monthPanel.add(marchButton);
+		calculateButton = new JButton("Calcola");
+		calculateButton.setFocusPainted(false);
+		calculateButton.setFocusable(false);
+		calculateButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				calculateButton.setContentAreaFilled(false);
+				calculateButton.setOpaque(true);
+				calculateButton.setBackground(new Color(255, 213, 213));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				calculateButton.setContentAreaFilled(true);
+				calculateButton.setBackground(new Color(255, 128, 128));
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				calculateButton.setContentAreaFilled(false);
+				calculateButton.setOpaque(true);
+				calculateButton.setBackground(new Color(255, 170, 170));
+			}
+		});
+		panel.add(calculateButton, "cell 7 1");
 		
-		aprilButton = new JButton("Apr");
-		monthPanel.add(aprilButton);
-		
-		mayButton = new JButton("Mag");
-		monthPanel.add(mayButton);
-		
-		juneButton = new JButton("Giu");
-		monthPanel.add(juneButton);
-		
-		julyButton = new JButton("Lug");
-		monthPanel.add(julyButton);
-		
-		augustButton = new JButton("Ago");
-		monthPanel.add(augustButton);
-		
-		septemberButton = new JButton("Set");
-		monthPanel.add(septemberButton);
-		
-		octoberButton = new JButton("Ott");
-		monthPanel.add(octoberButton);
-		
-		novemberButton = new JButton("Nov");
-		monthPanel.add(novemberButton);
-		
-		decemberButton = new JButton("Dic");
-		monthPanel.add(decemberButton);
-		
+		//TODO far funzionare per mese selezionato
 		try {
 			preparedStatementForAverageNumberOfOrders = myController.myconnection.prepareCall("{? = call numero_medio_ordini_in_mese(?)}");
 			preparedStatementForAverageNumberOfOrders.registerOutParameter(1, Types.DOUBLE);
@@ -111,23 +108,39 @@ public class ReportPage extends JFrame {
 		}
 		
 		resultsPanel = new JPanel();
-		getContentPane().add(resultsPanel, BorderLayout.CENTER);
-		resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
+		resultsPanel.setBounds(new Rectangle(200, 200, 200, 200));
+		panel.add(resultsPanel, "cell 1 3 7 1,alignx center,aligny center");
+		resultsPanel.setLayout(new MigLayout("", "[][]", "[][][]"));
 		
-		JButton calculateButton = new JButton("Calcola");
-		resultsPanel.add(calculateButton);
+		JLabel averageNumberOfOrdersLabel = new JLabel("Numero medio di ordini:");
+		resultsPanel.add(averageNumberOfOrdersLabel, "cell 0 0");
 		
-		averageNumberOfOrdersLabel = new JLabel("Numero medio di ordini: ");
-		averageNumberOfOrdersLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		resultsPanel.add(averageNumberOfOrdersLabel);
+		actualAverageNumberOfOrdersLabel = new JLabel("");
+		resultsPanel.add(actualAverageNumberOfOrdersLabel, "cell 1 0,alignx right");
+		
+		JLabel lblNewLabel_1 = new JLabel("New label");
+		resultsPanel.add(lblNewLabel_1, "cell 0 1");
+		
+		JLabel lblNewLabel_4 = new JLabel("New label");
+		resultsPanel.add(lblNewLabel_4, "cell 1 1,alignx right");
+		
+		JLabel lblNewLabel_2 = new JLabel("New label");
+		resultsPanel.add(lblNewLabel_2, "cell 0 2");
+		
+		JLabel lblNewLabel_5 = new JLabel("New label");
+		resultsPanel.add(lblNewLabel_5, "cell 1 2,alignx right");
+		
 		calculateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				calculateButtonPressed();
 			}
 		});
 		
-		createYearButtons();
-		addEventListenersToMonthsButtons();
+		setBackground(new Color(255, 234, 234));
+		setSize(new Dimension(640, 480));
+		setLocationRelativeTo(null);				
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setMinimumSize(new Dimension(640, 480));
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
@@ -135,68 +148,69 @@ public class ReportPage extends JFrame {
             }
         });
 	}
-	
-	void createYearButtons() {
-		ActionListener actionListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (e.getSource().getClass() == JButton.class)
-				{
-					for (Component button : yearPanel.getComponents()) {
-						button.setBackground(normalButtonColor);
-					}
-					JButton pressedButton = (JButton) e.getSource();
-					pressedButton.setBackground(selectedButtonColor);
-				}
-			}
-		};
-		int currentYear = Year.now().getValue();
-		((GridLayout) yearPanel.getLayout()).setColumns(currentYear - 2019);
-		for (Integer i = 2020; i <= currentYear; i++)
-		{
-			JButton button = new JButton();
-			button.setUI(januaryButton.getUI());
-			button.setText(i.toString());
-			button.addActionListener(actionListener);
-			yearPanel.add(button);
-		}
-	}
-	
-	private void calculateButtonPressed()
-	{
-		try {
-			preparedStatementForAverageNumberOfOrders.execute();
-			double averageNumberOfOrders = preparedStatementForAverageNumberOfOrders.getDouble(1);
-			averageNumberOfOrdersLabel.setText("Numero medio di ordini: " + averageNumberOfOrders);
-			
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-		
-	}
 
-	private void addEventListenersToMonthsButtons()
-	{
-		ActionListener actionListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (e.getSource().getClass() == JButton.class)
-				{
-					for (Component button : monthPanel.getComponents()) {
-						if (button.getClass() == JButton.class) {
-							button.setBackground(normalButtonColor);
-						}
-					}
-					JButton pressedButton = (JButton) e.getSource();
-					pressedButton.setBackground(selectedButtonColor);
-				}
-			}
-		};
+		//TODO gestire i metodi seguenti secondo i cambiamenti effettuati
 		
-		for (Component monthButton : monthPanel.getComponents()) {
-			if (monthButton.getClass() == JButton.class) {
-				((JButton) monthButton).addActionListener(actionListener);
+//		void createYearButtons() {
+//			ActionListener actionListener = new ActionListener() {
+//				@Override
+//				public void actionPerformed(ActionEvent e) {
+//					if (e.getSource().getClass() == JButton.class)
+//					{
+//						for (Component button : yearPanel.getComponents()) {
+//							button.setBackground(normalButtonColor);
+//						}
+//						JButton pressedButton = (JButton) e.getSource();
+//						pressedButton.setBackground(selectedButtonColor);
+//					}
+//				}
+//			};
+//			int currentYear = Year.now().getValue();
+//			((GridLayout) yearPanel.getLayout()).setColumns(currentYear - 2019);
+//			for (Integer i = 2020; i <= currentYear; i++)
+//			{
+//				JButton button = new JButton();
+//				button.setUI(januaryButton.getUI());
+//				button.setText(i.toString());
+//				button.addActionListener(actionListener);
+//				yearPanel.add(button);
+//			}
+//		}
+//		
+		private void calculateButtonPressed()
+		{
+			try {
+				preparedStatementForAverageNumberOfOrders.execute();
+				double averageNumberOfOrders = preparedStatementForAverageNumberOfOrders.getDouble(1);
+				actualAverageNumberOfOrdersLabel.setText("" + averageNumberOfOrders);
+				
+			} catch (SQLException e1) {
+				e1.printStackTrace();
 			}
 		}
-	}
+//
+//		private void addEventListenersToMonthsButtons()
+//		{
+//			ActionListener actionListener = new ActionListener() {
+//				@Override
+//				public void actionPerformed(ActionEvent e) {
+//					if (e.getSource().getClass() == JButton.class)
+//					{
+//						for (Component button : monthPanel.getComponents()) {
+//							if (button.getClass() == JButton.class) {
+//								button.setBackground(normalButtonColor);
+//							}
+//						}
+//						JButton pressedButton = (JButton) e.getSource();
+//						pressedButton.setBackground(selectedButtonColor);
+//					}
+//				}
+//			};
+//			
+//			for (Component monthButton : monthPanel.getComponents()) {
+//				if (monthButton.getClass() == JButton.class) {
+//					((JButton) monthButton).addActionListener(actionListener);
+//				}
+//			}
+//		}
 }
