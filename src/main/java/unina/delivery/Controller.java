@@ -24,6 +24,10 @@ public class Controller {
 	}
 	
 	Controller() {
+		
+		UIDesign uidesign = new UIDesign();
+		uidesign.setup();
+		
 		if (!attemptConnection())
 		{
 			JOptionPane.showMessageDialog(null, "Non è stato possibile stabilire una connessione con il database.", "Connessione fallita", JOptionPane.ERROR_MESSAGE);
@@ -34,8 +38,6 @@ public class Controller {
 			homePage = new HomePage(this);
 			ordiniPage = new OrdiniPage(this);
 			reportPage = new ReportPage(this);
-			UIDesign uidesign = new UIDesign();
-			uidesign.setup();
 			loginPage.setVisible(true);
 		}
 	}

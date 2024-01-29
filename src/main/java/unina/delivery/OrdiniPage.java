@@ -92,7 +92,7 @@ public class OrdiniPage extends JFrame {
 		getContentPane().add(panel, BorderLayout.NORTH);
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		JLabel usernameLabel = new JLabel("Username:");
+		JLabel usernameLabel = new JLabel("Username:"); //TODO cambiare in email
 		panel.add(usernameLabel);
 		
 		usernameField = new JTextField();

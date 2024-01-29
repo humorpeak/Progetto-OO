@@ -50,30 +50,23 @@ public class LoginPage extends JFrame {
 		setContentPane(panel);
 		panel.setMinimumSize(new Dimension(640, 400));
 		panel.setForeground(new Color(0, 0, 0));
-		panel.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));
-		panel.setBackground(new Color(255, 244, 244));
 		panel.setLayout(new MigLayout("", "[10px:200px,left][100px:300px,grow,shrink 30][10px:200px,right]", "[10px:200px,top][][][][][20px:n][][10px:200px,bottom]"));
 		
 		usernameLabel = new JLabel("Username ");
-		usernameLabel.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));
 		usernameLabel.setForeground(new Color(0, 0, 0));
 		panel.add(usernameLabel, "cell 1 1");
 		
 		usernameField = new JTextField();
-		usernameField.setSelectionColor(new Color(255, 213, 213));
 		usernameField.setToolTipText("Inserisci qui il tuo username.");
-		usernameField.setBorder(new LineBorder(new Color(255, 170, 170), 2));
-		usernameField.setBackground(new Color(255, 255, 255));
 		panel.add(usernameField, "cell 1 2,growx");
 		usernameField.setColumns(10);
 		
 		passwordField = new JPasswordField();
-		passwordField.setSelectionColor(new Color(255, 213, 213));
 		passwordField.setToolTipText("Inserisci qui la tua password.");
-		passwordField.setBorder(new LineBorder(new Color(255, 170, 170), 2));
 		panel.add(passwordField, "cell 1 4,growx");
 		
 		loginButton = new JButton("Login");
+		loginButton.setFocusPainted(false);
 		loginButton.setBorderPainted(false);
 		loginButton.addMouseListener(new MouseAdapter() {
 			@Override
@@ -94,9 +87,6 @@ public class LoginPage extends JFrame {
 				loginButton.setBackground(new Color(255, 170, 170));
 			}
 		});
-		loginButton.setFocusPainted(false);
-		loginButton.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));
-		loginButton.setBackground(new Color(255, 149, 149));
 		panel.add(loginButton, "cell 1 6,alignx center");
 		
 		loginButton.addActionListener(new ActionListener() {
@@ -122,7 +112,6 @@ public class LoginPage extends JFrame {
 		
 		passwordLabel = new JLabel("Password ");
 		passwordLabel.setForeground(Color.BLACK);
-		passwordLabel.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));
 		panel.add(passwordLabel, "cell 1 3");
 
 		setBackground(new Color(255, 234, 234));
@@ -137,10 +126,6 @@ public class LoginPage extends JFrame {
             }
         });
 		
-	}
-	
-	private void showInformation(String testo, String titolo) {
-		JOptionPane.showMessageDialog(this, testo, titolo, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	private void showWarning(String testo, String titolo) {

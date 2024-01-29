@@ -3,60 +3,66 @@ package unina.delivery;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
-import java.awt.GridLayout;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import javax.swing.border.EmptyBorder;
+import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.BorderLayout;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import net.miginfocom.swing.MigLayout;
 
 public class HomePage extends JFrame {
+	
 	private static final long serialVersionUID = 1L;
 	private Controller myController;
-	private JPanel contentPane;
 	private JPanel panel;
 	private JButton shipmentButton;
 	private JButton reportButton;
-	
 	
 	public HomePage(Controller controller) {
 		
 		myController = controller;
 		
-		setBounds(500, 230, 0, 0);
-		setMinimumSize(new Dimension(500,250));
-		contentPane = new JPanel();
-		contentPane.setBorder(null);
-		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
+		setIconImage(Toolkit.getDefaultToolkit().getImage((HomePage.class.getResource("/unina/delivery/resources/logo.png"))));
+		setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));		
+		setTitle("UninaDelivery");
+		
 		panel = new JPanel();
-		contentPane.add(panel, BorderLayout.CENTER);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWeights = new double[]{1.0};
-		panel.setLayout(gbl_panel);
+		setContentPane(panel);
+		panel.setMinimumSize(new Dimension(640, 400));
+		panel.setForeground(new Color(0, 0, 0));
+		panel.setLayout(new MigLayout("", "[10px:200px,left][100px:300px,grow,shrink 30][10px:200px,right]", "[10px:200px,top][][20px][][10px:200px,bottom]"));
 		
 		shipmentButton = new JButton("Genera spedizione");
-		GridBagConstraints gbc_shipmentButton = new GridBagConstraints();
-		gbc_shipmentButton.fill = GridBagConstraints.HORIZONTAL;
-		gbc_shipmentButton.insets = new Insets(0, 20, 10, 20);
-		gbc_shipmentButton.gridx = 0;
-		gbc_shipmentButton.gridy = 0;
 		shipmentButton.setToolTipText("Clicca qui per generare una nuova spedizione.");
-		panel.add(shipmentButton, gbc_shipmentButton);
-			
+		shipmentButton.setFocusable(false);
+		shipmentButton.setFocusPainted(false);
+		shipmentButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				shipmentButton.setContentAreaFilled(false);
+				shipmentButton.setOpaque(true);
+				shipmentButton.setBackground(new Color(255, 213, 213));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				shipmentButton.setContentAreaFilled(true);
+				shipmentButton.setBackground(new Color(255, 128, 128));
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				shipmentButton.setContentAreaFilled(false);
+				shipmentButton.setOpaque(true);
+				shipmentButton.setBackground(new Color(255, 170, 170));
+			}
+		});
+		panel.add(shipmentButton, "cell 1 1,growx");
+		
 		shipmentButton.addActionListener(new ActionListener() {
-	
+			
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("shipment button pressed");
 				myController.shipmentButtonPressed();
@@ -65,21 +71,44 @@ public class HomePage extends JFrame {
 		});
 		
 		reportButton = new JButton("Mostra report");
+		reportButton.setToolTipText("Clicca qui per visualizzare i report statistici mensili.");
+		reportButton.setFocusable(false);
+		reportButton.setFocusPainted(false);
+		reportButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				reportButton.setContentAreaFilled(false);
+				reportButton.setOpaque(true);
+				reportButton.setBackground(new Color(255, 213, 213));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				reportButton.setContentAreaFilled(true);
+				reportButton.setBackground(new Color(255, 128, 128));
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				reportButton.setContentAreaFilled(false);
+				reportButton.setOpaque(true);
+				reportButton.setBackground(new Color(255, 170, 170));
+			}
+		});
+		panel.add(reportButton, "cell 1 3,growx");
+		
 		reportButton.addActionListener(new ActionListener() {
-	
+			
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("report button pressed");
 				myController.reportButtonPressed();
 			}
 			
 		});
-		GridBagConstraints gbc_reportButton = new GridBagConstraints();
-		gbc_reportButton.fill = GridBagConstraints.HORIZONTAL;
-		gbc_reportButton.insets = new Insets(0, 20, 10, 20);
-		gbc_reportButton.gridx = 0;
-		gbc_reportButton.gridy = 2;
-		reportButton.setToolTipText("Clicca qui per visualizzare i report statistici mensili.");
-		panel.add(reportButton, gbc_reportButton);
+		
+		setBackground(new Color(255, 234, 234));
+		setSize(new Dimension(640, 480));
+		setLocationRelativeTo(null);				
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setMinimumSize(new Dimension(640, 480));
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
@@ -89,6 +118,6 @@ public class HomePage extends JFrame {
 	}
 	
 	protected void showInformation(String testo, String titolo) {
-		JOptionPane.showMessageDialog(this, testo, titolo, JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(this, testo, titolo, JOptionPane.INFORMATION_MESSAGE, null);
 	}
 }
