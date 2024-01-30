@@ -15,9 +15,8 @@ public class OrdineDAO {
 	 * @param sede
 	 * @return ArrayList of orders, empty if there are no orders to ship
 	 */
-	public ArrayList<Ordine> getOrdiniDaSpedireUnfiltered (int sede) {
+	protected ArrayList<Ordine> getOrdiniDaSpedireUnfiltered (int sede) {
 		
-
 		ArrayList<Ordine> listaordini = new ArrayList<Ordine>();
 		LocalDate data;
 		LocalTime orarioinizio;
@@ -54,11 +53,36 @@ public class OrdineDAO {
 		return listaordini;
 	}
 	
-
+	protected double getAverageNumberOfOrders(int year, int month) {
+		
+		double averageNumberOfOrders = 0;
+		Date date = Date.valueOf(LocalDate.of(year,  month, 2));
+		
+		try
+		{
+			String call = "{? = call numero_medio_ordini_in_mese_by_sede(?,?)}";		
+			CallableStatement cs = controller.myconnection.prepareCall(call);
+			cs.registerOutParameter(1, Types.DOUBLE);
+			cs.setDate(2, date);
+			cs.setInt(3, controller.operatore.getSede());
+			
+			cs.execute();
+			averageNumberOfOrders = cs.getDouble(1);
+			
+			System.out.println("average " + averageNumberOfOrders);
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, e, "Errore", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		return averageNumberOfOrders;
+	}
+	
 	private String getIndirizzo(String cap, String città, String via, String civico, String edificio) {
 		
 		String indirizzo;
-		//TODO testare
+
 		if (edificio == null) {
 			indirizzo = cap + " " + città + ", " + via + ", n° " + civico;
 		}

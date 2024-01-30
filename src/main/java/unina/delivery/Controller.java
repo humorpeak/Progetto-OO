@@ -1,6 +1,8 @@
 package unina.delivery;
 
 import java.sql.*;
+import java.time.LocalDate;
+
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
 
@@ -17,6 +19,8 @@ public class Controller {
 	OperatoreDAO operatoredao; //deve essere istanziato o metodi statici?
 	OrdineDAO ordinedao;
 	ArrayList<Ordine> listaordini;
+	ArrayList<Ordine> listaordinimax;
+	ArrayList<Ordine> listaordinimin;
 	
 	public static void main(String[] args) {
 		
@@ -38,6 +42,7 @@ public class Controller {
 			homePage = new HomePage(this);
 			ordiniPage = new OrdiniPage(this);
 			reportPage = new ReportPage(this);
+			
 			loginPage.setVisible(true);
 		}
 	}
@@ -97,13 +102,12 @@ public class Controller {
 		}
 		else
 		{
-			loginPage.showError("Le credenziali inserite non sono corrette. La invitiamo a riprovare.", "Credenziali errate");
+			loginPage.showError("Le credenziali inserite non sono corrette. Riprova.", "Credenziali errate");
 		}
 	}
 	
 	protected void shipmentButtonPressed()
 	{
-		//TODO mostrare shipment page con le info della sede: ordini confermati
 		ordinedao = new OrdineDAO(this);
 		listaordini = ordinedao.getOrdiniDaSpedireUnfiltered(operatore.getSede());
 
@@ -116,6 +120,7 @@ public class Controller {
 			homePage.setVisible(false);
 			ordiniPage.setVisible(true);
 			ordiniPage.setOrderList(listaordini);
+			ordiniPage.repaint(); //TODO test
 		}
 	}
 	
@@ -123,6 +128,14 @@ public class Controller {
 	{
 		homePage.setVisible(false);
 		reportPage.setVisible(true);
+	}
+	
+	protected void calculateButtonPressed(int year, int month) {
+		
+		ordinedao = new OrdineDAO(this);		
+		double averagenum = ordinedao.getAverageNumberOfOrders(year, month);
+		reportPage.showResults(averagenum);
+		//TODO il resto
 	}
 	
 	/**

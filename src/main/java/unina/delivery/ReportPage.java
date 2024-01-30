@@ -20,30 +20,54 @@ import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.Year;
 import javax.swing.JLabel;
 import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.SwingConstants;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import java.awt.Rectangle;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTable;
 
 public class ReportPage extends JFrame {
+	
+	private static final long serialVersionUID = 1L;
+	
 	private Controller myController;
 	private JPanel panel;
 	private JLabel yearLabel;
+	@SuppressWarnings("rawtypes")
 	private JComboBox yearBox;
 	private JLabel monthLabel;
+	@SuppressWarnings("rawtypes")
 	private JComboBox monthBox;
 	private JButton calculateButton;
 	private JPanel resultsPanel;
 	private JLabel actualAverageNumberOfOrdersLabel;
-	private Color selectedButtonColor = new Color(255,0,0);
-	private Color normalButtonColor = new Color(0,255,0);
-	private CallableStatement preparedStatementForAverageNumberOfOrders;
+	private JTable maxtable;
+	private JTable mintable;
+	
+//	class OrdersTableModel extends AbstractTableModel{
+//		
+//		private static final long serialVersionUID = 1L;
+//		private String columnNames[] = { "Email", "Data", "Orario Inizio", "Orario Fine"  };
+//		
+//		@Override
+//		public String getColumnName(int index) {
+//		    return columnNames[index];
+//		}	
+//		@Override
+//	    public Class getColumnClass(int col) {
+//			return String.class;
+//	    }
+//	}
 	
 	public ReportPage(Controller controller) {
 		myController = controller;
@@ -98,41 +122,51 @@ public class ReportPage extends JFrame {
 		});
 		panel.add(calculateButton, "cell 7 1");
 		
-		//TODO far funzionare per mese selezionato
-		try {
-			preparedStatementForAverageNumberOfOrders = myController.myconnection.prepareCall("{? = call numero_medio_ordini_in_mese(?)}");
-			preparedStatementForAverageNumberOfOrders.registerOutParameter(1, Types.DOUBLE);
-			preparedStatementForAverageNumberOfOrders.setDate(2,java.sql.Date.valueOf(LocalDate.now()));
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-		
 		resultsPanel = new JPanel();
 		resultsPanel.setBounds(new Rectangle(200, 200, 200, 200));
 		panel.add(resultsPanel, "cell 1 3 7 1,alignx center,aligny center");
-		resultsPanel.setLayout(new MigLayout("", "[][]", "[][][]"));
+		resultsPanel.setLayout(new MigLayout("", "[grow][]", "[][][][][][][grow][]"));
 		
-		JLabel averageNumberOfOrdersLabel = new JLabel("Numero medio di ordini:");
+		JLabel averageNumberOfOrdersLabel = new JLabel("Numero medio di ordini giornalieri:");
 		resultsPanel.add(averageNumberOfOrdersLabel, "cell 0 0");
 		
 		actualAverageNumberOfOrdersLabel = new JLabel("");
 		resultsPanel.add(actualAverageNumberOfOrdersLabel, "cell 1 0,alignx right");
 		
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		resultsPanel.add(lblNewLabel_1, "cell 0 1");
+		JLabel maxProductsOrderLabel = new JLabel("Ordini con il maggior numero di prodotti");
+		resultsPanel.add(maxProductsOrderLabel, "cell 0 3");
 		
-		JLabel lblNewLabel_4 = new JLabel("New label");
-		resultsPanel.add(lblNewLabel_4, "cell 1 1,alignx right");
+
+		TableModel dataModel = new OrdersTableModel(); //TODO fix!!
 		
-		JLabel lblNewLabel_2 = new JLabel("New label");
-		resultsPanel.add(lblNewLabel_2, "cell 0 2");
+		maxtable = new JTable(dataModel);
+		maxtable.setFocusable(false);
+		maxtable.setShowVerticalLines(false);
+		maxtable.setShowGrid(false);
+		maxtable.setRowSelectionAllowed(false);
+		resultsPanel.add(maxtable, "cell 0 5,grow");
 		
-		JLabel lblNewLabel_5 = new JLabel("New label");
-		resultsPanel.add(lblNewLabel_5, "cell 1 2,alignx right");
+		JLabel minProductsOrderLabel = new JLabel("Ordini con il minor numero di prodotti");
+		resultsPanel.add(minProductsOrderLabel, "flowy,cell 0 6");
+
+		mintable = new JTable(dataModel);
+		mintable.setFocusable(false);
+		mintable.setShowVerticalLines(false);
+		mintable.setShowGrid(false);
+		mintable.setRowSelectionAllowed(false);
+		resultsPanel.add(mintable, "cell 0 7,grow");
 		
 		calculateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				calculateButtonPressed();
+				
+				int year = Integer.valueOf(String.valueOf(yearBox.getSelectedItem()));
+				int month = Integer.valueOf(monthBox.getSelectedIndex()) + 1;
+				
+				System.out.println(year + " / " + month);
+				
+				myController.calculateButtonPressed(year, month);
+				
+				//calculateButtonPressed();
 			}
 		});
 		
@@ -149,68 +183,8 @@ public class ReportPage extends JFrame {
         });
 	}
 
-		//TODO gestire i metodi seguenti secondo i cambiamenti effettuati
+	protected void showResults(double averageNumberOfOrders) { //TODO aggiungere altri param
+		actualAverageNumberOfOrdersLabel.setText("     " + averageNumberOfOrders);
 		
-//		void createYearButtons() {
-//			ActionListener actionListener = new ActionListener() {
-//				@Override
-//				public void actionPerformed(ActionEvent e) {
-//					if (e.getSource().getClass() == JButton.class)
-//					{
-//						for (Component button : yearPanel.getComponents()) {
-//							button.setBackground(normalButtonColor);
-//						}
-//						JButton pressedButton = (JButton) e.getSource();
-//						pressedButton.setBackground(selectedButtonColor);
-//					}
-//				}
-//			};
-//			int currentYear = Year.now().getValue();
-//			((GridLayout) yearPanel.getLayout()).setColumns(currentYear - 2019);
-//			for (Integer i = 2020; i <= currentYear; i++)
-//			{
-//				JButton button = new JButton();
-//				button.setUI(januaryButton.getUI());
-//				button.setText(i.toString());
-//				button.addActionListener(actionListener);
-//				yearPanel.add(button);
-//			}
-//		}
-//		
-		private void calculateButtonPressed()
-		{
-			try {
-				preparedStatementForAverageNumberOfOrders.execute();
-				double averageNumberOfOrders = preparedStatementForAverageNumberOfOrders.getDouble(1);
-				actualAverageNumberOfOrdersLabel.setText("" + averageNumberOfOrders);
-				
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-		}
-//
-//		private void addEventListenersToMonthsButtons()
-//		{
-//			ActionListener actionListener = new ActionListener() {
-//				@Override
-//				public void actionPerformed(ActionEvent e) {
-//					if (e.getSource().getClass() == JButton.class)
-//					{
-//						for (Component button : monthPanel.getComponents()) {
-//							if (button.getClass() == JButton.class) {
-//								button.setBackground(normalButtonColor);
-//							}
-//						}
-//						JButton pressedButton = (JButton) e.getSource();
-//						pressedButton.setBackground(selectedButtonColor);
-//					}
-//				}
-//			};
-//			
-//			for (Component monthButton : monthPanel.getComponents()) {
-//				if (monthButton.getClass() == JButton.class) {
-//					((JButton) monthButton).addActionListener(actionListener);
-//				}
-//			}
-//		}
+	}
 }
