@@ -4,34 +4,19 @@ import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JFrame;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-
 import javax.swing.JPanel;
 import javax.swing.JButton;
-import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.CallableStatement;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.Year;
 import javax.swing.JLabel;
-import javax.swing.AbstractButton;
-import javax.swing.BoxLayout;
-import javax.swing.SwingConstants;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JComboBox;
-import javax.swing.JTextField;
 import java.awt.Rectangle;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
@@ -137,7 +122,7 @@ public class ReportPage extends JFrame {
 		resultsPanel.add(maxProductsOrderLabel, "cell 0 3");
 		
 
-		TableModel dataModel = new OrdersTableModel(); //TODO fix!!
+		TableModel dataModel = new OrdersTableModel(myController); //TODO fix!!
 		
 		maxtable = new JTable(dataModel);
 		maxtable.setFocusable(false);

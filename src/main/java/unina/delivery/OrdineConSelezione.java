@@ -1,9 +1,9 @@
 package unina.delivery;
 
-public class RigaOrdine {
+public class OrdineConSelezione {
 	public Ordine ordine;
 	public boolean selected;
-	public RigaOrdine(Ordine o)
+	public OrdineConSelezione(Ordine o)
 	{
 		selected = false;
 		ordine = o;

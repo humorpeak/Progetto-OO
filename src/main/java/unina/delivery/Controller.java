@@ -1,15 +1,15 @@
 package unina.delivery;
 
 import java.sql.*;
-import java.time.LocalDate;
-
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
-
 import java.util.*;
 
 public class Controller {
 
+	public static void main(String[] args) {
+		
+		Controller controller = new Controller();
+	}
 	LoginPage loginPage;
 	HomePage homePage;
 	OrdiniPage ordiniPage;
@@ -21,11 +21,9 @@ public class Controller {
 	ArrayList<Ordine> listaordini;
 	ArrayList<Ordine> listaordinimax;
 	ArrayList<Ordine> listaordinimin;
+	private List<OrdineConSelezione> ordersWithSelection;
 	
-	public static void main(String[] args) {
-		
-		Controller controller = new Controller();
-	}
+	private List<OrdineConSelezione> filteredOrdersRows;
 	
 	Controller() {
 		
@@ -45,20 +43,6 @@ public class Controller {
 			
 			loginPage.setVisible(true);
 		}
-	}
-	
-	/**
-	 * Opens connection to the database
-	 * TODO store credentials in config file
-	 * @throws ClassNotFoundException
-	 * @throws SQLException
-	 */
-	private void openConnection() throws ClassNotFoundException, SQLException {
-		
-		Class.forName("org.postgresql.Driver");
-		String url = "jdbc:postgresql://localhost:5432/postgres?currentSchema=uninadelivery";
-		myconnection = DriverManager.getConnection(url, "postgres", "egg");
-		System.out.println("Connessione OK");
 	}
 	
 	/**
@@ -83,6 +67,45 @@ public class Controller {
 		}
 		return false;
 	}
+
+	protected void calculateButtonPressed(int year, int month) {
+		
+		ordinedao = new OrdineDAO(this);		
+		double averagenum = ordinedao.getAverageNumberOfOrders(year, month);
+		reportPage.showResults(averagenum);
+		//TODO il resto
+	}
+
+	/**
+	 * @return the number of orders that are shown to the user according to the filters
+	 */
+	protected int countFilteredOrders() {
+		if (filteredOrdersRows == null) return 0;
+		else return filteredOrdersRows.size();
+	}
+
+	/**
+	 * exit button pressed
+	 * closes connection
+	 * kills program
+	 */
+	protected void exit() {
+		// prova a chiudere la connessione, se la connessione non era stata aperta cattura un'eccezione
+		try {
+			myconnection.close();
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		System.exit(0);
+	}
+	
+	protected List<OrdineConSelezione> getFilteredOrdersRows() {
+		return filteredOrdersRows;
+	}
+	
+	protected List<OrdineConSelezione> getOrdersWithSelection() {
+		return ordersWithSelection;
+	}
 	
 	protected void loginButtonPressed(String email, String password) {
 
@@ -106,6 +129,48 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Opens connection to the database
+	 * TODO store credentials in config file
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	private void openConnection() throws ClassNotFoundException, SQLException {
+		
+		Class.forName("org.postgresql.Driver");
+		String url = "jdbc:postgresql://localhost:5432/postgres?currentSchema=uninadelivery";
+		myconnection = DriverManager.getConnection(url, "postgres", "egg");
+		System.out.println("Connessione OK");
+	}
+	
+	protected void reportButtonPressed()
+	{
+		homePage.setVisible(false);
+		reportPage.setVisible(true);
+	}
+	
+	protected void setFilteredOrdersRows(List<OrdineConSelezione> filteredOrdersRows) {
+		this.filteredOrdersRows = filteredOrdersRows;
+	}
+	
+	/**
+	 * aggiorna la lista degli ordini
+	 * @param listaordini
+	 */
+	public void setOrderList(ArrayList<Ordine> listaordini) {
+		ordersWithSelection = new ArrayList<OrdineConSelezione>(listaordini.size());
+		for (Ordine o : listaordini)
+		{
+			OrdineConSelezione nuovaRiga = new OrdineConSelezione(o);
+			ordersWithSelection.add(nuovaRiga);
+		}
+		setFilteredOrdersRows (ordersWithSelection);
+	}
+	
+	protected void setOrdersWithSelection(List<OrdineConSelezione> ordersWithSelection2) {
+		this.ordersWithSelection = ordersWithSelection2;
+	}
+	
 	protected void shipmentButtonPressed()
 	{
 		ordinedao = new OrdineDAO(this);
@@ -119,37 +184,14 @@ public class Controller {
 		{
 			homePage.setVisible(false);
 			ordiniPage.setVisible(true);
-			ordiniPage.setOrderList(listaordini);
+			setOrderList(listaordini);
 			ordiniPage.repaint(); //TODO test
 		}
 	}
 	
-	protected void reportButtonPressed()
+	
+	protected void toggleOrder(int row)
 	{
-		homePage.setVisible(false);
-		reportPage.setVisible(true);
-	}
-	
-	protected void calculateButtonPressed(int year, int month) {
-		
-		ordinedao = new OrdineDAO(this);		
-		double averagenum = ordinedao.getAverageNumberOfOrders(year, month);
-		reportPage.showResults(averagenum);
-		//TODO il resto
-	}
-	
-	/**
-	 * exit button pressed
-	 * closes connection
-	 * kills program
-	 */
-	protected void exit() {
-		// prova a chiudere la connessione, se la connessione non era stata aperta cattura un'eccezione
-		try {
-			myconnection.close();
-		} catch (SQLException e) {
-			System.out.println(e);
-		}
-		System.exit(0);
+		filteredOrdersRows.get(row).toggle();
 	}
 }

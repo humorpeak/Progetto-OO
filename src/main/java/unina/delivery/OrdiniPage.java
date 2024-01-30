@@ -8,7 +8,6 @@ import com.github.lgooddatepicker.components.TimePicker;
 
 import javax.swing.JFrame;
 import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -28,8 +25,6 @@ import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 public class OrdiniPage extends JFrame {
 	private static final long serialVersionUID = 5710891036621600811L;
@@ -37,8 +32,6 @@ public class OrdiniPage extends JFrame {
 	private JTextField usernameField;
 	private JTable ordersTable;
 	private JScrollPane scrollPane;
-	protected static ArrayList<RigaOrdine> ordersList;
-	protected static ArrayList<RigaOrdine> filteredOrdersRows;
 	private DatePicker datePicker;
 	private TimePicker initialTimePicker;
 	private JLabel initialTimePickerLabel;
@@ -47,9 +40,10 @@ public class OrdiniPage extends JFrame {
 	private JButton applyButton;
 	
 	public OrdiniPage(Controller controller) {
-		filteredOrdersRows = new ArrayList<RigaOrdine>();
-		getContentPane().setBackground(new Color(0, 0, 0));
 		myController = controller;
+		myController.setFilteredOrdersRows(new ArrayList<OrdineConSelezione>());
+		
+		getContentPane().setBackground(new Color(0, 0, 0));
 		setBounds(500, 230, 0, 0);
 		setMinimumSize(new Dimension(1200,550));
 		getContentPane().setLayout(new BorderLayout(0, 0));
@@ -59,7 +53,7 @@ public class OrdiniPage extends JFrame {
 		getContentPane().add(panel_1, BorderLayout.CENTER);
 		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
 		
-		TableModel dataModel = new OrdersTableModel();
+		TableModel dataModel = new OrdersTableModel(myController);
 		ordersTable = new JTable(dataModel);
 		ordersTable.setRowSelectionAllowed(false);
 		ordersTable.setRequestFocusEnabled(false);
@@ -74,11 +68,7 @@ public class OrdiniPage extends JFrame {
 		ordersTable.addMouseListener(new java.awt.event.MouseAdapter() {
 		    @Override
 		    public void mouseClicked(java.awt.event.MouseEvent evt) {
-		        int row = ordersTable.rowAtPoint(evt.getPoint());
-		        int col = ordersTable.columnAtPoint(evt.getPoint());
-		        if (row >= 0 && col == 0) {
-		        	filteredOrdersRows.get(row).toggle();
-		        }
+		        toggleClickedOrder(evt);
 		    }
 		});
 		ordersTable.getColumnModel().getColumn(0).setMaxWidth(30);
@@ -136,18 +126,6 @@ public class OrdiniPage extends JFrame {
 		
 	}
 
-
-	public void setOrderList(ArrayList<Ordine> listaordini) {
-		OrdiniPage.ordersList = new ArrayList<RigaOrdine>(listaordini.size());
-		for (Ordine o : listaordini)
-		{
-			RigaOrdine nuovaRiga = new RigaOrdine(o);
-			ordersList.add(nuovaRiga);
-		}
-		filteredOrdersRows = new ArrayList<>(ordersList);
-	}
-	
-
 	private boolean doesOrderSatisfyFilters(Ordine o) {
 		String username = usernameField.getText();
 		boolean sameEmail = username.isEmpty() || o.getAcquirente().equals(username);
@@ -165,21 +143,37 @@ public class OrdiniPage extends JFrame {
 	}
 	
 	private void applyFilters() {
-		filteredOrdersRows = new ArrayList<>();
-		for (RigaOrdine row : ordersList)
+		List<OrdineConSelezione> filteredOrdersRows = new ArrayList<>();
+		for (OrdineConSelezione row : myController.getOrdersWithSelection())
 		{
 			if (doesOrderSatisfyFilters(row.ordine))
 			{
 				filteredOrdersRows.add(row);
 			}
 		}
+		myController.setFilteredOrdersRows(filteredOrdersRows);
 		repaint();
+	}
+	
+	private void toggleClickedOrder(MouseEvent evt) {
+		int row = ordersTable.rowAtPoint(evt.getPoint());
+        int col = ordersTable.columnAtPoint(evt.getPoint());
+        if (row >= 0 && col == 0) {
+        	myController.toggleOrder(row);
+        }
 	}
 }
 
+// TODO nested
 class OrdersTableModel extends AbstractTableModel{
 	
 	private String columnNames[] = { "Selected", "Email", "Data", "Orario Inizio", "Orario Fine"  };
+	private Controller myController;
+	
+	OrdersTableModel(Controller controller)
+	{
+		myController = controller;
+	}
 	
 	@Override
 	public String getColumnName(int index) {
@@ -187,7 +181,7 @@ class OrdersTableModel extends AbstractTableModel{
 	}
 	
 	@Override
-      public Class getColumnClass(int col) {
+      public Class<?> getColumnClass(int col) {
         if (col == 0)       //first column accepts only Boolean values (checkbox)
             return Boolean.class;
         else return String.class;  //other columns accept String values
@@ -202,11 +196,11 @@ class OrdersTableModel extends AbstractTableModel{
     public int getColumnCount() { return columnNames.length; }
     
     @Override
-    public int getRowCount() { if (OrdiniPage.filteredOrdersRows == null) return 0; else return OrdiniPage.filteredOrdersRows.size();}
+    public int getRowCount() {return myController.countFilteredOrders();}
     
     @Override
     public Object getValueAt(int row, int col) { 
-    	RigaOrdine riga = OrdiniPage.filteredOrdersRows.get(row);
+    	OrdineConSelezione riga = myController.getFilteredOrdersRows().get(row);
     	switch(col)
     	{
     	case 0:
