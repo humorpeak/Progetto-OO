@@ -19,7 +19,7 @@ public class OperatoreDAO {
 		try
 		{
 			String query = "SELECT * FROM operatore WHERE email = ? AND password = ?";
-			PreparedStatement ps = controller.getMyconnection().prepareStatement(query);
+			PreparedStatement ps = controller.myconnection.prepareStatement(query);
 			ps.setString(1, email);
 			ps.setString(2, password);
 			
@@ -47,7 +47,7 @@ public class OperatoreDAO {
 		try
 		{
 			String query = "SELECT * FROM operatore WHERE email = ? AND password = ?";
-			PreparedStatement ps = controller.getMyconnection().prepareStatement(query);
+			PreparedStatement ps = controller.myconnection.prepareStatement(query);
 			ps.setString(1, email);
 			ps.setString(2, password);
 			

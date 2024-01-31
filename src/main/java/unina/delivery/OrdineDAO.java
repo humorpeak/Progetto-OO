@@ -28,7 +28,7 @@ public class OrdineDAO {
 		{	
 			String query = "SELECT * FROM uninadelivery.get_ordini_da_spedire_by_sede(null, null, null, ?)";
 			//TODO funzione get peso!
-			PreparedStatement ps = controller.getMyconnection().prepareStatement(query);
+			PreparedStatement ps = controller.myconnection.prepareStatement(query);
 			ps.setInt(1, sede);
 			ResultSet rs = ps.executeQuery();
 			
@@ -61,10 +61,10 @@ public class OrdineDAO {
 		try
 		{
 			String call = "{? = call numero_medio_ordini_in_mese_by_sede(?,?)}";		
-			CallableStatement cs = controller.getMyconnection().prepareCall(call);
+			CallableStatement cs = controller.myconnection.prepareCall(call);
 			cs.registerOutParameter(1, Types.DOUBLE);
 			cs.setDate(2, date);
-			cs.setInt(3, controller.getOperatore().getSede());
+			cs.setInt(3, controller.operatore.getSede());
 			
 			cs.execute();
 			averageNumberOfOrders = cs.getDouble(1);
@@ -78,12 +78,6 @@ public class OrdineDAO {
 		
 		return averageNumberOfOrders;
 	}
-	
-	//TODO
-//	protected ArrayList<Ordine> getOrdiniConMenoProdotti (int year, int month) {
-//		
-//		
-//	}
 	
 	private String getIndirizzo(String cap, String città, String via, String civico, String edificio) {
 		
