@@ -19,6 +19,8 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+
 import java.awt.Cursor;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
@@ -48,10 +50,10 @@ public class OrdiniPage extends JFrame {
 		setMinimumSize(new Dimension(1200,550));
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(new Color(237, 51, 59));
-		getContentPane().add(panel_1, BorderLayout.CENTER);
-		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
+		JPanel tablePanel = new JPanel();
+		tablePanel.setBackground(new Color(237, 51, 59));
+		getContentPane().add(tablePanel, BorderLayout.CENTER);
+		tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
 		
 		TableModel dataModel = new OrdersTableModel(myController);
 		ordersTable = new JTable(dataModel);
@@ -72,42 +74,43 @@ public class OrdiniPage extends JFrame {
 		    }
 		});
 		ordersTable.getColumnModel().getColumn(0).setMaxWidth(30);
-		panel_1.add(ordersTable);
 		
-		scrollPane = new JScrollPane();
-		panel_1.add(scrollPane);
+		scrollPane = new JScrollPane(ordersTable);
+		scrollPane.setBackground(new Color(255,0,255));
+		tablePanel.add(scrollPane);
 		
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(255, 163, 72));
-		getContentPane().add(panel, BorderLayout.NORTH);
-		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		JPanel filtersPanel = new JPanel();
+		filtersPanel.setBackground(new Color(255, 163, 72));
+		getContentPane().add(filtersPanel, BorderLayout.NORTH);
+		filtersPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JLabel usernameLabel = new JLabel("Username:"); //TODO cambiare in email
-		panel.add(usernameLabel);
+		filtersPanel.add(usernameLabel);
 		
 		usernameField = new JTextField();
 		usernameField.setMaximumSize(new Dimension(2147483647, 30));
 		usernameField.setToolTipText("Inserisci una e-mail per filtrare i risultati in base all'utente che ha effettuato l'ordine.");
-		panel.add(usernameField);
+		filtersPanel.add(usernameField);
 		usernameField.setColumns(20);
 		
 		JLabel dateLabel = new JLabel("Data:");
-		panel.add(dateLabel);
+		filtersPanel.add(dateLabel);
 		
 		datePicker = new DatePicker();
-		panel.add(datePicker);
+		filtersPanel.add(datePicker);
 		
 		initialTimePickerLabel = new JLabel("Orario inizio:");
-		panel.add(initialTimePickerLabel);
+		filtersPanel.add(initialTimePickerLabel);
 		
 		initialTimePicker = new TimePicker();
-		panel.add(initialTimePicker);
+		filtersPanel.add(initialTimePicker);
 		
 		finalTimePickerLabel = new JLabel("Orario fine:");
-		panel.add(finalTimePickerLabel);
+		filtersPanel.add(finalTimePickerLabel);
 		
 		finalTimePicker = new TimePicker();
-		panel.add(finalTimePicker);
+		filtersPanel.add(finalTimePicker);
 		
 		applyButton = new JButton("Applica");
 		applyButton.addMouseListener(new MouseAdapter() {
@@ -116,7 +119,7 @@ public class OrdiniPage extends JFrame {
 				applyFilters();
 			}
 		});
-		panel.add(applyButton);
+		filtersPanel.add(applyButton);
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
@@ -166,7 +169,7 @@ public class OrdiniPage extends JFrame {
 // TODO nested
 class OrdersTableModel extends AbstractTableModel{
 	
-	private String columnNames[] = { "Selected", "Email", "Data", "Orario Inizio", "Orario Fine", "Peso"  };
+	private String columnNames[] = { "", "Email", "Data", "Orario Inizio", "Orario Fine", "Peso"  };
 	private Controller myController;
 	
 	OrdersTableModel(Controller controller)
