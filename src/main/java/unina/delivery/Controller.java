@@ -10,17 +10,18 @@ public class Controller {
 		
 		Controller controller = new Controller();
 	}
-	LoginPage loginPage;
-	HomePage homePage;
-	OrdiniPage ordiniPage;
-	ReportPage reportPage;
-	Connection myconnection;
-	Operatore operatore;
-	OperatoreDAO operatoredao; //deve essere istanziato o metodi statici?
-	OrdineDAO ordinedao;
-	ArrayList<Ordine> listaordini;
-	ArrayList<Ordine> listaordinimax;
-	ArrayList<Ordine> listaordinimin;
+
+	private LoginPage loginPage;
+	private HomePage homePage;
+	private OrdiniPage ordiniPage;
+	private ReportPage reportPage;
+	private Connection myconnection;
+	private Operatore operatore;
+	private OperatoreDAO operatoredao; //deve essere istanziato o metodi statici?
+	private OrdineDAO ordinedao;
+	private ArrayList<Ordine> listaordini;
+	private ArrayList<Ordine> listaordinimax;
+	private ArrayList<Ordine> listaordinimin;
 	private List<OrdineConSelezione> ordersWithSelection;
 	
 	private List<OrdineConSelezione> filteredOrdersRows;
@@ -194,4 +195,33 @@ public class Controller {
 	{
 		filteredOrdersRows.get(row).toggle();
 	}
+	
+	/**
+	 * @return the operatore
+	 */
+	protected Operatore getOperatore() {
+		return operatore;
+	}
+
+	/**
+	 * @param operatore the operatore to set
+	 */
+	protected void setOperatore(Operatore operatore) {
+		this.operatore = operatore;
+	}
+	
+	/**
+	 * @return the myconnection
+	 */
+	protected Connection getMyconnection() {
+		return myconnection;
+	}
+
+	/**
+	 * @param myconnection the myconnection to set
+	 */
+	protected void setMyconnection(Connection myconnection) {
+		this.myconnection = myconnection;
+	}
+
 }

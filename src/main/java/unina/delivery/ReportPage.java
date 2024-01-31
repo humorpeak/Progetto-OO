@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import net.miginfocom.swing.MigLayout;
@@ -39,19 +40,32 @@ public class ReportPage extends JFrame {
 	private JTable maxtable;
 	private JTable mintable;
 	
+//TODO
+	
 //	class OrdersTableModel extends AbstractTableModel{
 //		
 //		private static final long serialVersionUID = 1L;
 //		private String columnNames[] = { "Email", "Data", "Orario Inizio", "Orario Fine"  };
+//		private Controller myController;
+//		
+//		OrdersTableModel(Controller controller)
+//		{
+//			myController = controller;
+//		}
 //		
 //		@Override
 //		public String getColumnName(int index) {
 //		    return columnNames[index];
-//		}	
+//		}
+//		
 //		@Override
-//	    public Class getColumnClass(int col) {
-//			return String.class;
+//	    public Class<?> getColumnClass(int col) {
+//	        return String.class;
 //	    }
+//		
+//	    @Override
+//	    public int getColumnCount() { return columnNames.length; }
+//
 //	}
 	
 	public ReportPage(Controller controller) {
@@ -150,8 +164,6 @@ public class ReportPage extends JFrame {
 				System.out.println(year + " / " + month);
 				
 				myController.calculateButtonPressed(year, month);
-				
-				//calculateButtonPressed();
 			}
 		});
 		
