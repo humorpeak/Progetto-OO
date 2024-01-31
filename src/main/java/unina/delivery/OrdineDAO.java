@@ -31,16 +31,23 @@ public class OrdineDAO {
 			PreparedStatement ps = controller.myconnection.prepareStatement(query);
 			ps.setInt(1, sede);
 			ResultSet rs = ps.executeQuery();
+
+			PreparedStatement get_peso = controller.myconnection.prepareStatement("SELECT * FROM uninadelivery.get_peso_totale(?)");
+			int peso;
 			
 			while (rs.next())
-			{	
+			{
+				get_peso.setInt(1, rs.getInt("idordine"));
+				ResultSet risultato_peso = get_peso.executeQuery();
+				risultato_peso.next();
+				peso = risultato_peso.getInt(1);
 				Ordine ordine = new Ordine (
 								rs.getDate("data").toLocalDate(),
 								rs.getTimestamp("orarioinizio").toLocalDateTime().toLocalTime(),
 								rs.getTimestamp("orariofine").toLocalDateTime().toLocalTime(),
 								rs.getString("emailacquirente"),
-								getIndirizzo(rs.getString("cap"), rs.getString("città"), rs.getString("via"), rs.getString("civico"), rs.getString("edificio"))
-								);
+								getIndirizzo(rs.getString("cap"), rs.getString("città"), rs.getString("via"), rs.getString("civico"), rs.getString("edificio")),
+								peso);
 				
 				System.out.println(ordine.toString());
 				listaordini.add(ordine);

@@ -166,7 +166,7 @@ public class OrdiniPage extends JFrame {
 // TODO nested
 class OrdersTableModel extends AbstractTableModel{
 	
-	private String columnNames[] = { "Selected", "Email", "Data", "Orario Inizio", "Orario Fine"  };
+	private String columnNames[] = { "Selected", "Email", "Data", "Orario Inizio", "Orario Fine", "Peso"  };
 	private Controller myController;
 	
 	OrdersTableModel(Controller controller)
@@ -212,6 +212,8 @@ class OrdersTableModel extends AbstractTableModel{
     		return riga.ordine.getOrarioinizio().toString();
     	case 4:
     		return riga.ordine.getOrariofine().toString();
+    	case 5:
+    		return riga.ordine.getPeso();
     	default:
     		return "error";
     	}

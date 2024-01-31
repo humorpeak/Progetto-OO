@@ -8,7 +8,12 @@ public class Ordine {
 	private LocalTime orariofine;
 	private String acquirente;
 	private String indirizzo;
+	private int peso;
 	
+	public int getPeso() {
+		return peso;
+	}
+
 	public LocalDate getData() {
 		return data;
 	}
@@ -28,20 +33,19 @@ public class Ordine {
 	public String getIndirizzo() {
 		return indirizzo;
 	}
-
-	//TODO peso
 	
-	Ordine(LocalDate d, LocalTime oi, LocalTime of, String a, String i) {
+	Ordine(LocalDate d, LocalTime oi, LocalTime of, String a, String i, int p) {
 		data = d;
 		orarioinizio = oi;
 		orariofine = of;
 		acquirente = a;
 		indirizzo = i;
+		peso = p;
 	}
 
 	@Override
 	public String toString() {
 		return "Ordine [data=" + data + ", orarioinizio=" + orarioinizio + ", orariofine=" + orariofine
-				+ ", acquirente=" + acquirente + ", indirizzo=" + indirizzo + "]";
+				+ ", acquirente=" + acquirente + ", indirizzo=" + indirizzo + ", peso=" + peso + "]";
 	}
 }
