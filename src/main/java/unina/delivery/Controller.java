@@ -194,4 +194,9 @@ public class Controller {
 	{
 		filteredOrdersRows.get(row).toggle();
 	}
+
+	public void backButtonPressedFromOrdiniToHomePage() {
+		ordiniPage.setVisible(false);
+		homePage.setVisible(true);
+	}
 }

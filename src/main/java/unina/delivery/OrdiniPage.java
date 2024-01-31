@@ -27,6 +27,9 @@ import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.*;
+import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class OrdiniPage extends JFrame {
 	private static final long serialVersionUID = 5710891036621600811L;
@@ -40,6 +43,7 @@ public class OrdiniPage extends JFrame {
 	private JLabel finalTimePickerLabel;
 	private TimePicker finalTimePicker;
 	private JButton applyButton;
+	private JButton backButton;
 	
 	public OrdiniPage(Controller controller) {
 		myController = controller;
@@ -120,6 +124,14 @@ public class OrdiniPage extends JFrame {
 			}
 		});
 		filtersPanel.add(applyButton);
+		
+		backButton = new JButton("Indietro");
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				myController.backButtonPressedFromOrdiniToHomePage();
+			}
+		});
+		filtersPanel.add(backButton);
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
