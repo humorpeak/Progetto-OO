@@ -123,7 +123,6 @@ public class OrdiniPage extends JFrame {
                 myController.exit();
             }
         });
-		
 	}
 
 	private boolean doesOrderSatisfyFilters(Ordine o) {

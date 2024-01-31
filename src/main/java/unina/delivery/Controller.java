@@ -1,5 +1,6 @@
 package unina.delivery;
 
+import java.awt.Dimension;
 import java.sql.*;
 import javax.swing.*;
 import java.util.*;
@@ -183,9 +184,8 @@ public class Controller {
 		else
 		{
 			homePage.setVisible(false);
-			ordiniPage.setVisible(true);
 			setOrderList(listaordini);
-			ordiniPage.repaint(); //TODO test
+			ordiniPage.setVisible(true);
 		}
 	}
 	
