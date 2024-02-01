@@ -212,7 +212,6 @@ public class ReportPage extends JFrame {
 		
 		TableModel maxDataModel = new MaxOrdersTableModel(myController);
 		maxtable = new JTable(maxDataModel);
-		maxtable.setVisible(false);
 		maxtable.setFocusable(false);
 		maxtable.setShowVerticalLines(false);
 		maxtable.setShowGrid(false);
