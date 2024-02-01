@@ -185,65 +185,61 @@ public class OrdiniPage extends JFrame {
         	myController.toggleOrder(row);
         }
 	}
-}
+	
+	class OrdersTableModel extends AbstractTableModel{
+		private static final long serialVersionUID = 1L;
+		private String columnNames[] = { "", "Email", "Data", "Orario Inizio", "Orario Fine", "Peso"  };
+		private Controller myController;
+		
+		OrdersTableModel(Controller controller)
+		{
+			myController = controller;
+		}
+		
+		@Override
+		public String getColumnName(int index) {
+		    return columnNames[index];
+		}
+		
+		@Override
+	      public Class<?> getColumnClass(int col) {
+	        if (col == 0)       //first column accepts only Boolean values (checkbox)
+	            return Boolean.class;
+	        else return String.class;  //other columns accept String values
+	    }
+		
+	    @Override
+	      public boolean isCellEditable(int row, int col) {
+	        return col == 0;
+	      }
+		
+	    @Override
+	    public int getColumnCount() { return columnNames.length; }
+	    
+	    @Override
+	    public int getRowCount() {return myController.countFilteredOrders();}
+	    
+	    @Override
+	    public Object getValueAt(int row, int col) { 
+	    	OrdineConSelezione riga = myController.getFilteredOrdersRows().get(row);
+	    	switch(col)
+	    	{
+	    	case 0:
+	    		return riga.selected;
+	    	case 1:
+	    		return riga.ordine.getAcquirente();
+	    	case 2:
+	    		return riga.ordine.getData().toString();
+	    	case 3:
+	    		return riga.ordine.getOrarioinizio().toString();
+	    	case 4:
+	    		return riga.ordine.getOrariofine().toString();
+	    	case 5:
+	    		return riga.ordine.getPeso();
+	    	default:
+	    		return "error";
+	    	}
+	    }
+	}
 
-// TODO nested
-class OrdersTableModel extends AbstractTableModel{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String columnNames[] = { "", "Email", "Data", "Orario Inizio", "Orario Fine", "Peso"  };
-	private Controller myController;
-	
-	OrdersTableModel(Controller controller)
-	{
-		myController = controller;
-	}
-	
-	@Override
-	public String getColumnName(int index) {
-	    return columnNames[index];
-	}
-	
-	@Override
-      public Class<?> getColumnClass(int col) {
-        if (col == 0)       //first column accepts only Boolean values (checkbox)
-            return Boolean.class;
-        else return String.class;  //other columns accept String values
-    }
-	
-    @Override
-      public boolean isCellEditable(int row, int col) {
-        return col == 0;
-      }
-	
-    @Override
-    public int getColumnCount() { return columnNames.length; }
-    
-    @Override
-    public int getRowCount() {return myController.countFilteredOrders();}
-    
-    @Override
-    public Object getValueAt(int row, int col) { 
-    	OrdineConSelezione riga = myController.getFilteredOrdersRows().get(row);
-    	switch(col)
-    	{
-    	case 0:
-    		return riga.selected;
-    	case 1:
-    		return riga.ordine.getAcquirente();
-    	case 2:
-    		return riga.ordine.getData().toString();
-    	case 3:
-    		return riga.ordine.getOrarioinizio().toString();
-    	case 4:
-    		return riga.ordine.getOrariofine().toString();
-    	case 5:
-    		return riga.ordine.getPeso();
-    	default:
-    		return "error";
-    	}
-    }
 }
