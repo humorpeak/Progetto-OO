@@ -325,7 +325,8 @@ public class Controller {
 	}
 
 	public void creaSpedizione(String targa, String codiceFiscale) {
-		int idSpedizione = 999; // TODO
+		/*int idSpedizione = 999; // TODO
+		
 		for (OrdineConSelezione o : ordersWithSelection) {
 			if (o.selected)
 			{
@@ -338,7 +339,7 @@ public class Controller {
 					JOptionPane.showMessageDialog(this.logisticaPage, "Errore durante la spedizione del prodotto codice " + o.ordine.getIdOrdine(), "Errore", JOptionPane.ERROR_MESSAGE);
 				}
 			}
-		}
+		}*/
 	}
 
 }
