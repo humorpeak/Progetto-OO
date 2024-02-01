@@ -94,6 +94,7 @@ public class ReportPage extends JFrame {
 	    @Override
 	    public Object getValueAt(int row, int col) { 
 	    	Ordine riga = myController.getOrdiniWithMaxNumOfProductsRows().get(row);
+	    	System.out.println(riga);
 	    	switch(col)
 	    	{
 	    	case 0:
@@ -192,7 +193,7 @@ public class ReportPage extends JFrame {
 		resultsPanel = new JPanel();
 		resultsPanel.setBounds(new Rectangle(200, 200, 200, 200));
 		panel.add(resultsPanel, "cell 1 3 7 1,alignx center,aligny center");
-		resultsPanel.setLayout(new MigLayout("", "[grow][]", "[][][][grow][grow][][grow][]"));
+		resultsPanel.setLayout(new MigLayout("", "[grow][grow]", "[][][][grow][grow][][][grow]"));
 		
 		JLabel averageNumberOfOrdersLabel = new JLabel("Numero medio di ordini giornalieri:");
 		resultsPanel.add(averageNumberOfOrdersLabel, "cell 0 0");
@@ -271,6 +272,10 @@ public class ReportPage extends JFrame {
 		actualAverageNumberOfOrdersLabel.setText("     " + averageNumberOfOrders);
 
 		maxtablePanel.setVisible(true);
+		maxtable.invalidate();
+		maxtable.repaint();
 		mintablePanel.setVisible(true);
+		mintable.invalidate();
+		mintable.repaint();
 	}
 }
