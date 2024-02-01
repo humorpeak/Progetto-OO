@@ -28,11 +28,11 @@ public class OrdineDAO {
 		{	
 			String query = "SELECT * FROM uninadelivery.get_ordini_da_spedire_by_sede(null, null, null, ?)";
 			//TODO funzione get peso!
-			PreparedStatement ps = controller.myconnection.prepareStatement(query);
+			PreparedStatement ps = controller.getMyConnection().prepareStatement(query);
 			ps.setInt(1, sede);
 			ResultSet rs = ps.executeQuery();
 
-			PreparedStatement get_peso = controller.myconnection.prepareStatement("SELECT * FROM uninadelivery.get_peso_totale(?)");
+			PreparedStatement get_peso = controller.getMyConnection().prepareStatement("SELECT * FROM uninadelivery.get_peso_totale(?)");
 			int peso;
 			
 			while (rs.next())
@@ -68,10 +68,10 @@ public class OrdineDAO {
 		try
 		{
 			String call = "{? = call numero_medio_ordini_in_mese_by_sede(?,?)}";		
-			CallableStatement cs = controller.myconnection.prepareCall(call);
+			CallableStatement cs = controller.getMyConnection().prepareCall(call);
 			cs.registerOutParameter(1, Types.DOUBLE);
 			cs.setDate(2, date);
-			cs.setInt(3, controller.operatore.getSede());
+			cs.setInt(3, controller.getOperatore().getSede());
 			
 			cs.execute();
 			averageNumberOfOrders = cs.getDouble(1);
@@ -85,6 +85,42 @@ public class OrdineDAO {
 		
 		return averageNumberOfOrders;
 	}
+	
+	protected ArrayList<Ordine> getOrdiniWithMaxNumOfProducts (int year, int month) {
+		
+		ArrayList<Ordine> listaordini = new ArrayList<Ordine>();
+		String acquirente;
+		LocalDate data;
+		String indirizzo;
+
+		Date date = Date.valueOf(LocalDate.of(year,  month, 2));
+		
+		try
+		{	
+			String query = "SELECT * FROM uninadelivery.get_ordini_max_numero_prodotti_in_mese_per_sede(?, ?)";
+			PreparedStatement ps = controller.getMyConnection().prepareStatement(query);
+			ps.setDate(1, date);
+			ps.setInt(2, controller.getOperatore().getSede());
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next())
+			{
+				Ordine ordine = new Ordine (
+								rs.getString("emailacquirente"),
+								rs.getDate("data").toLocalDate(),
+								getIndirizzo(rs.getString("cap"), rs.getString("città"), rs.getString("via"), rs.getString("civico"), rs.getString("edificio")));
+				
+				System.out.println(ordine.toString());
+				listaordini.add(ordine);
+			}
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, e, "Errore", JOptionPane.ERROR_MESSAGE);
+		}
+		return listaordini;
+	}
+	
 	
 	private String getIndirizzo(String cap, String città, String via, String civico, String edificio) {
 		

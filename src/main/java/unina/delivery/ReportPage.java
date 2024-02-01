@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JFrame;
+
+import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -12,14 +14,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+
 import javax.swing.JLabel;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JComboBox;
 import java.awt.Rectangle;
+
+import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
+import javax.swing.JScrollPane;
 
 public class ReportPage extends JFrame {
 	
@@ -38,21 +46,95 @@ public class ReportPage extends JFrame {
 	private JLabel actualAverageNumberOfOrdersLabel;
 	private JTable maxtable;
 	private JTable mintable;
+	private JLabel maxNumberOfProductsLabel;
+	private JLabel minNumberOfProductsLabel;
+	private JPanel maxtablePanel;
+	private JPanel mintablePanel;
+	private JScrollPane maxscrollPane;
+	private JScrollPane minscrollPane;
 	
-//	class OrdersTableModel extends AbstractTableModel{
-//		
-//		private static final long serialVersionUID = 1L;
-//		private String columnNames[] = { "Email", "Data", "Orario Inizio", "Orario Fine"  };
-//		
-//		@Override
-//		public String getColumnName(int index) {
-//		    return columnNames[index];
-//		}	
-//		@Override
-//	    public Class getColumnClass(int col) {
-//			return String.class;
-//	    }
-//	}
+	abstract class OrdersReportTableModel extends AbstractTableModel{
+	
+		private static final long serialVersionUID = 1L;
+		private String columnNames[] = { "Acquirente", "Data", "Indirizzo"};
+		private Controller myController;
+		
+		OrdersReportTableModel(Controller controller)
+		{
+			myController = controller;
+		}
+		
+		@Override
+		public String getColumnName(int index) {
+		    return columnNames[index];
+		}
+		
+		@Override
+	      public Class<?> getColumnClass(int col) {
+	        return String.class;
+	    }
+		
+	    @Override
+	    public int getColumnCount() {
+	    	return columnNames.length;
+	    }
+	}
+	
+	class MaxOrdersTableModel extends OrdersReportTableModel {
+		
+		MaxOrdersTableModel(Controller controller) {
+			super(controller);
+		}
+		
+	    @Override
+	    public int getRowCount() {
+	    	return myController.countOrdersWithMaxNumOfProducts();
+	    }
+	    
+	    @Override
+	    public Object getValueAt(int row, int col) { 
+	    	Ordine riga = myController.getOrdiniWithMaxNumOfProductsRows().get(row);
+	    	switch(col)
+	    	{
+	    	case 0:
+	    		return riga.getAcquirente();
+	    	case 1:
+	    		return riga.getData().toString();
+	    	case 2:
+	    		return riga.getIndirizzo();
+	    	default:
+	    		return "error";
+	    	}
+	    }
+	}
+	
+	class MinOrdersTableModel extends OrdersReportTableModel {
+		
+		MinOrdersTableModel(Controller controller) {
+			super(controller);
+		}
+		
+	    @Override
+	    public int getRowCount() {
+	    	return myController.countOrdersWithMinNumOfProducts();
+	    }
+	    
+	    @Override
+	    public Object getValueAt(int row, int col) { 
+	    	Ordine riga = myController.getOrdiniWithMinNumOfProductsRows().get(row);
+	    	switch(col)
+	    	{
+	    	case 0:
+	    		return riga.getAcquirente();
+	    	case 1:
+	    		return riga.getData().toString();
+	    	case 2:
+	    		return riga.getIndirizzo();
+	    	default:
+	    		return "error";
+	    	}
+	    }
+	}
 	
 	public ReportPage(Controller controller) {
 		myController = controller;
@@ -110,7 +192,7 @@ public class ReportPage extends JFrame {
 		resultsPanel = new JPanel();
 		resultsPanel.setBounds(new Rectangle(200, 200, 200, 200));
 		panel.add(resultsPanel, "cell 1 3 7 1,alignx center,aligny center");
-		resultsPanel.setLayout(new MigLayout("", "[grow][]", "[][][][][][][grow][]"));
+		resultsPanel.setLayout(new MigLayout("", "[grow][]", "[][][][grow][grow][][grow][]"));
 		
 		JLabel averageNumberOfOrdersLabel = new JLabel("Numero medio di ordini giornalieri:");
 		resultsPanel.add(averageNumberOfOrdersLabel, "cell 0 0");
@@ -119,27 +201,47 @@ public class ReportPage extends JFrame {
 		resultsPanel.add(actualAverageNumberOfOrdersLabel, "cell 1 0,alignx right");
 		
 		JLabel maxProductsOrderLabel = new JLabel("Ordini con il maggior numero di prodotti");
-		resultsPanel.add(maxProductsOrderLabel, "cell 0 3");
+		resultsPanel.add(maxProductsOrderLabel, "cell 0 2");
 		
-
-		TableModel dataModel = new OrdersTableModel(myController); //TODO fix!!
+		maxNumberOfProductsLabel = new JLabel("");
+		resultsPanel.add(maxNumberOfProductsLabel, "cell 1 2,alignx right");
 		
-		maxtable = new JTable(dataModel);
+		maxtablePanel = new JPanel();
+		maxtablePanel.setVisible(false);
+		resultsPanel.add(maxtablePanel, "cell 0 3 2 1,grow");
+		
+		TableModel maxDataModel = new MaxOrdersTableModel(myController);
+		maxtable = new JTable(maxDataModel);
+		maxtable.setVisible(false);
 		maxtable.setFocusable(false);
 		maxtable.setShowVerticalLines(false);
 		maxtable.setShowGrid(false);
 		maxtable.setRowSelectionAllowed(false);
-		resultsPanel.add(maxtable, "cell 0 5,grow");
+		
+		maxscrollPane = new JScrollPane(maxtable);
+		maxscrollPane.setPreferredSize(new Dimension(452, 100));
+		maxtablePanel.add(maxscrollPane);
 		
 		JLabel minProductsOrderLabel = new JLabel("Ordini con il minor numero di prodotti");
 		resultsPanel.add(minProductsOrderLabel, "flowy,cell 0 6");
-
-		mintable = new JTable(dataModel);
+		
+		minNumberOfProductsLabel = new JLabel("");
+		resultsPanel.add(minNumberOfProductsLabel, "cell 1 6,alignx right");
+		
+		mintablePanel = new JPanel();
+		mintablePanel.setVisible(false);
+		resultsPanel.add(mintablePanel, "cell 0 7 2 1,grow");
+		
+		TableModel minDataModel = new MinOrdersTableModel(myController);
+		mintable = new JTable(minDataModel);
 		mintable.setFocusable(false);
 		mintable.setShowVerticalLines(false);
 		mintable.setShowGrid(false);
 		mintable.setRowSelectionAllowed(false);
-		resultsPanel.add(mintable, "cell 0 7,grow");
+		
+		minscrollPane = new JScrollPane(mintable);
+		minscrollPane.setPreferredSize(new Dimension(452, 100));
+		mintablePanel.add(minscrollPane);
 		
 		calculateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -150,8 +252,6 @@ public class ReportPage extends JFrame {
 				System.out.println(year + " / " + month);
 				
 				myController.calculateButtonPressed(year, month);
-				
-				//calculateButtonPressed();
 			}
 		});
 		
@@ -168,8 +268,10 @@ public class ReportPage extends JFrame {
         });
 	}
 
-	protected void showResults(double averageNumberOfOrders) { //TODO aggiungere altri param
+	protected void showResults(double averageNumberOfOrders) { //TODO aggiungere altri param !!!
 		actualAverageNumberOfOrdersLabel.setText("     " + averageNumberOfOrders);
-		
+
+		maxtablePanel.setVisible(true);
+		mintablePanel.setVisible(true);
 	}
 }

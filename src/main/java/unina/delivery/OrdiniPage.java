@@ -190,6 +190,10 @@ public class OrdiniPage extends JFrame {
 // TODO nested
 class OrdersTableModel extends AbstractTableModel{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String columnNames[] = { "", "Email", "Data", "Orario Inizio", "Orario Fine", "Peso"  };
 	private Controller myController;
 	

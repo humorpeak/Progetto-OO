@@ -11,20 +11,20 @@ public class Controller {
 		
 		Controller controller = new Controller();
 	}
-	LoginPage loginPage;
-	HomePage homePage;
-	OrdiniPage ordiniPage;
-	ReportPage reportPage;
-	LogisticaPage logisticaPage;
-	Connection myconnection;
-	Operatore operatore;
-	OperatoreDAO operatoredao; //deve essere istanziato o metodi statici?
-	OrdineDAO ordinedao;
-	ArrayList<Ordine> listaordini;
-	ArrayList<Ordine> listaordinimax;
-	ArrayList<Ordine> listaordinimin;
-	private List<OrdineConSelezione> ordersWithSelection;
-	
+
+	private LoginPage loginPage;
+	private HomePage homePage;
+	private OrdiniPage ordiniPage;
+	private ReportPage reportPage;
+	private LogisticaPage logisticaPage;;
+	private Connection myConnection;
+	private Operatore operatore;
+	private OperatoreDAO operatoredao;
+	private OrdineDAO ordinedao;
+	private ArrayList<Ordine> listaordini;
+	private ArrayList<Ordine> listaordinimax;
+	private ArrayList<Ordine> listaordinimin;
+	private List<OrdineConSelezione> ordersWithSelection;	
 	private List<OrdineConSelezione> filteredOrdersRows;
 	
 	Controller() {
@@ -75,6 +75,9 @@ public class Controller {
 		
 		ordinedao = new OrdineDAO(this);		
 		double averagenum = ordinedao.getAverageNumberOfOrders(year, month);
+		listaordinimax = ordinedao.getOrdiniWithMaxNumOfProducts(year, month);
+		//listaordinimin = ordinedao.getOrdiniWithMinNumOfProducts(year, month);
+		
 		reportPage.showResults(averagenum);
 		//TODO il resto
 	}
@@ -87,6 +90,16 @@ public class Controller {
 		else return filteredOrdersRows.size();
 	}
 
+	protected int countOrdersWithMaxNumOfProducts() {
+		if (listaordinimax == null) return 0;
+		else return listaordinimax.size();
+	}
+	
+	protected int countOrdersWithMinNumOfProducts() {
+		if (listaordinimin == null) return 0;
+		else return listaordinimin.size();
+	}
+	
 	/**
 	 * exit button pressed
 	 * closes connection
@@ -95,21 +108,12 @@ public class Controller {
 	protected void exit() {
 		// prova a chiudere la connessione, se la connessione non era stata aperta cattura un'eccezione
 		try {
-			myconnection.close();
+			myConnection.close();
 		} catch (SQLException e) {
 			System.out.println(e);
 		}
 		System.exit(0);
 	}
-	
-	protected List<OrdineConSelezione> getFilteredOrdersRows() {
-		return filteredOrdersRows;
-	}
-	
-	protected List<OrdineConSelezione> getOrdersWithSelection() {
-		return ordersWithSelection;
-	}
-	
 	protected void loginButtonPressed(String email, String password) {
 
 		if (!email.contains("@")) {
@@ -142,7 +146,7 @@ public class Controller {
 		
 		Class.forName("org.postgresql.Driver");
 		String url = "jdbc:postgresql://localhost:5432/postgres?currentSchema=uninadelivery";
-		myconnection = DriverManager.getConnection(url, "postgres", "egg");
+		myConnection = DriverManager.getConnection(url, "postgres", "egg");
 		System.out.println("Connessione OK");
 	}
 	
@@ -207,4 +211,51 @@ public class Controller {
 		//TODO warnings etc
 		logisticaPage.setVisible(true);
 	}
+	
+	
+	protected List<OrdineConSelezione> getFilteredOrdersRows() {
+		return filteredOrdersRows;
+	}
+	
+	protected List<OrdineConSelezione> getOrdersWithSelection() {
+		return ordersWithSelection;
+	}
+	
+	protected List<Ordine> getOrdiniWithMaxNumOfProductsRows() {
+		return listaordinimax;
+	}
+	
+	protected List<Ordine> getOrdiniWithMinNumOfProductsRows() {
+		return listaordinimin;
+	}
+	
+	
+	/**
+	 * @return the operatore
+	 */
+	protected Operatore getOperatore() {
+		return operatore;
+	}
+
+	/**
+	 * @param operatore the operatore to set
+	 */
+	protected void setOperatore(Operatore operatore) {
+		this.operatore = operatore;
+	}
+	
+	/**
+	 * @return the myConnection
+	 */
+	protected Connection getMyConnection() {
+		return myConnection;
+	}
+
+	/**
+	 * @param myConnection the myConnection to set
+	 */
+	protected void setMyConnection(Connection myConnection) {
+		this.myConnection = myConnection;
+	}
+
 }

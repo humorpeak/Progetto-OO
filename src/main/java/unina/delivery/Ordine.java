@@ -42,6 +42,12 @@ public class Ordine {
 		indirizzo = i;
 		peso = p;
 	}
+	
+	Ordine(String a, LocalDate d, String i) {
+		acquirente = a;
+		data = d;
+		indirizzo = i;
+	}
 
 	@Override
 	public String toString() {

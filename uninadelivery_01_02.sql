@@ -5,7 +5,7 @@
 -- Dumped from database version 16.1
 -- Dumped by pg_dump version 16.1
 
--- Started on 2024-01-31 19:19:05
+-- Started on 2024-02-01 13:18:46
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -19,7 +19,7 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 7 (class 2615 OID 17213)
+-- TOC entry 6 (class 2615 OID 57838)
 -- Name: uninadelivery; Type: SCHEMA; Schema: -; Owner: postgres
 --
 
@@ -29,7 +29,7 @@ CREATE SCHEMA uninadelivery;
 ALTER SCHEMA uninadelivery OWNER TO postgres;
 
 --
--- TOC entry 951 (class 1247 OID 17215)
+-- TOC entry 899 (class 1247 OID 57840)
 -- Name: enum_stato; Type: TYPE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -45,7 +45,7 @@ CREATE TYPE uninadelivery.enum_stato AS ENUM (
 ALTER TYPE uninadelivery.enum_stato OWNER TO postgres;
 
 --
--- TOC entry 283 (class 1255 OID 17225)
+-- TOC entry 236 (class 1255 OID 57851)
 -- Name: acquirente_eliminato(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -63,7 +63,7 @@ $$;
 ALTER FUNCTION uninadelivery.acquirente_eliminato() OWNER TO postgres;
 
 --
--- TOC entry 284 (class 1255 OID 17226)
+-- TOC entry 248 (class 1255 OID 57852)
 -- Name: annulla_ordine(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -90,7 +90,7 @@ $$;
 ALTER FUNCTION uninadelivery.annulla_ordine() OWNER TO postgres;
 
 --
--- TOC entry 285 (class 1255 OID 17227)
+-- TOC entry 249 (class 1255 OID 57853)
 -- Name: autenticazione_operatore(character varying, character varying); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -110,7 +110,7 @@ $$;
 ALTER FUNCTION uninadelivery.autenticazione_operatore(email_op character varying, passsword_op character varying) OWNER TO postgres;
 
 --
--- TOC entry 286 (class 1255 OID 17228)
+-- TOC entry 250 (class 1255 OID 57854)
 -- Name: conferma_ordine(integer); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -131,7 +131,7 @@ $$;
 ALTER PROCEDURE uninadelivery.conferma_ordine(IN idordine_in integer) OWNER TO postgres;
 
 --
--- TOC entry 278 (class 1255 OID 17229)
+-- TOC entry 251 (class 1255 OID 57855)
 -- Name: controlla_idsede_spedizione(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -164,7 +164,7 @@ $$;
 ALTER FUNCTION uninadelivery.controlla_idsede_spedizione() OWNER TO postgres;
 
 --
--- TOC entry 279 (class 1255 OID 17230)
+-- TOC entry 252 (class 1255 OID 57856)
 -- Name: controlla_intervalli_spedizione(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -192,7 +192,7 @@ $$;
 ALTER FUNCTION uninadelivery.controlla_intervalli_spedizione() OWNER TO postgres;
 
 --
--- TOC entry 280 (class 1255 OID 17231)
+-- TOC entry 253 (class 1255 OID 57857)
 -- Name: controlla_ordine_spedito(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -219,7 +219,7 @@ $$;
 ALTER FUNCTION uninadelivery.controlla_ordine_spedito() OWNER TO postgres;
 
 --
--- TOC entry 281 (class 1255 OID 17232)
+-- TOC entry 254 (class 1255 OID 57858)
 -- Name: controllo_capienza_e_tempi_ordine_aggiunto_a_spedizione(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -271,7 +271,7 @@ $$;
 ALTER FUNCTION uninadelivery.controllo_capienza_e_tempi_ordine_aggiunto_a_spedizione() OWNER TO postgres;
 
 --
--- TOC entry 282 (class 1255 OID 17233)
+-- TOC entry 255 (class 1255 OID 57859)
 -- Name: corriere_puo_guidare_mezzo_di_trasporto(character, character); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -305,7 +305,7 @@ $$;
 ALTER FUNCTION uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(codicefiscalecorriere character, targamezzo character) OWNER TO postgres;
 
 --
--- TOC entry 294 (class 1255 OID 17234)
+-- TOC entry 256 (class 1255 OID 57860)
 -- Name: corriere_puo_guidare_mezzo_di_trasporto_stessa_sede(character, character); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -337,7 +337,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 233 (class 1259 OID 17235)
+-- TOC entry 216 (class 1259 OID 57861)
 -- Name: corriere; Type: TABLE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -357,7 +357,7 @@ CREATE TABLE uninadelivery.corriere (
 ALTER TABLE uninadelivery.corriere OWNER TO postgres;
 
 --
--- TOC entry 295 (class 1255 OID 17243)
+-- TOC entry 257 (class 1255 OID 57869)
 -- Name: get_corrieri_disponibili(timestamp without time zone, timestamp without time zone); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -375,7 +375,7 @@ $$;
 ALTER FUNCTION uninadelivery.get_corrieri_disponibili(inizio timestamp without time zone, fine timestamp without time zone) OWNER TO postgres;
 
 --
--- TOC entry 287 (class 1255 OID 17244)
+-- TOC entry 258 (class 1255 OID 57870)
 -- Name: get_corrieri_disponibili_con_mezzo_di_trasporto(timestamp without time zone, timestamp without time zone, character); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -392,7 +392,7 @@ $$;
 ALTER FUNCTION uninadelivery.get_corrieri_disponibili_con_mezzo_di_trasporto(inizio timestamp without time zone, fine timestamp without time zone, targa character) OWNER TO postgres;
 
 --
--- TOC entry 288 (class 1255 OID 17245)
+-- TOC entry 259 (class 1255 OID 57871)
 -- Name: get_corrieri_per_mezzo_di_trasporto(character); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -411,7 +411,7 @@ $$;
 ALTER FUNCTION uninadelivery.get_corrieri_per_mezzo_di_trasporto(targa character) OWNER TO postgres;
 
 --
--- TOC entry 234 (class 1259 OID 17246)
+-- TOC entry 217 (class 1259 OID 57872)
 -- Name: mezzo_di_trasporto; Type: TABLE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -429,7 +429,7 @@ CREATE TABLE uninadelivery.mezzo_di_trasporto (
 ALTER TABLE uninadelivery.mezzo_di_trasporto OWNER TO postgres;
 
 --
--- TOC entry 289 (class 1255 OID 17253)
+-- TOC entry 260 (class 1255 OID 57879)
 -- Name: get_mezzi_di_trasporto_disponibili(timestamp without time zone, timestamp without time zone); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -447,7 +447,7 @@ $$;
 ALTER FUNCTION uninadelivery.get_mezzi_di_trasporto_disponibili(inizio timestamp without time zone, fine timestamp without time zone) OWNER TO postgres;
 
 --
--- TOC entry 290 (class 1255 OID 17254)
+-- TOC entry 261 (class 1255 OID 57880)
 -- Name: get_mezzi_di_trasporto_disponibili_con_corriere(timestamp without time zone, timestamp without time zone, character); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -464,7 +464,7 @@ $$;
 ALTER FUNCTION uninadelivery.get_mezzi_di_trasporto_disponibili_con_corriere(inizio timestamp without time zone, fine timestamp without time zone, codicefiscalecorriere character) OWNER TO postgres;
 
 --
--- TOC entry 291 (class 1255 OID 17255)
+-- TOC entry 262 (class 1255 OID 57881)
 -- Name: get_mezzi_di_trasporto_per_corriere(character); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -484,7 +484,7 @@ $$;
 ALTER FUNCTION uninadelivery.get_mezzi_di_trasporto_per_corriere(codicefiscalecorriere character) OWNER TO postgres;
 
 --
--- TOC entry 235 (class 1259 OID 17256)
+-- TOC entry 218 (class 1259 OID 57882)
 -- Name: ordine; Type: TABLE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -512,7 +512,7 @@ CREATE TABLE uninadelivery.ordine (
 ALTER TABLE uninadelivery.ordine OWNER TO postgres;
 
 --
--- TOC entry 292 (class 1255 OID 17269)
+-- TOC entry 263 (class 1255 OID 57895)
 -- Name: get_ordini(timestamp without time zone, timestamp without time zone, character varying); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -535,7 +535,7 @@ $$;
 ALTER FUNCTION uninadelivery.get_ordini(inizio timestamp without time zone, fine timestamp without time zone, emailutente character varying) OWNER TO postgres;
 
 --
--- TOC entry 293 (class 1255 OID 17270)
+-- TOC entry 264 (class 1255 OID 57896)
 -- Name: get_ordini_da_spedire(timestamp without time zone, timestamp without time zone, character varying); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -558,7 +558,7 @@ $$;
 ALTER FUNCTION uninadelivery.get_ordini_da_spedire(inizio timestamp without time zone, fine timestamp without time zone, emailutente character varying) OWNER TO postgres;
 
 --
--- TOC entry 296 (class 1255 OID 17271)
+-- TOC entry 265 (class 1255 OID 57897)
 -- Name: get_ordini_da_spedire_by_sede(timestamp without time zone, timestamp without time zone, character varying, integer); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -582,7 +582,7 @@ $$;
 ALTER FUNCTION uninadelivery.get_ordini_da_spedire_by_sede(inizio timestamp without time zone, fine timestamp without time zone, emailutente character varying, sede integer) OWNER TO postgres;
 
 --
--- TOC entry 277 (class 1255 OID 17472)
+-- TOC entry 266 (class 1255 OID 57898)
 -- Name: get_ordini_max_numero_prodotti_in_mese_per_sede(date, integer); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -610,7 +610,35 @@ $$;
 ALTER FUNCTION uninadelivery.get_ordini_max_numero_prodotti_in_mese_per_sede(datainput date, sede integer) OWNER TO postgres;
 
 --
--- TOC entry 305 (class 1255 OID 17456)
+-- TOC entry 285 (class 1255 OID 58084)
+-- Name: get_ordini_min_numero_prodotti_in_mese_per_sede(date, integer); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
+--
+
+CREATE FUNCTION uninadelivery.get_ordini_min_numero_prodotti_in_mese_per_sede(datainput date, sede integer) RETURNS SETOF uninadelivery.ordine
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+	primo_giorno_di_mese DATE;
+	primo_giorno_mese_successivo DATE;
+BEGIN
+	primo_giorno_di_mese := date_trunc('month', dataInput)::date;
+	primo_giorno_mese_successivo := primo_giorno_di_mese + interval '1 month';
+	RETURN QUERY(
+		SELECT O.*
+		FROM uninadelivery.ORDINE AS O JOIN (
+			SELECT MIN(uninadelivery.numero_prodotti_in_ordine(O.idordine)) AS num_ordini
+			FROM uninadelivery.get_ordini(primo_giorno_di_mese, primo_giorno_mese_successivo, null) AS O
+			WHERE O.idsede = sede
+		) ON uninadelivery.numero_prodotti_in_ordine(O.idordine) = num_ordini
+	);
+END;
+$$;
+
+
+ALTER FUNCTION uninadelivery.get_ordini_min_numero_prodotti_in_mese_per_sede(datainput date, sede integer) OWNER TO postgres;
+
+--
+-- TOC entry 267 (class 1255 OID 57899)
 -- Name: get_peso_totale(integer); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -632,7 +660,7 @@ $$;
 ALTER FUNCTION uninadelivery.get_peso_totale(idordineinput integer) OWNER TO postgres;
 
 --
--- TOC entry 297 (class 1255 OID 17272)
+-- TOC entry 268 (class 1255 OID 57900)
 -- Name: impossibile_modificare_attributo_ordine(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -648,7 +676,7 @@ $$;
 ALTER FUNCTION uninadelivery.impossibile_modificare_attributo_ordine() OWNER TO postgres;
 
 --
--- TOC entry 298 (class 1255 OID 17273)
+-- TOC entry 269 (class 1255 OID 57901)
 -- Name: impossibile_modificare_dettagli_ordine(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -664,7 +692,7 @@ $$;
 ALTER FUNCTION uninadelivery.impossibile_modificare_dettagli_ordine() OWNER TO postgres;
 
 --
--- TOC entry 299 (class 1255 OID 17274)
+-- TOC entry 270 (class 1255 OID 57902)
 -- Name: is_corriere_disponibile(character, timestamp without time zone, timestamp without time zone); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -693,7 +721,7 @@ $$;
 ALTER FUNCTION uninadelivery.is_corriere_disponibile(codicefiscaledelcorriere character, inizio timestamp without time zone, fine timestamp without time zone) OWNER TO postgres;
 
 --
--- TOC entry 300 (class 1255 OID 17275)
+-- TOC entry 271 (class 1255 OID 57903)
 -- Name: is_mezzo_di_trasporto_disponibile(character, timestamp without time zone, timestamp without time zone); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -722,7 +750,7 @@ $$;
 ALTER FUNCTION uninadelivery.is_mezzo_di_trasporto_disponibile(targamezzoditrasporto character, inizio timestamp without time zone, fine timestamp without time zone) OWNER TO postgres;
 
 --
--- TOC entry 301 (class 1255 OID 17276)
+-- TOC entry 272 (class 1255 OID 57904)
 -- Name: non_cancellare_dettagli_ordini(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -738,7 +766,7 @@ $$;
 ALTER FUNCTION uninadelivery.non_cancellare_dettagli_ordini() OWNER TO postgres;
 
 --
--- TOC entry 274 (class 1255 OID 17277)
+-- TOC entry 273 (class 1255 OID 57905)
 -- Name: numero_medio_ordini_in_mese(date); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -768,7 +796,7 @@ $$;
 ALTER FUNCTION uninadelivery.numero_medio_ordini_in_mese(data date) OWNER TO postgres;
 
 --
--- TOC entry 268 (class 1255 OID 17278)
+-- TOC entry 274 (class 1255 OID 57906)
 -- Name: numero_medio_ordini_in_mese_by_sede(date, integer); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -798,7 +826,7 @@ $$;
 ALTER FUNCTION uninadelivery.numero_medio_ordini_in_mese_by_sede(data date, sede integer) OWNER TO postgres;
 
 --
--- TOC entry 269 (class 1255 OID 17279)
+-- TOC entry 275 (class 1255 OID 57907)
 -- Name: numero_prodotti_in_ordine(integer); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -823,7 +851,7 @@ $$;
 ALTER FUNCTION uninadelivery.numero_prodotti_in_ordine(ordine integer) OWNER TO postgres;
 
 --
--- TOC entry 270 (class 1255 OID 17280)
+-- TOC entry 276 (class 1255 OID 57908)
 -- Name: nuovi_dettagli_per_ordine(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -855,7 +883,7 @@ $$;
 ALTER FUNCTION uninadelivery.nuovi_dettagli_per_ordine() OWNER TO postgres;
 
 --
--- TOC entry 271 (class 1255 OID 17281)
+-- TOC entry 277 (class 1255 OID 57909)
 -- Name: ordine_con_meno_prodotti_in_mese(date); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -889,7 +917,7 @@ $$;
 ALTER FUNCTION uninadelivery.ordine_con_meno_prodotti_in_mese(datainput date) OWNER TO postgres;
 
 --
--- TOC entry 272 (class 1255 OID 17282)
+-- TOC entry 278 (class 1255 OID 57910)
 -- Name: ordine_con_piu_prodotti_in_mese(date); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -923,7 +951,7 @@ $$;
 ALTER FUNCTION uninadelivery.ordine_con_piu_prodotti_in_mese(datainput date) OWNER TO postgres;
 
 --
--- TOC entry 273 (class 1255 OID 17283)
+-- TOC entry 279 (class 1255 OID 57911)
 -- Name: test(); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -945,7 +973,7 @@ $$;
 ALTER PROCEDURE uninadelivery.test() OWNER TO postgres;
 
 --
--- TOC entry 275 (class 1255 OID 17284)
+-- TOC entry 280 (class 1255 OID 57912)
 -- Name: test_autenticazione_operatore(); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -971,7 +999,7 @@ $$;
 ALTER PROCEDURE uninadelivery.test_autenticazione_operatore() OWNER TO postgres;
 
 --
--- TOC entry 276 (class 1255 OID 17285)
+-- TOC entry 281 (class 1255 OID 57913)
 -- Name: test_corriere_puo_guidare_mezzo_di_trasporto(); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1037,7 +1065,7 @@ $$;
 ALTER PROCEDURE uninadelivery.test_corriere_puo_guidare_mezzo_di_trasporto() OWNER TO postgres;
 
 --
--- TOC entry 302 (class 1255 OID 17286)
+-- TOC entry 282 (class 1255 OID 57914)
 -- Name: test_corriere_puo_guidare_mezzo_di_trasporto_stessa_sede(); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1071,7 +1099,7 @@ $$;
 ALTER PROCEDURE uninadelivery.test_corriere_puo_guidare_mezzo_di_trasporto_stessa_sede() OWNER TO postgres;
 
 --
--- TOC entry 303 (class 1255 OID 17287)
+-- TOC entry 283 (class 1255 OID 57915)
 -- Name: test_is_corriere_disponibile(); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1107,7 +1135,7 @@ $$;
 ALTER PROCEDURE uninadelivery.test_is_corriere_disponibile() OWNER TO postgres;
 
 --
--- TOC entry 304 (class 1255 OID 17288)
+-- TOC entry 284 (class 1255 OID 57916)
 -- Name: test_is_mezzo_di_trasporto_disponibile(); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1143,7 +1171,7 @@ $$;
 ALTER PROCEDURE uninadelivery.test_is_mezzo_di_trasporto_disponibile() OWNER TO postgres;
 
 --
--- TOC entry 236 (class 1259 OID 17289)
+-- TOC entry 219 (class 1259 OID 57917)
 -- Name: acquirente; Type: TABLE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1161,7 +1189,7 @@ CREATE TABLE uninadelivery.acquirente (
 ALTER TABLE uninadelivery.acquirente OWNER TO postgres;
 
 --
--- TOC entry 237 (class 1259 OID 17296)
+-- TOC entry 220 (class 1259 OID 57924)
 -- Name: corriere_idsede_seq; Type: SEQUENCE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1177,8 +1205,8 @@ CREATE SEQUENCE uninadelivery.corriere_idsede_seq
 ALTER SEQUENCE uninadelivery.corriere_idsede_seq OWNER TO postgres;
 
 --
--- TOC entry 5079 (class 0 OID 0)
--- Dependencies: 237
+-- TOC entry 5027 (class 0 OID 0)
+-- Dependencies: 220
 -- Name: corriere_idsede_seq; Type: SEQUENCE OWNED BY; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1186,7 +1214,7 @@ ALTER SEQUENCE uninadelivery.corriere_idsede_seq OWNED BY uninadelivery.corriere
 
 
 --
--- TOC entry 238 (class 1259 OID 17297)
+-- TOC entry 221 (class 1259 OID 57925)
 -- Name: dettagli_ordine; Type: TABLE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1201,7 +1229,7 @@ CREATE TABLE uninadelivery.dettagli_ordine (
 ALTER TABLE uninadelivery.dettagli_ordine OWNER TO postgres;
 
 --
--- TOC entry 239 (class 1259 OID 17302)
+-- TOC entry 222 (class 1259 OID 57930)
 -- Name: dettagli_ordine_idordine_seq; Type: SEQUENCE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1217,8 +1245,8 @@ CREATE SEQUENCE uninadelivery.dettagli_ordine_idordine_seq
 ALTER SEQUENCE uninadelivery.dettagli_ordine_idordine_seq OWNER TO postgres;
 
 --
--- TOC entry 5080 (class 0 OID 0)
--- Dependencies: 239
+-- TOC entry 5028 (class 0 OID 0)
+-- Dependencies: 222
 -- Name: dettagli_ordine_idordine_seq; Type: SEQUENCE OWNED BY; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1226,7 +1254,7 @@ ALTER SEQUENCE uninadelivery.dettagli_ordine_idordine_seq OWNED BY uninadelivery
 
 
 --
--- TOC entry 240 (class 1259 OID 17303)
+-- TOC entry 223 (class 1259 OID 57931)
 -- Name: disponibilità; Type: TABLE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1241,7 +1269,7 @@ CREATE TABLE uninadelivery."disponibilità" (
 ALTER TABLE uninadelivery."disponibilità" OWNER TO postgres;
 
 --
--- TOC entry 241 (class 1259 OID 17307)
+-- TOC entry 224 (class 1259 OID 57935)
 -- Name: metodo_pagamento; Type: TABLE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1256,7 +1284,7 @@ CREATE TABLE uninadelivery.metodo_pagamento (
 ALTER TABLE uninadelivery.metodo_pagamento OWNER TO postgres;
 
 --
--- TOC entry 242 (class 1259 OID 17313)
+-- TOC entry 225 (class 1259 OID 57941)
 -- Name: mezzo_di_trasporto_idsede_seq; Type: SEQUENCE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1272,8 +1300,8 @@ CREATE SEQUENCE uninadelivery.mezzo_di_trasporto_idsede_seq
 ALTER SEQUENCE uninadelivery.mezzo_di_trasporto_idsede_seq OWNER TO postgres;
 
 --
--- TOC entry 5081 (class 0 OID 0)
--- Dependencies: 242
+-- TOC entry 5029 (class 0 OID 0)
+-- Dependencies: 225
 -- Name: mezzo_di_trasporto_idsede_seq; Type: SEQUENCE OWNED BY; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1281,7 +1309,7 @@ ALTER SEQUENCE uninadelivery.mezzo_di_trasporto_idsede_seq OWNED BY uninadeliver
 
 
 --
--- TOC entry 243 (class 1259 OID 17314)
+-- TOC entry 226 (class 1259 OID 57942)
 -- Name: operatore; Type: TABLE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1303,7 +1331,7 @@ CREATE TABLE uninadelivery.operatore (
 ALTER TABLE uninadelivery.operatore OWNER TO postgres;
 
 --
--- TOC entry 244 (class 1259 OID 17323)
+-- TOC entry 227 (class 1259 OID 57951)
 -- Name: operatore_idsede_seq; Type: SEQUENCE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1319,8 +1347,8 @@ CREATE SEQUENCE uninadelivery.operatore_idsede_seq
 ALTER SEQUENCE uninadelivery.operatore_idsede_seq OWNER TO postgres;
 
 --
--- TOC entry 5082 (class 0 OID 0)
--- Dependencies: 244
+-- TOC entry 5030 (class 0 OID 0)
+-- Dependencies: 227
 -- Name: operatore_idsede_seq; Type: SEQUENCE OWNED BY; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1328,7 +1356,7 @@ ALTER SEQUENCE uninadelivery.operatore_idsede_seq OWNED BY uninadelivery.operato
 
 
 --
--- TOC entry 245 (class 1259 OID 17324)
+-- TOC entry 228 (class 1259 OID 57952)
 -- Name: ordine_idordine_seq; Type: SEQUENCE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1344,8 +1372,8 @@ CREATE SEQUENCE uninadelivery.ordine_idordine_seq
 ALTER SEQUENCE uninadelivery.ordine_idordine_seq OWNER TO postgres;
 
 --
--- TOC entry 5083 (class 0 OID 0)
--- Dependencies: 245
+-- TOC entry 5031 (class 0 OID 0)
+-- Dependencies: 228
 -- Name: ordine_idordine_seq; Type: SEQUENCE OWNED BY; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1353,7 +1381,7 @@ ALTER SEQUENCE uninadelivery.ordine_idordine_seq OWNED BY uninadelivery.ordine.i
 
 
 --
--- TOC entry 246 (class 1259 OID 17325)
+-- TOC entry 229 (class 1259 OID 57953)
 -- Name: ordine_idspedizione_seq; Type: SEQUENCE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1369,8 +1397,8 @@ CREATE SEQUENCE uninadelivery.ordine_idspedizione_seq
 ALTER SEQUENCE uninadelivery.ordine_idspedizione_seq OWNER TO postgres;
 
 --
--- TOC entry 5084 (class 0 OID 0)
--- Dependencies: 246
+-- TOC entry 5032 (class 0 OID 0)
+-- Dependencies: 229
 -- Name: ordine_idspedizione_seq; Type: SEQUENCE OWNED BY; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1378,7 +1406,7 @@ ALTER SEQUENCE uninadelivery.ordine_idspedizione_seq OWNED BY uninadelivery.ordi
 
 
 --
--- TOC entry 247 (class 1259 OID 17326)
+-- TOC entry 230 (class 1259 OID 57954)
 -- Name: prodotto; Type: TABLE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1395,7 +1423,7 @@ CREATE TABLE uninadelivery.prodotto (
 ALTER TABLE uninadelivery.prodotto OWNER TO postgres;
 
 --
--- TOC entry 248 (class 1259 OID 17332)
+-- TOC entry 231 (class 1259 OID 57960)
 -- Name: prodotto_idprodotto_seq; Type: SEQUENCE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1411,8 +1439,8 @@ CREATE SEQUENCE uninadelivery.prodotto_idprodotto_seq
 ALTER SEQUENCE uninadelivery.prodotto_idprodotto_seq OWNER TO postgres;
 
 --
--- TOC entry 5085 (class 0 OID 0)
--- Dependencies: 248
+-- TOC entry 5033 (class 0 OID 0)
+-- Dependencies: 231
 -- Name: prodotto_idprodotto_seq; Type: SEQUENCE OWNED BY; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1420,7 +1448,7 @@ ALTER SEQUENCE uninadelivery.prodotto_idprodotto_seq OWNED BY uninadelivery.prod
 
 
 --
--- TOC entry 249 (class 1259 OID 17333)
+-- TOC entry 232 (class 1259 OID 57961)
 -- Name: sede; Type: TABLE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1438,7 +1466,7 @@ CREATE TABLE uninadelivery.sede (
 ALTER TABLE uninadelivery.sede OWNER TO postgres;
 
 --
--- TOC entry 250 (class 1259 OID 17338)
+-- TOC entry 233 (class 1259 OID 57966)
 -- Name: sede_id_sede_seq; Type: SEQUENCE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1454,8 +1482,8 @@ CREATE SEQUENCE uninadelivery.sede_id_sede_seq
 ALTER SEQUENCE uninadelivery.sede_id_sede_seq OWNER TO postgres;
 
 --
--- TOC entry 5086 (class 0 OID 0)
--- Dependencies: 250
+-- TOC entry 5034 (class 0 OID 0)
+-- Dependencies: 233
 -- Name: sede_id_sede_seq; Type: SEQUENCE OWNED BY; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1463,7 +1491,7 @@ ALTER SEQUENCE uninadelivery.sede_id_sede_seq OWNED BY uninadelivery.sede.idsede
 
 
 --
--- TOC entry 251 (class 1259 OID 17339)
+-- TOC entry 234 (class 1259 OID 57967)
 -- Name: spedizione; Type: TABLE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1482,7 +1510,7 @@ CREATE TABLE uninadelivery.spedizione (
 ALTER TABLE uninadelivery.spedizione OWNER TO postgres;
 
 --
--- TOC entry 252 (class 1259 OID 17343)
+-- TOC entry 235 (class 1259 OID 57971)
 -- Name: spedizione_idspedizione_seq; Type: SEQUENCE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1498,8 +1526,8 @@ CREATE SEQUENCE uninadelivery.spedizione_idspedizione_seq
 ALTER SEQUENCE uninadelivery.spedizione_idspedizione_seq OWNER TO postgres;
 
 --
--- TOC entry 5087 (class 0 OID 0)
--- Dependencies: 252
+-- TOC entry 5035 (class 0 OID 0)
+-- Dependencies: 235
 -- Name: spedizione_idspedizione_seq; Type: SEQUENCE OWNED BY; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1507,7 +1535,7 @@ ALTER SEQUENCE uninadelivery.spedizione_idspedizione_seq OWNED BY uninadelivery.
 
 
 --
--- TOC entry 4831 (class 2604 OID 17344)
+-- TOC entry 4779 (class 2604 OID 57972)
 -- Name: corriere idsede; Type: DEFAULT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1515,7 +1543,7 @@ ALTER TABLE ONLY uninadelivery.corriere ALTER COLUMN idsede SET DEFAULT nextval(
 
 
 --
--- TOC entry 4833 (class 2604 OID 17345)
+-- TOC entry 4781 (class 2604 OID 57973)
 -- Name: mezzo_di_trasporto idsede; Type: DEFAULT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1523,7 +1551,7 @@ ALTER TABLE ONLY uninadelivery.mezzo_di_trasporto ALTER COLUMN idsede SET DEFAUL
 
 
 --
--- TOC entry 4842 (class 2604 OID 17346)
+-- TOC entry 4790 (class 2604 OID 57974)
 -- Name: operatore idsede; Type: DEFAULT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1531,7 +1559,7 @@ ALTER TABLE ONLY uninadelivery.operatore ALTER COLUMN idsede SET DEFAULT nextval
 
 
 --
--- TOC entry 4835 (class 2604 OID 17347)
+-- TOC entry 4783 (class 2604 OID 57975)
 -- Name: ordine idordine; Type: DEFAULT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1539,7 +1567,7 @@ ALTER TABLE ONLY uninadelivery.ordine ALTER COLUMN idordine SET DEFAULT nextval(
 
 
 --
--- TOC entry 4844 (class 2604 OID 17348)
+-- TOC entry 4792 (class 2604 OID 57976)
 -- Name: prodotto idprodotto; Type: DEFAULT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1547,7 +1575,7 @@ ALTER TABLE ONLY uninadelivery.prodotto ALTER COLUMN idprodotto SET DEFAULT next
 
 
 --
--- TOC entry 4845 (class 2604 OID 17349)
+-- TOC entry 4793 (class 2604 OID 57977)
 -- Name: sede idsede; Type: DEFAULT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1555,7 +1583,7 @@ ALTER TABLE ONLY uninadelivery.sede ALTER COLUMN idsede SET DEFAULT nextval('uni
 
 
 --
--- TOC entry 4846 (class 2604 OID 17350)
+-- TOC entry 4794 (class 2604 OID 57978)
 -- Name: spedizione idspedizione; Type: DEFAULT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1563,8 +1591,8 @@ ALTER TABLE ONLY uninadelivery.spedizione ALTER COLUMN idspedizione SET DEFAULT 
 
 
 --
--- TOC entry 5057 (class 0 OID 17289)
--- Dependencies: 236
+-- TOC entry 5005 (class 0 OID 57917)
+-- Dependencies: 219
 -- Data for Name: acquirente; Type: TABLE DATA; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1592,8 +1620,8 @@ INSERT INTO uninadelivery.acquirente VALUES
 
 
 --
--- TOC entry 5054 (class 0 OID 17235)
--- Dependencies: 233
+-- TOC entry 5002 (class 0 OID 57861)
+-- Dependencies: 216
 -- Data for Name: corriere; Type: TABLE DATA; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1621,8 +1649,8 @@ INSERT INTO uninadelivery.corriere VALUES
 
 
 --
--- TOC entry 5059 (class 0 OID 17297)
--- Dependencies: 238
+-- TOC entry 5007 (class 0 OID 57925)
+-- Dependencies: 221
 -- Data for Name: dettagli_ordine; Type: TABLE DATA; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1658,8 +1686,8 @@ INSERT INTO uninadelivery.dettagli_ordine VALUES
 
 
 --
--- TOC entry 5061 (class 0 OID 17303)
--- Dependencies: 240
+-- TOC entry 5009 (class 0 OID 57931)
+-- Dependencies: 223
 -- Data for Name: disponibilità; Type: TABLE DATA; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1756,16 +1784,16 @@ INSERT INTO uninadelivery."disponibilità" VALUES
 
 
 --
--- TOC entry 5062 (class 0 OID 17307)
--- Dependencies: 241
+-- TOC entry 5010 (class 0 OID 57935)
+-- Dependencies: 224
 -- Data for Name: metodo_pagamento; Type: TABLE DATA; Schema: uninadelivery; Owner: postgres
 --
 
 
 
 --
--- TOC entry 5055 (class 0 OID 17246)
--- Dependencies: 234
+-- TOC entry 5003 (class 0 OID 57872)
+-- Dependencies: 217
 -- Data for Name: mezzo_di_trasporto; Type: TABLE DATA; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1792,8 +1820,8 @@ INSERT INTO uninadelivery.mezzo_di_trasporto VALUES
 
 
 --
--- TOC entry 5064 (class 0 OID 17314)
--- Dependencies: 243
+-- TOC entry 5012 (class 0 OID 57942)
+-- Dependencies: 226
 -- Data for Name: operatore; Type: TABLE DATA; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1815,8 +1843,8 @@ INSERT INTO uninadelivery.operatore VALUES
 
 
 --
--- TOC entry 5056 (class 0 OID 17256)
--- Dependencies: 235
+-- TOC entry 5004 (class 0 OID 57882)
+-- Dependencies: 218
 -- Data for Name: ordine; Type: TABLE DATA; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1841,8 +1869,8 @@ INSERT INTO uninadelivery.ordine VALUES
 
 
 --
--- TOC entry 5068 (class 0 OID 17326)
--- Dependencies: 247
+-- TOC entry 5016 (class 0 OID 57954)
+-- Dependencies: 230
 -- Data for Name: prodotto; Type: TABLE DATA; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1875,8 +1903,8 @@ INSERT INTO uninadelivery.prodotto VALUES
 
 
 --
--- TOC entry 5070 (class 0 OID 17333)
--- Dependencies: 249
+-- TOC entry 5018 (class 0 OID 57961)
+-- Dependencies: 232
 -- Data for Name: sede; Type: TABLE DATA; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1888,8 +1916,8 @@ INSERT INTO uninadelivery.sede VALUES
 
 
 --
--- TOC entry 5072 (class 0 OID 17339)
--- Dependencies: 251
+-- TOC entry 5020 (class 0 OID 57967)
+-- Dependencies: 234
 -- Data for Name: spedizione; Type: TABLE DATA; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1900,8 +1928,8 @@ INSERT INTO uninadelivery.spedizione VALUES
 
 
 --
--- TOC entry 5088 (class 0 OID 0)
--- Dependencies: 237
+-- TOC entry 5036 (class 0 OID 0)
+-- Dependencies: 220
 -- Name: corriere_idsede_seq; Type: SEQUENCE SET; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1909,8 +1937,8 @@ SELECT pg_catalog.setval('uninadelivery.corriere_idsede_seq', 1, false);
 
 
 --
--- TOC entry 5089 (class 0 OID 0)
--- Dependencies: 239
+-- TOC entry 5037 (class 0 OID 0)
+-- Dependencies: 222
 -- Name: dettagli_ordine_idordine_seq; Type: SEQUENCE SET; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1918,8 +1946,8 @@ SELECT pg_catalog.setval('uninadelivery.dettagli_ordine_idordine_seq', 1, false)
 
 
 --
--- TOC entry 5090 (class 0 OID 0)
--- Dependencies: 242
+-- TOC entry 5038 (class 0 OID 0)
+-- Dependencies: 225
 -- Name: mezzo_di_trasporto_idsede_seq; Type: SEQUENCE SET; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1927,8 +1955,8 @@ SELECT pg_catalog.setval('uninadelivery.mezzo_di_trasporto_idsede_seq', 1, false
 
 
 --
--- TOC entry 5091 (class 0 OID 0)
--- Dependencies: 244
+-- TOC entry 5039 (class 0 OID 0)
+-- Dependencies: 227
 -- Name: operatore_idsede_seq; Type: SEQUENCE SET; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1936,8 +1964,8 @@ SELECT pg_catalog.setval('uninadelivery.operatore_idsede_seq', 1, false);
 
 
 --
--- TOC entry 5092 (class 0 OID 0)
--- Dependencies: 245
+-- TOC entry 5040 (class 0 OID 0)
+-- Dependencies: 228
 -- Name: ordine_idordine_seq; Type: SEQUENCE SET; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1945,8 +1973,8 @@ SELECT pg_catalog.setval('uninadelivery.ordine_idordine_seq', 47, true);
 
 
 --
--- TOC entry 5093 (class 0 OID 0)
--- Dependencies: 246
+-- TOC entry 5041 (class 0 OID 0)
+-- Dependencies: 229
 -- Name: ordine_idspedizione_seq; Type: SEQUENCE SET; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1954,8 +1982,8 @@ SELECT pg_catalog.setval('uninadelivery.ordine_idspedizione_seq', 1, false);
 
 
 --
--- TOC entry 5094 (class 0 OID 0)
--- Dependencies: 248
+-- TOC entry 5042 (class 0 OID 0)
+-- Dependencies: 231
 -- Name: prodotto_idprodotto_seq; Type: SEQUENCE SET; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1963,8 +1991,8 @@ SELECT pg_catalog.setval('uninadelivery.prodotto_idprodotto_seq', 1, false);
 
 
 --
--- TOC entry 5095 (class 0 OID 0)
--- Dependencies: 250
+-- TOC entry 5043 (class 0 OID 0)
+-- Dependencies: 233
 -- Name: sede_id_sede_seq; Type: SEQUENCE SET; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1972,8 +2000,8 @@ SELECT pg_catalog.setval('uninadelivery.sede_id_sede_seq', 4, true);
 
 
 --
--- TOC entry 5096 (class 0 OID 0)
--- Dependencies: 252
+-- TOC entry 5044 (class 0 OID 0)
+-- Dependencies: 235
 -- Name: spedizione_idspedizione_seq; Type: SEQUENCE SET; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1981,7 +2009,7 @@ SELECT pg_catalog.setval('uninadelivery.spedizione_idspedizione_seq', 1, false);
 
 
 --
--- TOC entry 4870 (class 2606 OID 17352)
+-- TOC entry 4818 (class 2606 OID 57980)
 -- Name: acquirente acquirente_pkey; Type: CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1990,7 +2018,7 @@ ALTER TABLE ONLY uninadelivery.acquirente
 
 
 --
--- TOC entry 4864 (class 2606 OID 17354)
+-- TOC entry 4812 (class 2606 OID 57982)
 -- Name: corriere corriere_pkey; Type: CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1999,7 +2027,7 @@ ALTER TABLE ONLY uninadelivery.corriere
 
 
 --
--- TOC entry 4872 (class 2606 OID 17356)
+-- TOC entry 4820 (class 2606 OID 57984)
 -- Name: dettagli_ordine dettagli_ordine_pkey; Type: CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2008,7 +2036,7 @@ ALTER TABLE ONLY uninadelivery.dettagli_ordine
 
 
 --
--- TOC entry 4874 (class 2606 OID 17358)
+-- TOC entry 4822 (class 2606 OID 57986)
 -- Name: disponibilità disponibilità_pkey; Type: CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2017,7 +2045,7 @@ ALTER TABLE ONLY uninadelivery."disponibilità"
 
 
 --
--- TOC entry 4878 (class 2606 OID 17360)
+-- TOC entry 4826 (class 2606 OID 57988)
 -- Name: operatore email_operatore_unica; Type: CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2026,7 +2054,7 @@ ALTER TABLE ONLY uninadelivery.operatore
 
 
 --
--- TOC entry 4876 (class 2606 OID 17362)
+-- TOC entry 4824 (class 2606 OID 57990)
 -- Name: metodo_pagamento metodo_pagamento_pkey; Type: CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2035,7 +2063,7 @@ ALTER TABLE ONLY uninadelivery.metodo_pagamento
 
 
 --
--- TOC entry 4866 (class 2606 OID 17364)
+-- TOC entry 4814 (class 2606 OID 57992)
 -- Name: mezzo_di_trasporto mezzo_di_trasporto_pkey; Type: CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2044,7 +2072,7 @@ ALTER TABLE ONLY uninadelivery.mezzo_di_trasporto
 
 
 --
--- TOC entry 4880 (class 2606 OID 17366)
+-- TOC entry 4828 (class 2606 OID 57994)
 -- Name: operatore operatore_pkey; Type: CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2053,7 +2081,7 @@ ALTER TABLE ONLY uninadelivery.operatore
 
 
 --
--- TOC entry 4868 (class 2606 OID 17368)
+-- TOC entry 4816 (class 2606 OID 57996)
 -- Name: ordine ordine_pkey; Type: CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2062,7 +2090,7 @@ ALTER TABLE ONLY uninadelivery.ordine
 
 
 --
--- TOC entry 4882 (class 2606 OID 17370)
+-- TOC entry 4830 (class 2606 OID 57998)
 -- Name: prodotto prodotto_pkey; Type: CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2071,7 +2099,7 @@ ALTER TABLE ONLY uninadelivery.prodotto
 
 
 --
--- TOC entry 4884 (class 2606 OID 17372)
+-- TOC entry 4832 (class 2606 OID 58000)
 -- Name: sede sede_pkey; Type: CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2080,7 +2108,7 @@ ALTER TABLE ONLY uninadelivery.sede
 
 
 --
--- TOC entry 4886 (class 2606 OID 17374)
+-- TOC entry 4834 (class 2606 OID 58002)
 -- Name: spedizione spedizione_pkey; Type: CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2089,7 +2117,7 @@ ALTER TABLE ONLY uninadelivery.spedizione
 
 
 --
--- TOC entry 4905 (class 2620 OID 17375)
+-- TOC entry 4853 (class 2620 OID 58003)
 -- Name: acquirente acquirente_eliminato; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2097,7 +2125,7 @@ CREATE TRIGGER acquirente_eliminato BEFORE DELETE ON uninadelivery.acquirente FO
 
 
 --
--- TOC entry 4906 (class 2620 OID 17376)
+-- TOC entry 4854 (class 2620 OID 58004)
 -- Name: dettagli_ordine dettagli_ordine_eliminato; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2105,7 +2133,7 @@ CREATE TRIGGER dettagli_ordine_eliminato BEFORE DELETE ON uninadelivery.dettagli
 
 
 --
--- TOC entry 4907 (class 2620 OID 17377)
+-- TOC entry 4855 (class 2620 OID 58005)
 -- Name: dettagli_ordine dettagli_ordine_modificato_attributi_costanti; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2113,7 +2141,7 @@ CREATE TRIGGER dettagli_ordine_modificato_attributi_costanti BEFORE UPDATE ON un
 
 
 --
--- TOC entry 4908 (class 2620 OID 17378)
+-- TOC entry 4856 (class 2620 OID 58006)
 -- Name: dettagli_ordine inserimento_dettagli_ordine; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2121,7 +2149,7 @@ CREATE TRIGGER inserimento_dettagli_ordine BEFORE INSERT ON uninadelivery.dettag
 
 
 --
--- TOC entry 4901 (class 2620 OID 17379)
+-- TOC entry 4849 (class 2620 OID 58007)
 -- Name: ordine ordine_aggiunto_a_spedizione; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2129,7 +2157,7 @@ CREATE TRIGGER ordine_aggiunto_a_spedizione BEFORE INSERT OR UPDATE OF idspedizi
 
 
 --
--- TOC entry 4902 (class 2620 OID 17380)
+-- TOC entry 4850 (class 2620 OID 58008)
 -- Name: ordine ordine_annullato; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2137,7 +2165,7 @@ CREATE TRIGGER ordine_annullato BEFORE UPDATE OF stato ON uninadelivery.ordine F
 
 
 --
--- TOC entry 4903 (class 2620 OID 17381)
+-- TOC entry 4851 (class 2620 OID 58009)
 -- Name: ordine ordine_modificato_attributi_costanti; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2145,7 +2173,7 @@ CREATE TRIGGER ordine_modificato_attributi_costanti BEFORE UPDATE OF data, orari
 
 
 --
--- TOC entry 4904 (class 2620 OID 17382)
+-- TOC entry 4852 (class 2620 OID 58010)
 -- Name: ordine ordine_spedito; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2153,7 +2181,7 @@ CREATE TRIGGER ordine_spedito BEFORE UPDATE OF idspedizione ON uninadelivery.ord
 
 
 --
--- TOC entry 4909 (class 2620 OID 17383)
+-- TOC entry 4857 (class 2620 OID 58011)
 -- Name: spedizione spedizione_inserita_o_aggiornata_controllo_disponibilita; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2161,7 +2189,7 @@ CREATE TRIGGER spedizione_inserita_o_aggiornata_controllo_disponibilita BEFORE I
 
 
 --
--- TOC entry 4910 (class 2620 OID 17384)
+-- TOC entry 4858 (class 2620 OID 58012)
 -- Name: spedizione spedizione_inserita_o_aggiornata_controllo_idsede; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2169,7 +2197,7 @@ CREATE TRIGGER spedizione_inserita_o_aggiornata_controllo_idsede BEFORE INSERT O
 
 
 --
--- TOC entry 4887 (class 2606 OID 17385)
+-- TOC entry 4835 (class 2606 OID 58013)
 -- Name: corriere corriere_idsede_fkey; Type: FK CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2178,7 +2206,7 @@ ALTER TABLE ONLY uninadelivery.corriere
 
 
 --
--- TOC entry 4892 (class 2606 OID 17390)
+-- TOC entry 4840 (class 2606 OID 58018)
 -- Name: dettagli_ordine dettagli_ordine_idordine_fkey; Type: FK CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2187,7 +2215,7 @@ ALTER TABLE ONLY uninadelivery.dettagli_ordine
 
 
 --
--- TOC entry 4893 (class 2606 OID 17395)
+-- TOC entry 4841 (class 2606 OID 58023)
 -- Name: dettagli_ordine dettagli_ordine_idprodotto_fkey; Type: FK CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2196,7 +2224,7 @@ ALTER TABLE ONLY uninadelivery.dettagli_ordine
 
 
 --
--- TOC entry 4894 (class 2606 OID 17400)
+-- TOC entry 4842 (class 2606 OID 58028)
 -- Name: disponibilità disponibilità_idprodotto_fkey; Type: FK CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2205,7 +2233,7 @@ ALTER TABLE ONLY uninadelivery."disponibilità"
 
 
 --
--- TOC entry 4895 (class 2606 OID 17405)
+-- TOC entry 4843 (class 2606 OID 58033)
 -- Name: disponibilità disponibilità_idsede_fkey; Type: FK CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2214,7 +2242,7 @@ ALTER TABLE ONLY uninadelivery."disponibilità"
 
 
 --
--- TOC entry 4896 (class 2606 OID 17410)
+-- TOC entry 4844 (class 2606 OID 58038)
 -- Name: metodo_pagamento metodo_pagamento_email_fkey; Type: FK CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2223,7 +2251,7 @@ ALTER TABLE ONLY uninadelivery.metodo_pagamento
 
 
 --
--- TOC entry 4888 (class 2606 OID 17415)
+-- TOC entry 4836 (class 2606 OID 58043)
 -- Name: mezzo_di_trasporto mezzo_di_trasporto_idsede_fkey; Type: FK CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2232,7 +2260,7 @@ ALTER TABLE ONLY uninadelivery.mezzo_di_trasporto
 
 
 --
--- TOC entry 4897 (class 2606 OID 17420)
+-- TOC entry 4845 (class 2606 OID 58048)
 -- Name: operatore operatore_idsede_fkey; Type: FK CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2241,7 +2269,7 @@ ALTER TABLE ONLY uninadelivery.operatore
 
 
 --
--- TOC entry 4889 (class 2606 OID 17425)
+-- TOC entry 4837 (class 2606 OID 58053)
 -- Name: ordine ordine_emailacquirente_fkey; Type: FK CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2250,7 +2278,7 @@ ALTER TABLE ONLY uninadelivery.ordine
 
 
 --
--- TOC entry 4890 (class 2606 OID 17430)
+-- TOC entry 4838 (class 2606 OID 58058)
 -- Name: ordine ordine_idsede_fkey; Type: FK CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2259,7 +2287,7 @@ ALTER TABLE ONLY uninadelivery.ordine
 
 
 --
--- TOC entry 4891 (class 2606 OID 17435)
+-- TOC entry 4839 (class 2606 OID 58063)
 -- Name: ordine ordine_idspedizione_fkey; Type: FK CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2268,7 +2296,7 @@ ALTER TABLE ONLY uninadelivery.ordine
 
 
 --
--- TOC entry 4898 (class 2606 OID 17440)
+-- TOC entry 4846 (class 2606 OID 58068)
 -- Name: spedizione spedizione_codicefiscalecorriere_fkey; Type: FK CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2277,7 +2305,7 @@ ALTER TABLE ONLY uninadelivery.spedizione
 
 
 --
--- TOC entry 4899 (class 2606 OID 17445)
+-- TOC entry 4847 (class 2606 OID 58073)
 -- Name: spedizione spedizione_codicefiscaleoperatore_fkey; Type: FK CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2286,7 +2314,7 @@ ALTER TABLE ONLY uninadelivery.spedizione
 
 
 --
--- TOC entry 4900 (class 2606 OID 17450)
+-- TOC entry 4848 (class 2606 OID 58078)
 -- Name: spedizione spedizione_targa_fkey; Type: FK CONSTRAINT; Schema: uninadelivery; Owner: postgres
 --
 
@@ -2294,7 +2322,7 @@ ALTER TABLE ONLY uninadelivery.spedizione
     ADD CONSTRAINT spedizione_targa_fkey FOREIGN KEY (targa) REFERENCES uninadelivery.mezzo_di_trasporto(targa);
 
 
--- Completed on 2024-01-31 19:19:06
+-- Completed on 2024-02-01 13:18:47
 
 --
 -- PostgreSQL database dump complete
