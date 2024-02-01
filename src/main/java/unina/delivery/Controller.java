@@ -15,6 +15,7 @@ public class Controller {
 	HomePage homePage;
 	OrdiniPage ordiniPage;
 	ReportPage reportPage;
+	LogisticaPage logisticaPage;
 	Connection myconnection;
 	Operatore operatore;
 	OperatoreDAO operatoredao; //deve essere istanziato o metodi statici?
@@ -41,6 +42,7 @@ public class Controller {
 			homePage = new HomePage(this);
 			ordiniPage = new OrdiniPage(this);
 			reportPage = new ReportPage(this);
+			logisticaPage = new LogisticaPage(this);
 			
 			loginPage.setVisible(true);
 		}
@@ -198,5 +200,11 @@ public class Controller {
 	public void backButtonPressedFromOrdiniToHomePage() {
 		ordiniPage.setVisible(false);
 		homePage.setVisible(true);
+	}
+	
+	public void confirmButtonPressed() {
+		ordiniPage.setVisible(false);
+		//TODO warnings etc
+		logisticaPage.setVisible(true);
 	}
 }

@@ -44,6 +44,7 @@ public class OrdiniPage extends JFrame {
 	private TimePicker finalTimePicker;
 	private JButton applyButton;
 	private JButton backButton;
+	private JButton confirmButton;
 	
 	public OrdiniPage(Controller controller) {
 		myController = controller;
@@ -132,6 +133,14 @@ public class OrdiniPage extends JFrame {
 			}
 		});
 		filtersPanel.add(backButton);
+		
+		confirmButton = new JButton("Conferma");
+		confirmButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				myController.confirmButtonPressed();
+			}
+		});
+		filtersPanel.add(confirmButton);
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
