@@ -22,6 +22,9 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.awt.event.ActionEvent;
+import javax.swing.ListSelectionModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class LogisticaPage extends JFrame {
 	
@@ -93,12 +96,20 @@ public class LogisticaPage extends JFrame {
 		
 		TableModel vehiclesDataModel = new MezziDiTrasportoTableModel(myController);
 		vehiclesTable = new JTable(vehiclesDataModel);
+		vehiclesTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				vehiclesTableButtonClicked(e);
+			}
+		});
+		vehiclesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		vehiclesScrollPane.setViewportView(vehiclesTable);
 		
 		shippersScrollPane = new JScrollPane();
 		panel.add(shippersScrollPane, "cell 3 3,grow");
 		
-		shippersTable = new JTable();
+		TableModel shippersDataModel = new CorrieriTableModel(myController);
+		shippersTable = new JTable(shippersDataModel);
 		shippersScrollPane.setViewportView(shippersTable);
 		
 		JButton backButton = new JButton("Indietro");
@@ -121,24 +132,25 @@ public class LogisticaPage extends JFrame {
 		LocalTime initTime = initialTimePicker.getTime();
 		LocalTime finalTime = finalTimePicker.getTime();
 		myController.applicaButtonPressedLogisticaPage(date, initTime, finalTime);
-		vehiclesTable.validate();
+		vehiclesTable.invalidate();
 		vehiclesTable.repaint();
-		/*if (date != null && initTime != null && finalTime != null)
-		{
-			
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(this,
-					"Si prega di validare data e orario di inizio e fine prima di applicare i filtri.",
-					"Campi non validi",
-					JOptionPane.WARNING_MESSAGE, null);
-		}*/
+	}
+	
+	private void vehiclesTableButtonClicked(MouseEvent e) {
+    	int selectedVehicleRow = vehiclesTable.getSelectedRow();
+    	if (selectedVehicleRow == -1) return;
+		LocalDate date = datePicker.getDate();
+		LocalTime initTime = initialTimePicker.getTime();
+		LocalTime finalTime = finalTimePicker.getTime();
+		String targa = (String) vehiclesTable.getValueAt(selectedVehicleRow, 1);
+		myController.retrieveCorrieriDisponibiliPerMezzoDiTrasporto(date, initTime, finalTime, targa);
+		shippersTable.invalidate();
+		shippersTable.repaint();
 	}
 	
 	class MezziDiTrasportoTableModel extends AbstractTableModel{
 		private static final long serialVersionUID = 1L;
-		private String columnNames[] = { "Tipo", "Capienza", "Corrieri disponibili"};
+		private String columnNames[] = { "Tipo", "Targa", "Capienza", "Corrieri disponibili"};
 		private Controller myController;
 		
 		MezziDiTrasportoTableModel(Controller controller)
@@ -175,10 +187,60 @@ public class LogisticaPage extends JFrame {
 	    	case 0:
 	    		return riga.getTipoMezzo();
 	    	case 1:
-	    		return riga.getCapienza();
+	    		return riga.getTarga();
 	    	case 2:
+	    		return riga.getCapienza();
+	    	case 3:
 	    		return myController.getNumberOfCorrieriDisponibili(datePicker.getDate(), initialTimePicker.getTime(),
 	    				finalTimePicker.getTime(), riga.getTarga());
+	    	default:
+	    		return "error";
+	    	}
+	    }
+	}
+	
+	class CorrieriTableModel extends AbstractTableModel{
+		private static final long serialVersionUID = 1L;
+		private String columnNames[] = { "Nome", "Cognome", "Patente"};
+		private Controller myController;
+		
+		CorrieriTableModel(Controller controller)
+		{
+			myController = controller;
+		}
+		
+		@Override
+		public String getColumnName(int index) {
+		    return columnNames[index];
+		}
+		
+		@Override
+	      public Class<?> getColumnClass(int col) {
+	        return String.class;
+	    }
+		
+	    @Override
+	      public boolean isCellEditable(int row, int col) {
+	        return false;
+	      }
+		
+	    @Override
+	    public int getColumnCount() { return columnNames.length; }
+	    
+	    @Override
+	    public int getRowCount() {return myController.getNumberOfCorrieriDisponibili();}
+	    
+	    @Override
+	    public Object getValueAt(int row, int col) {
+	    	Corriere riga = myController.getCorrieriDisponibili().get(row);
+	    	switch(col)
+	    	{
+	    	case 0:
+	    		return riga.getNome();
+	    	case 1:
+	    		return riga.getCognome();
+	    	case 2:
+	    		return riga.getTipoPatente();
 	    	default:
 	    		return "error";
 	    	}

@@ -29,6 +29,7 @@ public class Controller {
 	private List<OrdineConSelezione> ordersWithSelection;	
 	private List<OrdineConSelezione> filteredOrdersRows;
 	private List<MezzoDiTrasporto> mezziDiTrasportoDisponibiliConCorriere;
+	private List<Corriere> corrieriDisponibili;
 	
 	Controller() {
 		
@@ -272,6 +273,12 @@ public class Controller {
 		return mezziDiTrasportoDisponibiliConCorriere;
 	}
 	
+	public int getNumberOfCorrieriDisponibili()
+	{
+		if (corrieriDisponibili == null) return 0;
+		return corrieriDisponibili.size();
+	}
+	
 	public int getNumberOfCorrieriDisponibili(LocalDate data, LocalTime inizio, LocalTime fine, String targa)
 	{
 		return mezzoDiTrasportoDAO.getNumeroDiCorrieriDisponibili(data, inizio, fine, targa);
@@ -284,6 +291,15 @@ public class Controller {
 
 	public void applicaButtonPressedLogisticaPage(LocalDate data, LocalTime inizio, LocalTime fine) {
 		retrieveMezziDiTrasportoDisponibili(data,inizio,fine);
+	}
+	
+	public List<Corriere> getCorrieriDisponibili() {
+		return corrieriDisponibili;
+	}
+	
+	public void retrieveCorrieriDisponibiliPerMezzoDiTrasporto(LocalDate data, LocalTime inizio, LocalTime fine, String targa)
+	{
+		corrieriDisponibili = mezzoDiTrasportoDAO.getCorrieriDisponibili(data, inizio, fine, targa);
 	}
 
 }
