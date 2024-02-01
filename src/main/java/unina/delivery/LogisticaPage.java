@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 import javax.swing.JButton;
@@ -113,12 +114,18 @@ public class LogisticaPage extends JFrame {
 		
 		TableModel shippersDataModel = new CorrieriTableModel(myController);
 		shippersTable = new JTable(shippersDataModel);
+		shippersTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		shippersScrollPane.setViewportView(shippersTable);
 		
 		JButton backButton = new JButton("Indietro");
 		panel.add(backButton, "cell 1 5,alignx left,aligny top");
 		
 		JButton saveButton = new JButton("Salva");
+		saveButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				salvaClicked();
+			}
+		});
 		panel.add(saveButton, "cell 3 5,alignx right,aligny top");
 		
 		
@@ -150,6 +157,23 @@ public class LogisticaPage extends JFrame {
 		myController.retrieveCorrieriDisponibiliPerMezzoDiTrasporto(appliedDate, appliedInitialTime, appliedFinalTime, targa);
 		shippersTable.invalidate();
 		shippersTable.repaint();
+	}
+	
+	private void salvaClicked() {
+		int selectedVehicleRow = vehiclesTable.getSelectedRow();
+    	if (selectedVehicleRow == -1)
+    	{
+    		JOptionPane.showMessageDialog(this, "Selezionare un mezzo di trasporto", "Nessun mezzo selezionato", JOptionPane.WARNING_MESSAGE);
+    	}
+    	int selectedShipperRow = shippersTable.getSelectedRow();
+    	if (selectedShipperRow == -1)
+    	{
+    		JOptionPane.showMessageDialog(this, "Selezionare un corriere", "Nessun corriere selezionato", JOptionPane.WARNING_MESSAGE);
+    	}
+    	String targa = (String) vehiclesTable.getValueAt(selectedVehicleRow, 1);
+    	String codiceFiscale = (String) shippersTable.getValueAt(selectedShipperRow, 3);
+    	
+    	myController.creaSpedizione(targa, codiceFiscale);
 	}
 	
 	class MezziDiTrasportoTableModel extends AbstractTableModel{
@@ -204,7 +228,7 @@ public class LogisticaPage extends JFrame {
 	
 	class CorrieriTableModel extends AbstractTableModel{
 		private static final long serialVersionUID = 1L;
-		private String columnNames[] = { "Nome", "Cognome", "Patente"};
+		private String columnNames[] = { "Nome", "Cognome", "Patente", "Codice Fiscale"};
 		private Controller myController;
 		
 		CorrieriTableModel(Controller controller)
@@ -244,6 +268,8 @@ public class LogisticaPage extends JFrame {
 	    		return riga.getCognome();
 	    	case 2:
 	    		return riga.getTipoPatente();
+	    	case 3:
+	    		return riga.getCodiceFiscale();
 	    	default:
 	    		return "error";
 	    	}

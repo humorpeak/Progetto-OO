@@ -27,7 +27,6 @@ public class OrdineDAO {
 		try
 		{	
 			String query = "SELECT * FROM uninadelivery.get_ordini_da_spedire_by_sede(null, null, null, ?)";
-			//TODO funzione get peso!
 			PreparedStatement ps = controller.getMyConnection().prepareStatement(query);
 			ps.setInt(1, sede);
 			ResultSet rs = ps.executeQuery();
@@ -47,7 +46,8 @@ public class OrdineDAO {
 								rs.getTimestamp("orariofine").toLocalDateTime().toLocalTime(),
 								rs.getString("emailacquirente"),
 								getIndirizzo(rs.getString("cap"), rs.getString("città"), rs.getString("via"), rs.getString("civico"), rs.getString("edificio")),
-								peso);
+								peso,
+								rs.getInt("idordine"));
 				
 				System.out.println(ordine.toString());
 				listaordini.add(ordine);
@@ -173,5 +173,11 @@ public class OrdineDAO {
 	
 	OrdineDAO(Controller c){
 		controller = c;
+	}
+
+	public void shipOrder(Ordine ordine, int idSpedizione) throws SQLException {
+		Statement st = controller.getMyConnection().createStatement();
+		st.executeQuery("UPDATE uninadelivery.ORDINE AS O SET idspedizione = " + idSpedizione + " stato = 'Spedito'"
+				+ "WHERE O.idordine = " + ordine.getIdOrdine());
 	}
 }

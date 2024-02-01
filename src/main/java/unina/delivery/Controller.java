@@ -324,4 +324,21 @@ public class Controller {
 		corrieriDisponibili = mezzoDiTrasportoDAO.getCorrieriDisponibili(data, inizio, fine, targa);
 	}
 
+	public void creaSpedizione(String targa, String codiceFiscale) {
+		int idSpedizione = 999; // TODO
+		for (OrdineConSelezione o : ordersWithSelection) {
+			if (o.selected)
+			{
+				try {
+					ordinedao.shipOrder(o.ordine, idSpedizione);
+				}
+				catch (SQLException e)
+				{
+					System.out.println(e.getStackTrace());
+					JOptionPane.showMessageDialog(this.logisticaPage, "Errore durante la spedizione del prodotto codice " + o.ordine.getIdOrdine(), "Errore", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+	}
+
 }

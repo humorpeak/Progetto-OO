@@ -9,6 +9,7 @@ public class Ordine {
 	private String acquirente;
 	private String indirizzo;
 	private int peso;
+	private int idOrdine;
 	
 	public int getPeso() {
 		return peso;
@@ -34,13 +35,19 @@ public class Ordine {
 		return indirizzo;
 	}
 	
-	Ordine(LocalDate d, LocalTime oi, LocalTime of, String a, String i, int p) {
+	public int getIdOrdine()
+	{
+		return idOrdine;
+	}
+	
+	Ordine(LocalDate d, LocalTime oi, LocalTime of, String a, String i, int p, int id) {
 		data = d;
 		orarioinizio = oi;
 		orariofine = of;
 		acquirente = a;
 		indirizzo = i;
 		peso = p;
+		idOrdine = id;
 	}
 	
 	Ordine(String a, LocalDate d, String i) {
