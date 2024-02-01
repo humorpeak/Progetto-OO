@@ -43,10 +43,13 @@ public class ReportPage extends JFrame {
 	private JComboBox monthBox;
 	private JButton calculateButton;
 	private JPanel resultsPanel;
+	private JLabel averageNumberOfOrdersLabel;
 	private JLabel actualAverageNumberOfOrdersLabel;
 	private JTable maxtable;
 	private JTable mintable;
+	private JLabel maxProductsOrderLabel;
 	private JLabel maxNumberOfProductsLabel;
+	private JLabel minProductsOrderLabel;
 	private JLabel minNumberOfProductsLabel;
 	private JPanel maxtablePanel;
 	private JPanel mintablePanel;
@@ -195,13 +198,15 @@ public class ReportPage extends JFrame {
 		panel.add(resultsPanel, "cell 1 3 7 1,alignx center,aligny center");
 		resultsPanel.setLayout(new MigLayout("", "[grow][grow]", "[][][][grow][grow][][][grow]"));
 		
-		JLabel averageNumberOfOrdersLabel = new JLabel("Numero medio di ordini giornalieri:");
+		averageNumberOfOrdersLabel = new JLabel("Numero medio di ordini giornalieri:");
+		averageNumberOfOrdersLabel.setVisible(false);
 		resultsPanel.add(averageNumberOfOrdersLabel, "cell 0 0");
 		
 		actualAverageNumberOfOrdersLabel = new JLabel("");
 		resultsPanel.add(actualAverageNumberOfOrdersLabel, "cell 1 0,alignx right");
 		
-		JLabel maxProductsOrderLabel = new JLabel("Ordini con il maggior numero di prodotti");
+		maxProductsOrderLabel = new JLabel("Ordini con il maggior numero di prodotti");
+		maxProductsOrderLabel.setVisible(false);
 		resultsPanel.add(maxProductsOrderLabel, "cell 0 2");
 		
 		maxNumberOfProductsLabel = new JLabel("");
@@ -219,10 +224,11 @@ public class ReportPage extends JFrame {
 		maxtable.setRowSelectionAllowed(false);
 		
 		maxscrollPane = new JScrollPane(maxtable);
-		maxscrollPane.setPreferredSize(new Dimension(452, 100));
+		maxscrollPane.setPreferredSize(new Dimension(550, 100));
 		maxtablePanel.add(maxscrollPane);
 		
-		JLabel minProductsOrderLabel = new JLabel("Ordini con il minor numero di prodotti");
+		minProductsOrderLabel = new JLabel("Ordini con il minor numero di prodotti");
+		minProductsOrderLabel.setVisible(false);
 		resultsPanel.add(minProductsOrderLabel, "flowy,cell 0 6");
 		
 		minNumberOfProductsLabel = new JLabel("");
@@ -240,7 +246,7 @@ public class ReportPage extends JFrame {
 		mintable.setRowSelectionAllowed(false);
 		
 		minscrollPane = new JScrollPane(mintable);
-		minscrollPane.setPreferredSize(new Dimension(452, 100));
+		minscrollPane.setPreferredSize(new Dimension(550, 100));
 		mintablePanel.add(minscrollPane);
 		
 		calculateButton.addActionListener(new ActionListener() {
@@ -269,8 +275,14 @@ public class ReportPage extends JFrame {
 	}
 
 	protected void showResults(double averageNumberOfOrders) { //TODO aggiungere altri param !!!
-		actualAverageNumberOfOrdersLabel.setText("     " + averageNumberOfOrders);
-
+		
+		averageNumberOfOrdersLabel.setVisible(true);
+		actualAverageNumberOfOrdersLabel.setText("  " + averageNumberOfOrders);
+		maxProductsOrderLabel.setVisible(true);
+		
+		minProductsOrderLabel.setVisible(true);
+		
+		
 		maxtablePanel.setVisible(true);
 		maxtable.invalidate();
 		maxtable.repaint();

@@ -121,6 +121,41 @@ public class OrdineDAO {
 		return listaordini;
 	}
 	
+	protected ArrayList<Ordine> getOrdiniWithMinNumOfProducts (int year, int month) {
+		
+		ArrayList<Ordine> listaordini = new ArrayList<Ordine>();
+		String acquirente;
+		LocalDate data;
+		String indirizzo;
+
+		Date date = Date.valueOf(LocalDate.of(year,  month, 2));
+		
+		try
+		{	
+			String query = "SELECT * FROM uninadelivery.get_ordini_min_numero_prodotti_in_mese_per_sede(?, ?)";
+			PreparedStatement ps = controller.getMyConnection().prepareStatement(query);
+			ps.setDate(1, date);
+			ps.setInt(2, controller.getOperatore().getSede());
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next())
+			{
+				Ordine ordine = new Ordine (
+								rs.getString("emailacquirente"),
+								rs.getDate("data").toLocalDate(),
+								getIndirizzo(rs.getString("cap"), rs.getString("città"), rs.getString("via"), rs.getString("civico"), rs.getString("edificio")));
+				
+				System.out.println(ordine.toString());
+				listaordini.add(ordine);
+			}
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, e, "Errore", JOptionPane.ERROR_MESSAGE);
+		}
+		return listaordini;
+	}
+	
 	
 	private String getIndirizzo(String cap, String città, String via, String civico, String edificio) {
 		

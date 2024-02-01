@@ -76,7 +76,7 @@ public class Controller {
 		ordinedao = new OrdineDAO(this);		
 		double averagenum = ordinedao.getAverageNumberOfOrders(year, month);
 		listaordinimax = ordinedao.getOrdiniWithMaxNumOfProducts(year, month);
-		//listaordinimin = ordinedao.getOrdiniWithMinNumOfProducts(year, month);
+		listaordinimin = ordinedao.getOrdiniWithMinNumOfProducts(year, month);
 		
 		reportPage.showResults(averagenum);
 		//TODO il resto
