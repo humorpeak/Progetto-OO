@@ -291,6 +291,7 @@ public class Controller {
 
 	public void applicaButtonPressedLogisticaPage(LocalDate data, LocalTime inizio, LocalTime fine) {
 		retrieveMezziDiTrasportoDisponibili(data,inizio,fine);
+		corrieriDisponibili = null;
 	}
 	
 	public List<Corriere> getCorrieriDisponibili() {

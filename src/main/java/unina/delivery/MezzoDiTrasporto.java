@@ -5,6 +5,7 @@ public class MezzoDiTrasporto {
 	private String tipoMezzo;
 	private String patenteRichiesta;
 	private float capienza;
+	private int numeroCorrieriDisponibili;
 	
 	MezzoDiTrasporto(String targa, String tipoMezzo, String patenteRichiesta, float capienza)
 	{
@@ -12,6 +13,7 @@ public class MezzoDiTrasporto {
 		this.tipoMezzo = tipoMezzo;
 		this.patenteRichiesta = patenteRichiesta;
 		this.capienza = capienza;
+		this.setNumeroCorrieriDisponibili(0);
 	}
 	
 	public String getTipoMezzo() {
@@ -25,5 +27,13 @@ public class MezzoDiTrasporto {
 	}
 	public float getCapienza() {
 		return capienza;
+	}
+
+	public int getNumeroCorrieriDisponibili() {
+		return numeroCorrieriDisponibili;
+	}
+
+	public void setNumeroCorrieriDisponibili(int numeroCorrieriDisponibili) {
+		this.numeroCorrieriDisponibili = numeroCorrieriDisponibili;
 	}
 }

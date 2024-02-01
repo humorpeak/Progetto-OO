@@ -40,6 +40,9 @@ public class LogisticaPage extends JFrame {
 	private JButton applyButton;
 	private JScrollPane vehiclesScrollPane;
 	private JScrollPane shippersScrollPane;
+	private LocalDate appliedDate;
+	private LocalTime appliedInitialTime;
+	private LocalTime appliedFinalTime;
 	
 	public LogisticaPage(Controller controller) {
 		myController = controller;
@@ -131,6 +134,10 @@ public class LogisticaPage extends JFrame {
 		LocalDate date = datePicker.getDate();
 		LocalTime initTime = initialTimePicker.getTime();
 		LocalTime finalTime = finalTimePicker.getTime();
+		appliedDate = date;
+		appliedInitialTime = initTime;
+		appliedFinalTime = finalTime;
+		vehiclesTable.clearSelection();
 		myController.applicaButtonPressedLogisticaPage(date, initTime, finalTime);
 		vehiclesTable.invalidate();
 		vehiclesTable.repaint();
@@ -139,11 +146,8 @@ public class LogisticaPage extends JFrame {
 	private void vehiclesTableButtonClicked(MouseEvent e) {
     	int selectedVehicleRow = vehiclesTable.getSelectedRow();
     	if (selectedVehicleRow == -1) return;
-		LocalDate date = datePicker.getDate();
-		LocalTime initTime = initialTimePicker.getTime();
-		LocalTime finalTime = finalTimePicker.getTime();
 		String targa = (String) vehiclesTable.getValueAt(selectedVehicleRow, 1);
-		myController.retrieveCorrieriDisponibiliPerMezzoDiTrasporto(date, initTime, finalTime, targa);
+		myController.retrieveCorrieriDisponibiliPerMezzoDiTrasporto(appliedDate, appliedInitialTime, appliedFinalTime, targa);
 		shippersTable.invalidate();
 		shippersTable.repaint();
 	}
@@ -191,8 +195,7 @@ public class LogisticaPage extends JFrame {
 	    	case 2:
 	    		return riga.getCapienza();
 	    	case 3:
-	    		return myController.getNumberOfCorrieriDisponibili(datePicker.getDate(), initialTimePicker.getTime(),
-	    				finalTimePicker.getTime(), riga.getTarga());
+	    		return riga.getNumeroCorrieriDisponibili();
 	    	default:
 	    		return "error";
 	    	}

@@ -48,6 +48,7 @@ public class MezzoDiTrasportoDAO {
 				String patenteRichiesta = rs.getString("patenteRichiesta");
 				float capienza = rs.getFloat("capienza");
 				MezzoDiTrasporto mezzo = new MezzoDiTrasporto(targa, tipoMezzo, patenteRichiesta, capienza);
+				mezzo.setNumeroCorrieriDisponibili(myController.getNumberOfCorrieriDisponibili(date, inizio, fine, targa));
 				result.add(mezzo);
 				System.out.println(mezzo);
 			}
