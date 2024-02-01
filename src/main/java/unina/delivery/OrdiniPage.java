@@ -19,15 +19,12 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-
 import java.awt.Cursor;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.*;
-import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -51,7 +48,7 @@ public class OrdiniPage extends JFrame {
 		myController.setFilteredOrdersRows(new ArrayList<OrdineConSelezione>());
 		
 		getContentPane().setBackground(new Color(0, 0, 0));
-		setBounds(500, 230, 0, 0);
+		setBounds(250, 220, 0, 0);
 		setMinimumSize(new Dimension(1200,550));
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		

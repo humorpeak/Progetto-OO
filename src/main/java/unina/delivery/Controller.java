@@ -1,7 +1,8 @@
 package unina.delivery;
 
-import java.awt.Dimension;
 import java.sql.*;
+import java.time.*;
+
 import javax.swing.*;
 import java.util.*;
 
@@ -21,11 +22,13 @@ public class Controller {
 	private Operatore operatore;
 	private OperatoreDAO operatoredao;
 	private OrdineDAO ordinedao;
+	private MezzoDiTrasportoDAO mezzoDiTrasportoDAO;
 	private ArrayList<Ordine> listaordini;
 	private ArrayList<Ordine> listaordinimax;
 	private ArrayList<Ordine> listaordinimin;
 	private List<OrdineConSelezione> ordersWithSelection;	
 	private List<OrdineConSelezione> filteredOrdersRows;
+	private List<MezzoDiTrasporto> mezziDiTrasportoDisponibiliConCorriere;
 	
 	Controller() {
 		
@@ -38,6 +41,7 @@ public class Controller {
 		}
 		else
 		{
+			mezzoDiTrasportoDAO = new MezzoDiTrasportoDAO(this);
 			loginPage = new LoginPage(this);
 			homePage = new HomePage(this);
 			ordiniPage = new OrdiniPage(this);
@@ -210,6 +214,7 @@ public class Controller {
 		ordiniPage.setVisible(false);
 		//TODO warnings etc
 		logisticaPage.setVisible(true);
+		retrieveMezziDiTrasportoDisponibili(null, null, null);
 	}
 	
 	
@@ -256,6 +261,29 @@ public class Controller {
 	 */
 	protected void setMyConnection(Connection myConnection) {
 		this.myConnection = myConnection;
+	}
+
+	public int countMezziDiTrasportoWithCorrieri() {
+		if (mezziDiTrasportoDisponibiliConCorriere == null) return 0;
+		return mezziDiTrasportoDisponibiliConCorriere.size();
+	}
+
+	public List<MezzoDiTrasporto> getMezziDiTrasportoDisponibiliConCorriere() {
+		return mezziDiTrasportoDisponibiliConCorriere;
+	}
+	
+	public int getNumberOfCorrieriDisponibili(LocalDate data, LocalTime inizio, LocalTime fine, String targa)
+	{
+		return mezzoDiTrasportoDAO.getNumeroDiCorrieriDisponibili(data, inizio, fine, targa);
+	}
+	
+	public void retrieveMezziDiTrasportoDisponibili(LocalDate data, LocalTime inizio, LocalTime fine)
+	{
+		mezziDiTrasportoDisponibiliConCorriere = mezzoDiTrasportoDAO.getMezziDiTrasportoDisponibili(data, inizio, fine, 2); // TODO operatore.getSede();
+	}
+
+	public void applicaButtonPressedLogisticaPage(LocalDate data, LocalTime inizio, LocalTime fine) {
+		retrieveMezziDiTrasportoDisponibili(data,inizio,fine);
 	}
 
 }

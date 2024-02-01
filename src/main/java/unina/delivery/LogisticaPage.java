@@ -14,12 +14,14 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 
-import com.github.lgooddatepicker.components.DatePicker;
-import com.github.lgooddatepicker.components.TimePicker;
-
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.awt.event.ActionEvent;
 
 public class LogisticaPage extends JFrame {
 	
@@ -61,6 +63,11 @@ public class LogisticaPage extends JFrame {
 		filtersPanel.add(datePicker, "cell 1 0 2 1,alignx left,aligny center");
 		
 		applyButton = new JButton("Applica");
+		applyButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				applicaButtonPressed();
+			}
+		});
 		filtersPanel.add(applyButton, "cell 7 0 1 2,alignx right,aligny center");
 		
 		initialTimePickerLabel = new JLabel("Orario di partenza:");
@@ -84,7 +91,8 @@ public class LogisticaPage extends JFrame {
 		vehiclesScrollPane = new JScrollPane();
 		panel.add(vehiclesScrollPane, "cell 1 3,grow");
 		
-		vehiclesTable = new JTable();
+		TableModel vehiclesDataModel = new MezziDiTrasportoTableModel(myController);
+		vehiclesTable = new JTable(vehiclesDataModel);
 		vehiclesScrollPane.setViewportView(vehiclesTable);
 		
 		shippersScrollPane = new JScrollPane();
@@ -104,6 +112,76 @@ public class LogisticaPage extends JFrame {
 		setSize(new Dimension(640, 480));
 		setLocationRelativeTo(null);				
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setMinimumSize(new Dimension(640, 480));		
+		setMinimumSize(new Dimension(640, 480));
+	}
+	
+
+	private void applicaButtonPressed() {
+		LocalDate date = datePicker.getDate();
+		LocalTime initTime = initialTimePicker.getTime();
+		LocalTime finalTime = finalTimePicker.getTime();
+		myController.applicaButtonPressedLogisticaPage(date, initTime, finalTime);
+		vehiclesTable.validate();
+		vehiclesTable.repaint();
+		/*if (date != null && initTime != null && finalTime != null)
+		{
+			
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(this,
+					"Si prega di validare data e orario di inizio e fine prima di applicare i filtri.",
+					"Campi non validi",
+					JOptionPane.WARNING_MESSAGE, null);
+		}*/
+	}
+	
+	class MezziDiTrasportoTableModel extends AbstractTableModel{
+		private static final long serialVersionUID = 1L;
+		private String columnNames[] = { "Tipo", "Capienza", "Corrieri disponibili"};
+		private Controller myController;
+		
+		MezziDiTrasportoTableModel(Controller controller)
+		{
+			myController = controller;
+		}
+		
+		@Override
+		public String getColumnName(int index) {
+		    return columnNames[index];
+		}
+		
+		@Override
+	      public Class<?> getColumnClass(int col) {
+	        return String.class;
+	    }
+		
+	    @Override
+	      public boolean isCellEditable(int row, int col) {
+	        return false;
+	      }
+		
+	    @Override
+	    public int getColumnCount() { return columnNames.length; }
+	    
+	    @Override
+	    public int getRowCount() {return myController.countMezziDiTrasportoWithCorrieri();}
+	    
+	    @Override
+	    public Object getValueAt(int row, int col) { 
+	    	MezzoDiTrasporto riga = myController.getMezziDiTrasportoDisponibiliConCorriere().get(row);
+	    	switch(col)
+	    	{
+	    	case 0:
+	    		return riga.getTipoMezzo();
+	    	case 1:
+	    		return riga.getCapienza();
+	    	case 2:
+	    		return myController.getNumberOfCorrieriDisponibili(datePicker.getDate(), initialTimePicker.getTime(),
+	    				finalTimePicker.getTime(), riga.getTarga());
+	    	default:
+	    		return "error";
+	    	}
+	    }
 	}
 }
