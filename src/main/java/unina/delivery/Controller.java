@@ -213,9 +213,30 @@ public class Controller {
 	
 	public void confirmButtonPressed() {
 		ordiniPage.setVisible(false);
-		//TODO warnings etc
-		logisticaPage.setVisible(true);
-		retrieveMezziDiTrasportoDisponibili(null, null, null);
+		//TODO other warnings etc
+		if (noOrdersSelected())
+		{
+			JOptionPane.showMessageDialog(this.ordiniPage, "Non puoi creare una spedizione vuota", "Nessun ordine selezionato", JOptionPane.WARNING_MESSAGE);
+		}
+		else
+		{
+			logisticaPage.setVisible(true);
+			retrieveMezziDiTrasportoDisponibili(null, null, null);
+		}
+	}
+	
+	private boolean noOrdersSelected()
+	{
+		Iterator<OrdineConSelezione> iter = ordersWithSelection.iterator();
+		boolean noOrdersSelected = true;
+		while (iter.hasNext())
+		{
+			if(iter.next().selected)
+			{
+				noOrdersSelected = false;
+			}
+		}
+		return noOrdersSelected;
 	}
 	
 	

@@ -134,7 +134,7 @@ public class OrdiniPage extends JFrame {
 		confirmButton = new JButton("Conferma");
 		confirmButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				myController.confirmButtonPressed();
+				confermaClicked();
 			}
 		});
 		filtersPanel.add(confirmButton);
@@ -146,6 +146,11 @@ public class OrdiniPage extends JFrame {
         });
 	}
 
+	private void confermaClicked()
+	{
+		myController.confirmButtonPressed();
+	}
+	
 	private boolean doesOrderSatisfyFilters(Ordine o) {
 		String username = usernameField.getText();
 		boolean sameEmail = username.isEmpty() || o.getAcquirente().equals(username);
