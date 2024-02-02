@@ -166,7 +166,7 @@ public class LogisticaPage extends JFrame {
     	if (selectedVehicleRow == -1) return;
 		String targa = (String) vehiclesTable.getValueAt(selectedVehicleRow, 1);
 		shippersTable.clearSelection();
-		myController.retrieveCorrieriDisponibiliPerMezzoDiTrasporto(appliedDate, appliedInitialTime, appliedFinalTime, targa);
+		myController.retrieveAvailableShippersForVehicle(appliedDate, appliedInitialTime, appliedFinalTime, targa);
 		shippersTable.revalidate();
 	}
 	
@@ -198,7 +198,7 @@ public class LogisticaPage extends JFrame {
 		        	String targa = (String) vehiclesTable.getValueAt(selectedVehicleRow, 1);
 		        	String codiceFiscale = (String) shippersTable.getValueAt(selectedShipperRow, 3);
 		        	
-		        	myController.creaSpedizione(appliedDate, appliedInitialTime, appliedFinalTime, targa, codiceFiscale);
+		        	myController.createShipment(appliedDate, appliedInitialTime, appliedFinalTime, targa, codiceFiscale);
 		    	}
 	    	}
     	}
@@ -233,11 +233,11 @@ public class LogisticaPage extends JFrame {
 	    public int getColumnCount() { return columnNames.length; }
 	    
 	    @Override
-	    public int getRowCount() {return myController.countMezziDiTrasportoWithCorrieri();}
+	    public int getRowCount() {return myController.getNumberOfAvailableVehiclesWithShipper();}
 	    
 	    @Override
 	    public Object getValueAt(int row, int col) { 
-	    	MezzoDiTrasporto riga = myController.getMezziDiTrasportoDisponibiliConCorriere().get(row);
+	    	MezzoDiTrasporto riga = myController.getAvailableVehiclesWithShipper().get(row);
 	    	switch(col)
 	    	{
 	    	case 0:
@@ -283,7 +283,7 @@ public class LogisticaPage extends JFrame {
 	    public int getColumnCount() { return columnNames.length; }
 	    
 	    @Override
-	    public int getRowCount() {return myController.getNumberOfCorrieriDisponibili();}
+	    public int getRowCount() {return myController.getNumberOfAvailableShippers();}
 	    
 	    @Override
 	    public Object getValueAt(int row, int col) {

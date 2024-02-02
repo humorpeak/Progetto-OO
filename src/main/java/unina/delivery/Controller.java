@@ -12,23 +12,23 @@ public class Controller {
 		new Controller();
 	}
 
+	private Connection myConnection;
 	private LoginPage loginPage;
 	private HomePage homePage;
 	private OrdiniPage ordiniPage;
 	private ReportPage reportPage;
 	private LogisticaPage logisticaPage;;
-	private Connection myConnection;
 	private Operatore operatore;
 	private OperatoreDAO operatoredao;
 	private OrdineDAO ordinedao;
 	private MezzoDiTrasportoDAO mezzoDiTrasportoDAO;
-	private ArrayList<Ordine> listaordini;
-	private ArrayList<Ordine> listaordinimax;
-	private ArrayList<Ordine> listaordinimin;
+	private ArrayList<Ordine> ordersList;
+	private ArrayList<Ordine> ordersWithMaxNumberOfProducts;
+	private ArrayList<Ordine> ordersWithMinNumberOfProducts;
 	private List<OrdineConSelezione> ordersWithSelection;	
 	private List<OrdineConSelezione> filteredOrdersRows;
-	private List<MezzoDiTrasporto> mezziDiTrasportoDisponibiliConCorriere;
-	private List<Corriere> corrieriDisponibili;
+	private List<MezzoDiTrasporto> availableVehiclesWithShipper;
+	private List<Corriere> availableShippers;
 	
 	Controller() {
 		try {
@@ -36,7 +36,8 @@ public class Controller {
 			uidesign.setup();
 		}
 		catch (Exception e){
-			System.out.println("errore, default design");
+			JOptionPane.showMessageDialog(null, "Non è possibile applicare le proprietà grafiche.", "Setup UI fallito", JOptionPane.ERROR_MESSAGE);
+			System.err.println("Errore, default design");
 		}
 		
 		if (!attemptConnection())
@@ -49,7 +50,6 @@ public class Controller {
 			loginPage = new LoginPage(this);
 			homePage = new HomePage(this);
 			ordiniPage = new OrdiniPage(this);
-			//reportPage = new ReportPage(this);
 			logisticaPage = new LogisticaPage(this);
 			
 			loginPage.setVisible(true);
@@ -68,23 +68,28 @@ public class Controller {
 		}
 		catch(ClassNotFoundException e)
 		{
-			System.out.println("Driver non trovato");
-			System.out.println(e);
+			System.err.println("Driver non trovato");
+			e.printStackTrace();
 		}
 		catch(SQLException e)
 		{
-			System.out.println("Connessione fallita");
-			System.out.println(e);
+			System.err.println("Connessione fallita");
+			e.printStackTrace();
 		}
 		return false;
 	}
 
+	
+	/**
+	 * updates reportPage after calculating the correct results for given year and month
+	 * @param year
+	 * @param month
+	 */
 	protected void calculateButtonPressed(int year, int month) {
-		
-		ordinedao = new OrdineDAO(this);		
+		ordinedao = new OrdineDAO(this);
 		double averagenum = ordinedao.getAverageNumberOfOrders(year, month);
-		listaordinimax = ordinedao.getOrdiniWithMaxNumOfProducts(year, month);
-		listaordinimin = ordinedao.getOrdiniWithMinNumOfProducts(year, month);
+		ordersWithMaxNumberOfProducts = ordinedao.getOrdiniWithMaxNumOfProducts(year, month);
+		ordersWithMinNumberOfProducts = ordinedao.getOrdiniWithMinNumOfProducts(year, month);
 		
 		reportPage.showResults(averagenum);
 	}
@@ -97,14 +102,20 @@ public class Controller {
 		else return filteredOrdersRows.size();
 	}
 
+	/**
+	 * @return the number of orders that have the maximum amount of product
+	 */
 	protected int countOrdersWithMaxNumOfProducts() {
-		if (listaordinimax == null) return 0;
-		else return listaordinimax.size();
+		if (ordersWithMaxNumberOfProducts == null) return 0;
+		else return ordersWithMaxNumberOfProducts.size();
 	}
 	
+	/**
+	 * @return the number of orders that have the minimum amount of product
+	 */
 	protected int countOrdersWithMinNumOfProducts() {
-		if (listaordinimin == null) return 0;
-		else return listaordinimin.size();
+		if (ordersWithMinNumberOfProducts == null) return 0;
+		else return ordersWithMinNumberOfProducts.size();
 	}
 	
 	/**
@@ -113,14 +124,21 @@ public class Controller {
 	 * kills program
 	 */
 	protected void exit() {
-		// prova a chiudere la connessione, se la connessione non era stata aperta cattura un'eccezione
+		// tries to close connection that might not be open
 		try {
 			myConnection.close();
 		} catch (SQLException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		System.exit(0);
 	}
+	
+	
+	/**
+	 * Called when Login button is pressed in LoginPage
+	 * @param email
+	 * @param password
+	 */
 	protected void loginButtonPressed(String email, String password) {
 
 		if (!email.contains("@")) {
@@ -130,12 +148,10 @@ public class Controller {
 		
 		if (operatoredao.isOperatoreValid(email, password))
 		{
-			System.out.println("valido");
 			loginPage.setVisible(false);
 			int sede = operatoredao.getSede(email, password);
 			String codiceFiscale = operatoredao.getCodiceFiscale(email, password);
 			operatore = new Operatore(email, password, sede, codiceFiscale);
-			System.out.println(operatore.getEmail() + operatore.getPassword() + operatore.getSede());
 			homePage.setVisible(true);
 		}
 		else
@@ -169,7 +185,6 @@ public class Controller {
 	}
 	
 	/**
-	 * aggiorna la lista degli ordini
 	 * @param listaordini
 	 */
 	public void setOrderList(ArrayList<Ordine> listaordini) {
@@ -189,21 +204,25 @@ public class Controller {
 	protected void shipmentButtonPressed()
 	{
 		ordinedao = new OrdineDAO(this);
-		listaordini = ordinedao.getOrdiniDaSpedireUnfiltered(operatore.getSede());
+		ordersList = ordinedao.getOrdiniDaSpedireUnfiltered(operatore.getSede());
 
-		if (listaordini.isEmpty())
+		if (ordersList.isEmpty())
 		{
 			homePage.showInformation("Non sono presenti nuovi ordini da spedire.", "Nessun nuovo ordine");
 		}
 		else
 		{
 			homePage.setVisible(false);
-			setOrderList(listaordini);
+			setOrderList(ordersList);
 			ordiniPage.setVisible(true);
 		}
 	}
 	
 	
+	/**
+	 * toggled an order from filteredOrdersRows in OrdiniPage
+	 * @param row
+	 */
 	protected void toggleOrder(int row)
 	{
 		filteredOrdersRows.get(row).toggle();
@@ -216,8 +235,8 @@ public class Controller {
 	
 	protected void backButtonPressedFromLogisticaToOrdiniPage()
 	{
-		corrieriDisponibili = new ArrayList<>();
-		mezziDiTrasportoDisponibiliConCorriere = new ArrayList<>();
+		availableShippers = new ArrayList<>();
+		availableVehiclesWithShipper = new ArrayList<>();
 		logisticaPage.setVisible(false);
 		ordiniPage.setVisible(true);
 	}
@@ -231,9 +250,12 @@ public class Controller {
 	protected void openLogisticaPage() {
 		ordiniPage.setVisible(false);
 		logisticaPage.setVisible(true);
-		retrieveMezziDiTrasportoDisponibili(null, null, null);
+		retrieveAvailableVehicles(null, null, null);
 	}
 	
+	/**
+	 * @return true if none of the confirmed orders that are shown in the OrdiniPage is selected, false otherwise.
+	 */
 	protected boolean noOrdersSelected()
 	{
 		Iterator<OrdineConSelezione> iter = ordersWithSelection.iterator();
@@ -257,104 +279,103 @@ public class Controller {
 	}
 	
 	protected List<Ordine> getOrdiniWithMaxNumOfProductsRows() {
-		return listaordinimax;
+		return ordersWithMaxNumberOfProducts;
 	}
 	
 	protected List<Ordine> getOrdiniWithMinNumOfProductsRows() {
-		return listaordinimin;
+		return ordersWithMinNumberOfProducts;
 	}
 	
-	
-	/**
-	 * @return the operatore
-	 */
 	protected Operatore getOperatore() {
 		return operatore;
 	}
 
-	/**
-	 * @param operatore the operatore to set
-	 */
 	protected void setOperatore(Operatore operatore) {
 		this.operatore = operatore;
 	}
 	
-	/**
-	 * @return the myConnection
-	 */
 	protected Connection getMyConnection() {
 		return myConnection;
 	}
 
-	/**
-	 * @param myConnection the myConnection to set
-	 */
 	protected void setMyConnection(Connection myConnection) {
 		this.myConnection = myConnection;
 	}
 
-	public int countMezziDiTrasportoWithCorrieri() {
-		if (mezziDiTrasportoDisponibiliConCorriere == null) return 0;
-		return mezziDiTrasportoDisponibiliConCorriere.size();
+	/**
+	 * @return the number of available vehicles that have at least one shipper
+	 */
+	public int getNumberOfAvailableVehiclesWithShipper() {
+		if (availableVehiclesWithShipper == null) return 0;
+		return availableVehiclesWithShipper.size();
 	}
 
-	public List<MezzoDiTrasporto> getMezziDiTrasportoDisponibiliConCorriere() {
-		return mezziDiTrasportoDisponibiliConCorriere;
+	public List<MezzoDiTrasporto> getAvailableVehiclesWithShipper() {
+		return availableVehiclesWithShipper;
 	}
 	
-	public int getNumberOfCorrieriDisponibili()
+	/**
+	 * @return the number of available shippers for the filters applied in OrdiniPage
+	 */
+	public int getNumberOfAvailableShippers()
 	{
-		if (corrieriDisponibili == null) return 0;
-		return corrieriDisponibili.size();
+		if (availableShippers == null) return 0;
+		return availableShippers.size();
 	}
 	
-	public int getNumberOfCorrieriDisponibili(LocalDate data, LocalTime inizio, LocalTime fine, String targa)
+	/**
+	 * @return the number of available shippers for the given filters
+	 */
+	public int getNumberOfAvailableShippers(LocalDate date, LocalTime beginning, LocalTime end, String targa)
 	{
-		return mezzoDiTrasportoDAO.getNumeroDiCorrieriDisponibili(data, inizio, fine, targa);
+		return mezzoDiTrasportoDAO.getNumeroDiCorrieriDisponibili(date, beginning, end, targa);
 	}
 	
-	public void retrieveMezziDiTrasportoDisponibili(LocalDate data, LocalTime inizio, LocalTime fine)
+	/**
+	 * updates controller's field "availableVehiclesWithShipper"
+	 */
+	public void retrieveAvailableVehicles(LocalDate date, LocalTime beginning, LocalTime end)
 	{
-		mezziDiTrasportoDisponibiliConCorriere = mezzoDiTrasportoDAO.getMezziDiTrasportoDisponibili(data, inizio, fine, operatore.getSede());
+		availableVehiclesWithShipper = mezzoDiTrasportoDAO.getMezziDiTrasportoDisponibili(date, beginning, end, operatore.getSede());
 	}
 
-	public void applicaButtonPressedLogisticaPage(LocalDate data, LocalTime inizio, LocalTime fine) {
-		retrieveMezziDiTrasportoDisponibili(data,inizio,fine);
-		corrieriDisponibili = new ArrayList<Corriere>();
+	public void applicaButtonPressedLogisticaPage(LocalDate date, LocalTime beginning, LocalTime end) {
+		retrieveAvailableVehicles(date,beginning,end);
+		availableShippers = new ArrayList<Corriere>();
 	}
 	
 	public List<Corriere> getCorrieriDisponibili() {
-		return corrieriDisponibili;
+		return availableShippers;
 	}
 	
-	public void retrieveCorrieriDisponibiliPerMezzoDiTrasporto(LocalDate data, LocalTime inizio, LocalTime fine, String targa)
+	public void retrieveAvailableShippersForVehicle(LocalDate date, LocalTime beginning, LocalTime end, String targa)
 	{
-		corrieriDisponibili = mezzoDiTrasportoDAO.getCorrieriDisponibili(data, inizio, fine, targa);
+		availableShippers = mezzoDiTrasportoDAO.getCorrieriDisponibili(date, beginning, end, targa);
 	}
 
-	public void creaSpedizione(LocalDate appliedDate, LocalTime appliedInitialTime, LocalTime appliedFinalTime, String targa, String codiceFiscale) {
+	public void createShipment(LocalDate appliedDate, LocalTime appliedInitialTime, LocalTime appliedFinalTime, String targa, String codiceFiscale) {
 		SpedizioneDAO spedizioneDAO = new SpedizioneDAO(this);
-		Timestamp partenza = Timestamp.valueOf(LocalDateTime.of(appliedDate, appliedInitialTime));
-		Timestamp arrivoStimato = Timestamp.valueOf(LocalDateTime.of(appliedDate, appliedFinalTime));
+		Timestamp departure = Timestamp.valueOf(LocalDateTime.of(appliedDate, appliedInitialTime));
+		Timestamp estimatedArrival = Timestamp.valueOf(LocalDateTime.of(appliedDate, appliedFinalTime));
 		
 		long idSpedizione = -1;
 		try {
-			Spedizione s = new Spedizione (partenza, arrivoStimato, targa, codiceFiscale, this.operatore.getCodiceFiscale());
+			Spedizione s = new Spedizione (departure, estimatedArrival, targa, codiceFiscale, this.operatore.getCodiceFiscale());
 			idSpedizione = spedizioneDAO.create(s);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.err.println("forse hai dimenticato di eseguire questa riga di codice dopo aver effettuato il backup: "
+			System.err.println("Errore: Forse hai dimenticato di eseguire questa riga di codice dopo aver effettuato il backup: "
 					+ "SELECT setval('uninadelivery.spedizione_idspedizione_seq',(SELECT max(idspedizione) "
 					+ "FROM uninadelivery.SPEDIZIONE));");
 			JOptionPane.showMessageDialog(this.logisticaPage, "Errore durante la creazione della spedizione. "
-					+ "Forse hai dimenticato di aggiornare il Database?", "Errore", JOptionPane.ERROR_MESSAGE);
+					+ "Forse hai dimenticato di aggiornare il Database dopo aver ripristinato un backup?", "Errore", JOptionPane.ERROR_MESSAGE);
 		}
 		if (idSpedizione == -1) return;
 		
 		setSelectedOrdersStateToShipped(idSpedizione);
 		
-		corrieriDisponibili = new ArrayList<>();
-		mezziDiTrasportoDisponibiliConCorriere = new ArrayList<>();
+		availableShippers = new ArrayList<>();
+		availableVehiclesWithShipper = new ArrayList<>();
 		this.ordiniPage.resetFilters();
 	}
 
@@ -374,6 +395,9 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * @return the sum of the weights of the selected orders in OrdiniPage
+	 */
 	protected float calculateWeightForSelectedOrders()
 	{
 		float tot = 0;
@@ -381,11 +405,6 @@ public class Controller {
 			if (o.selected) tot += o.ordine.getPeso();
 		}
 		return tot;
-	}
-
-	public int getNumberOfMezziDiTrasportoDisponibili() {
-		if (mezziDiTrasportoDisponibiliConCorriere == null) return 0;
-		return getMezziDiTrasportoDisponibiliConCorriere().size();
 	}
 
 	public LocalDate getSelectedOrdersDate() {

@@ -290,10 +290,10 @@ public class OrdiniPage extends JFrame {
 		else
 		{
 			if (ordersDate != null) {
-				myController.retrieveMezziDiTrasportoDisponibili(ordersDate,
+				myController.retrieveAvailableVehicles(ordersDate,
 						myController.getSuggestedDepartureTimeForSelectedOrders(),
 						myController.getSuggestedArrivalTimeForSelectedOrders());
-				mezziDisponibili = ((Integer) myController.getNumberOfMezziDiTrasportoDisponibili()).toString();
+				mezziDisponibili = ((Integer) myController.getNumberOfAvailableVehiclesWithShipper()).toString();
 			}
 		}
 		actualWeightLabel.setText(" " + myController.calculateWeightForSelectedOrders());
