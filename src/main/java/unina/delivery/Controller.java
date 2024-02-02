@@ -229,6 +229,9 @@ public class Controller {
 	protected void backButtonPressedFromOrdiniToHomePage() {
 		ordiniPage.setVisible(false);
 		homePage.setVisible(true);
+		availableShippers = new ArrayList<>();
+		availableVehiclesWithShipper = new ArrayList<>();
+		this.logisticaPage.resetFilters();
 	}
 	
 	protected void backButtonPressedFromLogisticaToOrdiniPage()

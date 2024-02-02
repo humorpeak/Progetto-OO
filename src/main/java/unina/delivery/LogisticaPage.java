@@ -312,11 +312,12 @@ public class LogisticaPage extends JFrame {
 	    }
 	}
 
-	public void resetFilters() {
+	protected void resetFilters() {
 		appliedDate = null;
 		appliedFinalTime = null;
 		appliedInitialTime = null;
 		datePicker.setDate(null);
 		initialTimePicker.setTime(null);
+		finalTimePicker.setTime(null);
 	}
 }
