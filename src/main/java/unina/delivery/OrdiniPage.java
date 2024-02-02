@@ -118,6 +118,11 @@ public class OrdiniPage extends JFrame {
 		filtersPanel.add(applyButton, "cell 9 0");
 		
 		resetButton = new JButton("Reset");
+		resetButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				resetFilters();
+			}
+		});
 		resetButton.setToolTipText("Clicca qui per resettare i tuoi filtri.");
 		filtersPanel.add(resetButton, "cell 10 0");
 		
@@ -255,6 +260,14 @@ public class OrdiniPage extends JFrame {
 		}
 		myController.setFilteredOrdersRows(filteredOrdersRows);
 		repaint();
+	}
+	
+	protected void resetFilters() {
+		datePicker.clear();
+		initialTimePicker.clear();
+		finalTimePicker.clear();
+		usernameField.setText("");
+		applyFilters();
 	}
 	
 	private void toggleClickedOrder(MouseEvent evt) {

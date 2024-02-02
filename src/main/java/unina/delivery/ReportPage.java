@@ -304,14 +304,11 @@ public class ReportPage extends JFrame {
         });
 	}
 
-	protected void showResults(double averageNumberOfOrders) { //TODO aggiungere altri param !!!
-		
+	protected void showResults(double averageNumberOfOrders) {
 		averageNumberOfOrdersLabel.setVisible(true);
 		actualAverageNumberOfOrdersLabel.setText(averageNumberOfOrders + " ");
 		maxProductsOrderLabel.setVisible(true);
-		
 		minProductsOrderLabel.setVisible(true);
-		
 		
 		maxtablePanel.setVisible(true);
 		maxtable.invalidate();

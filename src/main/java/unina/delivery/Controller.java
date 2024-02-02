@@ -9,8 +9,7 @@ import java.util.*;
 public class Controller {
 
 	public static void main(String[] args) {
-		
-		Controller controller = new Controller();
+		new Controller();
 	}
 
 	private LoginPage loginPage;
@@ -32,10 +31,9 @@ public class Controller {
 	private List<Corriere> corrieriDisponibili;
 	
 	Controller() {
-		
 		try {
-		UIDesign uidesign = new UIDesign();
-		uidesign.setup();
+			UIDesign uidesign = new UIDesign();
+			uidesign.setup();
 		}
 		catch (Exception e){
 			System.out.println("errore, default design");
@@ -89,7 +87,6 @@ public class Controller {
 		listaordinimin = ordinedao.getOrdiniWithMinNumOfProducts(year, month);
 		
 		reportPage.showResults(averagenum);
-		//TODO il resto
 	}
 
 	/**
@@ -149,7 +146,6 @@ public class Controller {
 	
 	/**
 	 * Opens connection to the database
-	 * TODO store credentials in config file
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
@@ -347,6 +343,11 @@ public class Controller {
 			idSpedizione = spedizioneDAO.create(s);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.err.println("forse hai dimenticato di eseguire questa riga di codice dopo aver effettuato il backup: "
+					+ "SELECT setval('uninadelivery.spedizione_idspedizione_seq',(SELECT max(idspedizione) "
+					+ "FROM uninadelivery.SPEDIZIONE));");
+			JOptionPane.showMessageDialog(this.logisticaPage, "Errore durante la creazione della spedizione. "
+					+ "Forse hai dimenticato di aggiornare il Database?", "Errore", JOptionPane.ERROR_MESSAGE);
 		}
 		if (idSpedizione == -1) return;
 		
@@ -354,6 +355,7 @@ public class Controller {
 		
 		corrieriDisponibili = new ArrayList<>();
 		mezziDiTrasportoDisponibiliConCorriere = new ArrayList<>();
+		this.ordiniPage.resetFilters();
 	}
 
 	private void setSelectedOrdersStateToShipped(long idSpedizione) {

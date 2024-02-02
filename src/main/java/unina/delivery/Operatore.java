@@ -23,12 +23,7 @@ public class Operatore {
 	public int getSede() {
 		return sede;
 	}
-
 	public String getCodiceFiscale() {
 		return codiceFiscale;
 	}
-	
-//	public void setSede(int s) {
-//		sede = s;
-//	}
 }

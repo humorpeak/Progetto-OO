@@ -2,15 +2,10 @@ package unina.delivery;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Toolkit;
-
 import javax.swing.ImageIcon;
-import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.plaf.ColorUIResource;
-import javax.swing.plaf.FontUIResource;
 
 public class UIDesign {
 	
@@ -21,7 +16,7 @@ public class UIDesign {
 	private static final Color BORDER_COLOR = new Color(255, 170, 170);
 	private static final Font FONT = new Font("Segoe UI Semibold", Font.PLAIN, 12);
 	private static final EmptyBorder BUTTON_BORDER = new EmptyBorder(5,16,5,16);
-		
+	
 	public void setup() {
 		UIManager.put("ToolTip.background", SECONDARY_BACKGROUND_COLOR);
 		UIManager.put("ToolTip.border", false);

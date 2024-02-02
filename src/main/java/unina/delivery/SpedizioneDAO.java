@@ -3,7 +3,6 @@ package unina.delivery;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 
 public class SpedizioneDAO {
 	Controller myController;
@@ -14,6 +13,11 @@ public class SpedizioneDAO {
 	}
 	
 	
+	/**
+	 * @param Spedizione to insert into the SPEDIZIONE table in the database
+	 * @return
+	 * @throws SQLException
+	 */
 	public long create(Spedizione s) throws SQLException
 	{
 		Statement st = myController.getMyConnection().createStatement();
