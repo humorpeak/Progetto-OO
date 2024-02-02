@@ -65,6 +65,30 @@ public class OperatoreDAO {
 		return numerosede;
 	}
 	
+	public String getCodiceFiscale (String email, String password)
+	{
+		String cf = null;
+		try
+		{
+			String query = "SELECT * FROM operatore WHERE email = ? AND password = ?";
+			PreparedStatement ps = controller.getMyConnection().prepareStatement(query);
+			ps.setString(1, email);
+			ps.setString(2, password);
+			
+			ResultSet rs = ps.executeQuery();
+			while (rs.next())
+			{
+				cf = rs.getString("codiceFiscale");
+			}
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, e, "Errore", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		return cf;
+	}
+	
 	OperatoreDAO(Controller c){
 		controller = c;
 	}

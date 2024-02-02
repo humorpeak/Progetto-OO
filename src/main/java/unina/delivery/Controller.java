@@ -131,7 +131,8 @@ public class Controller {
 			System.out.println("valido");
 			loginPage.setVisible(false);
 			int sede = operatoredao.getSede(email, password);
-			operatore = new Operatore(email, password, sede);
+			String codiceFiscale = operatoredao.getCodiceFiscale(email, password);
+			operatore = new Operatore(email, password, sede, codiceFiscale);
 			System.out.println(operatore.getEmail() + operatore.getPassword() + operatore.getSede());
 			homePage.setVisible(true);
 		}
@@ -179,8 +180,8 @@ public class Controller {
 		setFilteredOrdersRows (ordersWithSelection);
 	}
 	
-	protected void setOrdersWithSelection(List<OrdineConSelezione> ordersWithSelection2) {
-		this.ordersWithSelection = ordersWithSelection2;
+	protected void setOrdersWithSelection(List<OrdineConSelezione> ordersWithSelection) {
+		this.ordersWithSelection = ordersWithSelection;
 	}
 	
 	protected void shipmentButtonPressed()
@@ -212,7 +213,6 @@ public class Controller {
 	}
 	
 	public void confirmButtonPressed() {
-		ordiniPage.setVisible(false);
 		//TODO other warnings etc
 		if (noOrdersSelected())
 		{
@@ -220,6 +220,7 @@ public class Controller {
 		}
 		else
 		{
+			ordiniPage.setVisible(false);
 			logisticaPage.setVisible(true);
 			retrieveMezziDiTrasportoDisponibili(null, null, null);
 		}
@@ -307,12 +308,12 @@ public class Controller {
 	
 	public void retrieveMezziDiTrasportoDisponibili(LocalDate data, LocalTime inizio, LocalTime fine)
 	{
-		mezziDiTrasportoDisponibiliConCorriere = mezzoDiTrasportoDAO.getMezziDiTrasportoDisponibili(data, inizio, fine, 2); // TODO operatore.getSede();
+		mezziDiTrasportoDisponibiliConCorriere = mezzoDiTrasportoDAO.getMezziDiTrasportoDisponibili(data, inizio, fine, operatore.getSede());
 	}
 
 	public void applicaButtonPressedLogisticaPage(LocalDate data, LocalTime inizio, LocalTime fine) {
 		retrieveMezziDiTrasportoDisponibili(data,inizio,fine);
-		corrieriDisponibili = null;
+		corrieriDisponibili = new ArrayList<Corriere>();
 	}
 	
 	public List<Corriere> getCorrieriDisponibili() {
@@ -324,9 +325,26 @@ public class Controller {
 		corrieriDisponibili = mezzoDiTrasportoDAO.getCorrieriDisponibili(data, inizio, fine, targa);
 	}
 
-	public void creaSpedizione(String targa, String codiceFiscale) {
-		/*int idSpedizione = 999; // TODO
+	public void creaSpedizione(LocalDate appliedDate, LocalTime appliedInitialTime, LocalTime appliedFinalTime, String targa, String codiceFiscale) {
+		SpedizioneDAO spedizioneDAO = new SpedizioneDAO(this);
+		Timestamp partenza = Timestamp.valueOf(LocalDateTime.of(appliedDate, appliedInitialTime));
+		Timestamp arrivoStimato = Timestamp.valueOf(LocalDateTime.of(appliedDate, appliedFinalTime));
 		
+		long idSpedizione = -1;
+		try {
+			idSpedizione = spedizioneDAO.create(partenza, arrivoStimato, targa, codiceFiscale, this.operatore.getCodiceFiscale());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if (idSpedizione == -1) return;
+		
+		setSelectedOrdersStateToShipped(idSpedizione);
+		
+		corrieriDisponibili = new ArrayList<>();
+		mezziDiTrasportoDisponibiliConCorriere = new ArrayList<>();
+	}
+
+	private void setSelectedOrdersStateToShipped(long idSpedizione) {
 		for (OrdineConSelezione o : ordersWithSelection) {
 			if (o.selected)
 			{
@@ -339,7 +357,7 @@ public class Controller {
 					JOptionPane.showMessageDialog(this.logisticaPage, "Errore durante la spedizione del prodotto codice " + o.ordine.getIdOrdine(), "Errore", JOptionPane.ERROR_MESSAGE);
 				}
 			}
-		}*/
+		}
 	}
 
 }

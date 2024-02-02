@@ -161,19 +161,31 @@ public class LogisticaPage extends JFrame {
 	
 	private void salvaClicked() {
 		int selectedVehicleRow = vehiclesTable.getSelectedRow();
+		int selectedShipperRow = shippersTable.getSelectedRow();
     	if (selectedVehicleRow == -1)
     	{
     		JOptionPane.showMessageDialog(this, "Selezionare un mezzo di trasporto", "Nessun mezzo selezionato", JOptionPane.WARNING_MESSAGE);
     	}
-    	int selectedShipperRow = shippersTable.getSelectedRow();
-    	if (selectedShipperRow == -1)
-    	{
-    		JOptionPane.showMessageDialog(this, "Selezionare un corriere", "Nessun corriere selezionato", JOptionPane.WARNING_MESSAGE);
+    	else {
+    		if (selectedShipperRow == -1)
+	    	{
+	    		JOptionPane.showMessageDialog(this, "Selezionare un corriere", "Nessun corriere selezionato", JOptionPane.WARNING_MESSAGE);
+	    	}
+	    	else 
+	    	{
+	    		if (appliedDate == null || appliedInitialTime == null || appliedFinalTime == null)
+		    	{
+	    			JOptionPane.showMessageDialog(this, "Si prega di riempire i campi 'data', 'orario inizio' e 'orario fine'", "Data o orario mancanti", JOptionPane.WARNING_MESSAGE);
+		    	}
+		    	else
+		    	{
+		        	String targa = (String) vehiclesTable.getValueAt(selectedVehicleRow, 1);
+		        	String codiceFiscale = (String) shippersTable.getValueAt(selectedShipperRow, 3);
+		        	
+		        	myController.creaSpedizione(appliedDate, appliedInitialTime, appliedFinalTime, targa, codiceFiscale);
+		    	}
+	    	}
     	}
-    	String targa = (String) vehiclesTable.getValueAt(selectedVehicleRow, 1);
-    	String codiceFiscale = (String) shippersTable.getValueAt(selectedShipperRow, 3);
-    	
-    	myController.creaSpedizione(targa, codiceFiscale);
 	}
 	
 	class MezziDiTrasportoTableModel extends AbstractTableModel{
