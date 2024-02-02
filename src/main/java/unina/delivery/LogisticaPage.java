@@ -45,6 +45,12 @@ public class LogisticaPage extends JFrame {
 	private LocalDate appliedDate;
 	private LocalTime appliedInitialTime;
 	private LocalTime appliedFinalTime;
+	private JPanel filtersPanel;
+	private JLabel dateLabel;
+	private JLabel vehiclesLabel;
+	private JButton backButton;
+	private JLabel shippersLabel;
+	private JButton saveButton;
 	
 	LogisticaPage(Controller controller) {
 		myController = controller;
@@ -59,11 +65,11 @@ public class LogisticaPage extends JFrame {
 		panel.setForeground(new Color(0, 0, 0));
 		panel.setLayout(new MigLayout("", "[5px:10px,left][10px:200px,grow][5px:n][10px:200px,grow][5px:10px,right]", "[::60px,grow,top][][][grow][][][10px:n,bottom]"));
 		
-		JPanel filtersPanel = new JPanel();
+		filtersPanel = new JPanel();
 		panel.add(filtersPanel, "cell 0 0 5 1,alignx center,aligny center");
 		filtersPanel.setLayout(new MigLayout("", "[][][][][][][50px][]", "[][]"));
 		
-		JLabel dateLabel = new JLabel("Data programmata:");
+		dateLabel = new JLabel("Data programmata:");
 		filtersPanel.add(dateLabel, "cell 0 0,alignx right,aligny center");
 
 		DatePickerSettings datePickerSettings = new DatePickerSettings();
@@ -92,10 +98,10 @@ public class LogisticaPage extends JFrame {
 		finalTimePicker = new TimePicker();
 		filtersPanel.add(finalTimePicker, "cell 3 1,alignx left,aligny top");
 		
-		JLabel vehiclesLabel = new JLabel("Mezzi di trasporto disponibili");
+		vehiclesLabel = new JLabel("Mezzi di trasporto disponibili");
 		panel.add(vehiclesLabel, "cell 1 2");
 		
-		JLabel shippersLabel = new JLabel("Corrieri disponibili");
+		shippersLabel = new JLabel("Corrieri disponibili");
 		panel.add(shippersLabel, "cell 3 2");
 		
 		vehiclesScrollPane = new JScrollPane();
@@ -120,7 +126,7 @@ public class LogisticaPage extends JFrame {
 		shippersTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		shippersScrollPane.setViewportView(shippersTable);
 		
-		JButton backButton = new JButton("Indietro");
+		backButton = new JButton("Indietro");
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				backButtonPressed();
@@ -128,7 +134,7 @@ public class LogisticaPage extends JFrame {
 		});
 		panel.add(backButton, "cell 1 5,alignx left,aligny top");
 		
-		JButton saveButton = new JButton("Salva");
+		saveButton = new JButton("Salva");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				salvaClicked();

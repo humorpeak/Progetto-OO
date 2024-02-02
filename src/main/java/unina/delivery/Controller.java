@@ -365,7 +365,7 @@ public class Controller {
 					+ "SELECT setval('uninadelivery.spedizione_idspedizione_seq',(SELECT max(idspedizione) "
 					+ "FROM uninadelivery.SPEDIZIONE));");
 			JOptionPane.showMessageDialog(this.logisticaPage, "Errore durante la creazione della spedizione. "
-					+ "Forse hai dimenticato di aggiornare il Database dopo aver ripristinato un backup?", "Errore", JOptionPane.ERROR_MESSAGE);
+					+ "Impossibile creare una spedizione che dura più di 9 ore.", "Errore", JOptionPane.ERROR_MESSAGE);
 		}
 		if (idSpedizione == -1) return;
 		
