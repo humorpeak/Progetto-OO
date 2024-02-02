@@ -21,6 +21,9 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Toolkit;
+
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -29,35 +32,96 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import java.awt.Component;
+import net.miginfocom.swing.MigLayout;
+import unina.delivery.LogisticaPage.CorrieriTableModel;
+
 
 public class OrdiniPage extends JFrame {
+	
 	private static final long serialVersionUID = 5710891036621600811L;
 	private Controller myController;
-	private JTextField usernameField;
-	private JTable ordersTable;
-	private JScrollPane scrollPane;
+	private JPanel panel;
+	private JPanel filtersPanel;
+	private JLabel dateLabel;
 	private DatePicker datePicker;
 	private TimePicker initialTimePicker;
 	private JLabel initialTimePickerLabel;
 	private JLabel finalTimePickerLabel;
 	private TimePicker finalTimePicker;
+	private JScrollPane scrollPane;
+	private JTable ordersTable;
+	private JButton resetButton;
 	private JButton applyButton;
 	private JButton backButton;
+	private JLabel actualVehiclesLabel;
+	private JLabel weightLabel;
+	private JLabel actualWeightLabel;
+	private JLabel vehiclesLabel;
+	private JLabel usernameLabel;
+	private JTextField usernameField;
 	private JButton confirmButton;
-	private JLabel feedbackLabel;
 	
 	public OrdiniPage(Controller controller) {
 		myController = controller;
-		myController.setFilteredOrdersRows(new ArrayList<OrdineConSelezione>());
 		
-		getContentPane().setBackground(new Color(0, 0, 0));
-		setBounds(250, 220, 0, 0);
-		setMinimumSize(new Dimension(1200,550));
-		getContentPane().setLayout(new BorderLayout(0, 0));
+		setIconImage(Toolkit.getDefaultToolkit().getImage((ReportPage.class.getResource("/unina/delivery/resources/logo.png"))));
+		setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));		
+		setTitle("UninaDelivery");
 		
-		JPanel tablePanel = new JPanel();
-		getContentPane().add(tablePanel, BorderLayout.CENTER);
-		tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
+		panel = new JPanel();
+		setContentPane(panel);
+		panel.setMinimumSize(new Dimension(640, 400));
+		panel.setForeground(new Color(0, 0, 0));
+		panel.setLayout(new MigLayout("", "[10px:n,left][200px][][][][40px][][][][200px][10px:n,right]", "[10px:n,top][][grow][][][10px:n,bottom]"));
+		
+		filtersPanel = new JPanel();
+		panel.add(filtersPanel, "cell 1 1 9 1,alignx center,growy");
+		filtersPanel.setLayout(new MigLayout("", "[][grow][][][][][][][][][]", "[]"));
+		
+		usernameLabel = new JLabel("E-mail dell'acquirente:");
+		filtersPanel.add(usernameLabel, "flowx,cell 0 0,alignx trailing");
+		
+		usernameField = new JTextField();
+		usernameField.setMinimumSize(new Dimension(30, 19));
+		usernameField.setToolTipText("Inserisci una e-mail per filtrare i risultati in base all'utente che ha effettuato l'ordine.");
+		filtersPanel.add(usernameField, "cell 1 0,growx");
+		usernameField.setColumns(10);
+		
+		dateLabel = new JLabel("Data:");
+		filtersPanel.add(dateLabel, "cell 0 0");
+		filtersPanel.add(dateLabel);
+		
+		datePicker = new DatePicker();
+		filtersPanel.add(datePicker, "cell 3 0");
+		
+		initialTimePickerLabel = new JLabel("Orario di inizio:");
+		filtersPanel.add(initialTimePickerLabel, "cell 4 0");
+		
+		initialTimePicker = new TimePicker();
+		filtersPanel.add(initialTimePicker, "cell 5 0");
+		
+		finalTimePickerLabel = new JLabel("Orario di fine:");
+		filtersPanel.add(finalTimePickerLabel, "cell 6 0");
+		
+		finalTimePicker = new TimePicker();
+		filtersPanel.add(finalTimePicker, "flowx,cell 7 0");
+		
+		applyButton = new JButton("Applica");
+		applyButton.setToolTipText("Clicca qui per applicare i filtri.");
+		applyButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				applyFilters();
+			}
+		});
+		filtersPanel.add(applyButton, "cell 9 0");
+		
+		resetButton = new JButton("Reset");
+		resetButton.setToolTipText("Clicca qui per resettare i tuoi filtri.");
+		filtersPanel.add(resetButton, "cell 10 0");
+		
+		scrollPane = new JScrollPane();
+		panel.add(scrollPane, "cell 1 2 9 1,grow");
 		
 		TableModel dataModel = new OrdersTableModel(myController);
 		ordersTable = new JTable(dataModel);
@@ -78,71 +142,43 @@ public class OrdiniPage extends JFrame {
 		    }
 		});
 		ordersTable.getColumnModel().getColumn(0).setMaxWidth(30);
-
-		feedbackLabel = new JLabel("Peso: - ; Mezzi disponibili: - ");
-		feedbackLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		tablePanel.add(feedbackLabel);
-		
-		scrollPane = new JScrollPane(ordersTable);
-		tablePanel.add(scrollPane);
-		
-		
-		JPanel filtersPanel = new JPanel();
-		filtersPanel.setBackground(new Color(255, 163, 72));
-		getContentPane().add(filtersPanel, BorderLayout.NORTH);
-		filtersPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
-		JLabel usernameLabel = new JLabel("Username:"); //TODO cambiare in email
-		filtersPanel.add(usernameLabel);
-		
-		usernameField = new JTextField();
-		usernameField.setMaximumSize(new Dimension(2147483647, 30));
-		usernameField.setToolTipText("Inserisci una e-mail per filtrare i risultati in base all'utente che ha effettuato l'ordine.");
-		filtersPanel.add(usernameField);
-		usernameField.setColumns(20);
-		
-		JLabel dateLabel = new JLabel("Data:");
-		filtersPanel.add(dateLabel);
-		
-		datePicker = new DatePicker();
-		filtersPanel.add(datePicker);
-		
-		initialTimePickerLabel = new JLabel("Orario inizio:");
-		filtersPanel.add(initialTimePickerLabel);
-		
-		initialTimePicker = new TimePicker();
-		filtersPanel.add(initialTimePicker);
-		
-		finalTimePickerLabel = new JLabel("Orario fine:");
-		filtersPanel.add(finalTimePickerLabel);
-		
-		finalTimePicker = new TimePicker();
-		filtersPanel.add(finalTimePicker);
-		
-		applyButton = new JButton("Applica");
-		applyButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				applyFilters();
-			}
-		});
-		filtersPanel.add(applyButton);
+		scrollPane.setViewportView(ordersTable);
 		
 		backButton = new JButton("Indietro");
+		backButton.setToolTipText("Clicca qui per tornare alla Home.");
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				myController.backButtonPressedFromOrdiniToHomePage();
 			}
 		});
-		filtersPanel.add(backButton);
+		panel.add(backButton, "cell 1 4,alignx left");
+		
+		weightLabel = new JLabel("Peso totale:");
+		panel.add(weightLabel, "cell 3 4");
+		
+		actualWeightLabel = new JLabel("");
+		panel.add(actualWeightLabel, "cell 4 4");
+		
+		vehiclesLabel = new JLabel("Mezzi di trasporto disponibili:");
+		panel.add(vehiclesLabel, "cell 6 4");
+		
+		actualVehiclesLabel = new JLabel("");
+		panel.add(actualVehiclesLabel, "cell 7 4");
 		
 		confirmButton = new JButton("Conferma");
+		confirmButton.setToolTipText("Clicca qui per confermare gli ordini selezionati e andare avanti.");
 		confirmButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				confermaClicked();
 			}
 		});
-		filtersPanel.add(confirmButton);
+		panel.add(confirmButton, "cell 9 4,alignx right");
+		
+		setBackground(new Color(255, 234, 234));
+		setSize(new Dimension(940, 480));
+		setLocationRelativeTo(null);				
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setMinimumSize(new Dimension(940, 480));
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
@@ -150,7 +186,7 @@ public class OrdiniPage extends JFrame {
             }
         });
 	}
-
+	
 	private void confermaClicked()
 	{
 		myController.confirmButtonPressed();
@@ -207,7 +243,8 @@ public class OrdiniPage extends JFrame {
 		/*
 		 * TODO if not exists mezzi con capacità >= al peso then mezzidisponibili = X
 		 */
-		feedbackLabel.setText("Peso: " + myController.calculateWeightForSelectedOrders() + "; Mezzi disponibili: " + mezziDisponibili);
+		actualWeightLabel.setText(" " + myController.calculateWeightForSelectedOrders());
+		actualVehiclesLabel.setText(" " + mezziDisponibili);
 	}
 
 	class OrdersTableModel extends AbstractTableModel{
