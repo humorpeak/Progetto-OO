@@ -139,7 +139,7 @@ public class ReportPage extends JFrame {
 	    }
 	}
 	
-	public ReportPage(Controller controller) {
+	ReportPage(Controller controller) {
 		myController = controller;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage((ReportPage.class.getResource("/unina/delivery/resources/logo.png"))));

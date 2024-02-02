@@ -3,13 +3,13 @@ package unina.delivery;
 public class OrdineConSelezione {
 	public Ordine ordine;
 	public boolean selected;
-	public OrdineConSelezione(Ordine o)
+	OrdineConSelezione(Ordine o)
 	{
 		selected = false;
 		ordine = o;
 	}
 	
-	public void toggle() {
+	protected void toggle() {
 		selected = !selected;
 	}
 }

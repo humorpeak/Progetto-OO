@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 
 public class OperatoreDAO {
 	
-	Controller controller;
+	private Controller controller;
 	
 	/**
 	 * Checks whether the table operatore contains a row with given email and password
@@ -14,7 +14,7 @@ public class OperatoreDAO {
 	 * @param password
 	 * @return
 	 */
-	public boolean isOperatoreValid(String email, String password) {
+	protected boolean isOperatoreValid(String email, String password) {
 		
 		try
 		{
@@ -40,7 +40,7 @@ public class OperatoreDAO {
 	 * @param password
 	 * @return value of "sede" for the operatore with given credentials, 0 if the Operatore is not found
 	 */
-	public int getSede(String email, String password) {
+	protected int getSede(String email, String password) {
 		
 		int numerosede = 0;
 		
@@ -65,7 +65,7 @@ public class OperatoreDAO {
 		return numerosede;
 	}
 	
-	public String getCodiceFiscale (String email, String password)
+	protected String getCodiceFiscale (String email, String password)
 	{
 		String cf = null;
 		try

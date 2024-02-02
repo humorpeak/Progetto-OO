@@ -18,7 +18,7 @@ public class SpedizioneDAO {
 	 * @return
 	 * @throws SQLException
 	 */
-	public long create(Spedizione s) throws SQLException
+	protected long create(Spedizione s) throws SQLException
 	{
 		Statement st = myController.getMyConnection().createStatement();
 		st.executeUpdate("INSERT INTO uninadelivery.SPEDIZIONE (partenza, arrivoStimato, codiceFiscaleCorriere, codiceFiscaleOperatore, targa) VALUES ('"

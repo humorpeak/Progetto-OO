@@ -183,11 +183,9 @@ public class Controller {
 	protected void setFilteredOrdersRows(List<OrdineConSelezione> filteredOrdersRows) {
 		this.filteredOrdersRows = filteredOrdersRows;
 	}
-	
-	/**
-	 * @param listaordini
-	 */
-	public void setOrderList(ArrayList<Ordine> listaordini) {
+
+
+	protected void setOrderList(ArrayList<Ordine> listaordini) {
 		ordersWithSelection = new ArrayList<OrdineConSelezione>(listaordini.size());
 		for (Ordine o : listaordini)
 		{
@@ -304,19 +302,19 @@ public class Controller {
 	/**
 	 * @return the number of available vehicles that have at least one shipper
 	 */
-	public int getNumberOfAvailableVehiclesWithShipper() {
+	protected int getNumberOfAvailableVehiclesWithShipper() {
 		if (availableVehiclesWithShipper == null) return 0;
 		return availableVehiclesWithShipper.size();
 	}
 
-	public List<MezzoDiTrasporto> getAvailableVehiclesWithShipper() {
+	protected List<MezzoDiTrasporto> getAvailableVehiclesWithShipper() {
 		return availableVehiclesWithShipper;
 	}
 	
 	/**
 	 * @return the number of available shippers for the filters applied in OrdiniPage
 	 */
-	public int getNumberOfAvailableShippers()
+	protected int getNumberOfAvailableShippers()
 	{
 		if (availableShippers == null) return 0;
 		return availableShippers.size();
@@ -325,7 +323,7 @@ public class Controller {
 	/**
 	 * @return the number of available shippers for the given filters
 	 */
-	public int getNumberOfAvailableShippers(LocalDate date, LocalTime beginning, LocalTime end, String targa)
+	protected int getNumberOfAvailableShippers(LocalDate date, LocalTime beginning, LocalTime end, String targa)
 	{
 		return mezzoDiTrasportoDAO.getNumeroDiCorrieriDisponibili(date, beginning, end, targa);
 	}
@@ -333,26 +331,26 @@ public class Controller {
 	/**
 	 * updates controller's field "availableVehiclesWithShipper"
 	 */
-	public void retrieveAvailableVehicles(LocalDate date, LocalTime beginning, LocalTime end)
+	protected void retrieveAvailableVehicles(LocalDate date, LocalTime beginning, LocalTime end)
 	{
 		availableVehiclesWithShipper = mezzoDiTrasportoDAO.getMezziDiTrasportoDisponibili(date, beginning, end, operatore.getSede());
 	}
 
-	public void applicaButtonPressedLogisticaPage(LocalDate date, LocalTime beginning, LocalTime end) {
+	protected void applicaButtonPressedLogisticaPage(LocalDate date, LocalTime beginning, LocalTime end) {
 		retrieveAvailableVehicles(date,beginning,end);
 		availableShippers = new ArrayList<Corriere>();
 	}
 	
-	public List<Corriere> getCorrieriDisponibili() {
+	protected List<Corriere> getCorrieriDisponibili() {
 		return availableShippers;
 	}
 	
-	public void retrieveAvailableShippersForVehicle(LocalDate date, LocalTime beginning, LocalTime end, String targa)
+	protected void retrieveAvailableShippersForVehicle(LocalDate date, LocalTime beginning, LocalTime end, String targa)
 	{
 		availableShippers = mezzoDiTrasportoDAO.getCorrieriDisponibili(date, beginning, end, targa);
 	}
 
-	public void createShipment(LocalDate appliedDate, LocalTime appliedInitialTime, LocalTime appliedFinalTime, String targa, String codiceFiscale) {
+	protected void createShipment(LocalDate appliedDate, LocalTime appliedInitialTime, LocalTime appliedFinalTime, String targa, String codiceFiscale) {
 		SpedizioneDAO spedizioneDAO = new SpedizioneDAO(this);
 		Timestamp departure = Timestamp.valueOf(LocalDateTime.of(appliedDate, appliedInitialTime));
 		Timestamp estimatedArrival = Timestamp.valueOf(LocalDateTime.of(appliedDate, appliedFinalTime));
@@ -406,7 +404,7 @@ public class Controller {
 		return tot;
 	}
 
-	public LocalDate getSelectedOrdersDate() {
+	protected LocalDate getSelectedOrdersDate() {
 		LocalDate result = null;
 		for (OrdineConSelezione o : ordersWithSelection)
 		{
@@ -459,7 +457,7 @@ public class Controller {
 		return result;
 	}
 
-	public boolean existsMezzoDiTrasportoForWeight() {
+	protected boolean existsMezzoDiTrasportoForWeight() {
 		List<MezzoDiTrasporto> lista = mezzoDiTrasportoDAO.getMezziDiTrasportoDisponibili(null, null, null, this.operatore.getSede());
 		float peso = calculateWeightForSelectedOrders();
 		for (MezzoDiTrasporto mezzo : lista)

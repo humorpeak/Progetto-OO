@@ -8,7 +8,7 @@ import java.time.*;
 
 public class OrdineDAO {
 	
-	Controller controller;
+	private Controller controller;
 	
 	/**
 	 * Calls a SQL function to get ready to ship orders of sede and arranges them in an ArrayList

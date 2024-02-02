@@ -56,7 +56,7 @@ public class OrdiniPage extends JFrame {
 	private JTextField usernameField;
 	private JButton confirmButton;
 	
-	public OrdiniPage(Controller controller) {
+	OrdiniPage(Controller controller) {
 		myController = controller;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage((ReportPage.class.getResource("/unina/delivery/resources/logo.png"))));

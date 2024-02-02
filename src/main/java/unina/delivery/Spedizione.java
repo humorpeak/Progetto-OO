@@ -9,7 +9,7 @@ public class Spedizione {
 	private String codiceFiscaleCorriere;
 	private String codiceFiscaleOperatore;
 	
-	public Spedizione(Timestamp partenza, Timestamp arrivoStimato, String targa, String codiceFiscaleCorriere,
+	Spedizione(Timestamp partenza, Timestamp arrivoStimato, String targa, String codiceFiscaleCorriere,
 			String codiceFiscaleOperatore) {
 		this.partenza = partenza;
 		this.arrivoStimato = arrivoStimato;
@@ -17,34 +17,34 @@ public class Spedizione {
 		this.codiceFiscaleCorriere = codiceFiscaleCorriere;
 		this.codiceFiscaleOperatore = codiceFiscaleOperatore;
 	}
-	public Timestamp getPartenza() {
+	protected Timestamp getPartenza() {
 		return partenza;
 	}
-	public void setPartenza(Timestamp partenza) {
+	protected void setPartenza(Timestamp partenza) {
 		this.partenza = partenza;
 	}
-	public Timestamp getArrivoStimato() {
+	protected Timestamp getArrivoStimato() {
 		return arrivoStimato;
 	}
-	public void setArrivoStimato(Timestamp arrivoStimato) {
+	protected void setArrivoStimato(Timestamp arrivoStimato) {
 		this.arrivoStimato = arrivoStimato;
 	}
-	public String getTarga() {
+	protected String getTarga() {
 		return targa;
 	}
-	public void setTarga(String targa) {
+	protected void setTarga(String targa) {
 		this.targa = targa;
 	}
-	public String getCodiceFiscaleCorriere() {
+	protected String getCodiceFiscaleCorriere() {
 		return codiceFiscaleCorriere;
 	}
-	public void setCodiceFiscaleCorriere(String codiceFiscaleCorriere) {
+	protected void setCodiceFiscaleCorriere(String codiceFiscaleCorriere) {
 		this.codiceFiscaleCorriere = codiceFiscaleCorriere;
 	}
-	public String getCodiceFiscaleOperatore() {
+	protected String getCodiceFiscaleOperatore() {
 		return codiceFiscaleOperatore;
 	}
-	public void setCodiceFiscaleOperatore(String codiceFiscaleOperatore) {
+	protected void setCodiceFiscaleOperatore(String codiceFiscaleOperatore) {
 		this.codiceFiscaleOperatore = codiceFiscaleOperatore;
 	}
 }

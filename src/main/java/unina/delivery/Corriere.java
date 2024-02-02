@@ -14,16 +14,16 @@ public class Corriere {
 		tipoPatente = p;
 	}
 	
-	public String getCodiceFiscale() {
+	protected String getCodiceFiscale() {
 		return codiceFiscale;
 	}
-	public String getNome() {
+	protected String getNome() {
 		return nome;
 	}
-	public String getCognome() {
+	protected String getCognome() {
 		return cognome;
 	}
-	public String getTipoPatente() {
+	protected String getTipoPatente() {
 		return tipoPatente;
 	}
 }

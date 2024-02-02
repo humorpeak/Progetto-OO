@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 
 import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.TimePicker;
 
 import javax.swing.JFrame;
@@ -45,7 +46,7 @@ public class LogisticaPage extends JFrame {
 	private LocalTime appliedInitialTime;
 	private LocalTime appliedFinalTime;
 	
-	public LogisticaPage(Controller controller) {
+	LogisticaPage(Controller controller) {
 		myController = controller;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage((LoginPage.class.getResource("/unina/delivery/resources/logo.png"))));
@@ -67,6 +68,9 @@ public class LogisticaPage extends JFrame {
 		
 		datePicker = new DatePicker();
 		datePicker.setPreferredSize(new Dimension(160, 19));
+		DatePickerSettings datePickerSettings = new DatePickerSettings();
+		datePickerSettings.setDateRangeLimits(LocalDate.now(), null);
+		datePicker.setSettings(datePickerSettings);
 		filtersPanel.add(datePicker, "cell 1 0 2 1,alignx left,aligny center");
 		
 		applyButton = new JButton("Applica");

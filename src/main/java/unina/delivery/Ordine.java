@@ -11,31 +11,31 @@ public class Ordine {
 	private int peso;
 	private int idOrdine;
 	
-	public int getPeso() {
+	protected int getPeso() {
 		return peso;
 	}
 
-	public LocalDate getData() {
+	protected LocalDate getData() {
 		return data;
 	}
 
-	public LocalTime getOrarioinizio() {
+	protected LocalTime getOrarioinizio() {
 		return orarioinizio;
 	}
 
-	public LocalTime getOrariofine() {
+	protected LocalTime getOrariofine() {
 		return orariofine;
 	}
 
-	public String getAcquirente() {
+	protected String getAcquirente() {
 		return acquirente;
 	}
 
-	public String getIndirizzo() {
+	protected String getIndirizzo() {
 		return indirizzo;
 	}
 	
-	public int getIdOrdine()
+	protected int getIdOrdine()
 	{
 		return idOrdine;
 	}

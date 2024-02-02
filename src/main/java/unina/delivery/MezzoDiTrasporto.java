@@ -16,24 +16,24 @@ public class MezzoDiTrasporto {
 		this.setNumeroCorrieriDisponibili(0);
 	}
 	
-	public String getTipoMezzo() {
+	protected String getTipoMezzo() {
 		return tipoMezzo;
 	}
-	public String getPatenteRichiesta() {
+	protected String getPatenteRichiesta() {
 		return patenteRichiesta;
 	}
-	public String getTarga() {
+	protected String getTarga() {
 		return targa;
 	}
-	public float getCapienza() {
+	protected float getCapienza() {
 		return capienza;
 	}
 
-	public int getNumeroCorrieriDisponibili() {
+	protected int getNumeroCorrieriDisponibili() {
 		return numeroCorrieriDisponibili;
 	}
 
-	public void setNumeroCorrieriDisponibili(int numeroCorrieriDisponibili) {
+	protected void setNumeroCorrieriDisponibili(int numeroCorrieriDisponibili) {
 		this.numeroCorrieriDisponibili = numeroCorrieriDisponibili;
 	}
 }

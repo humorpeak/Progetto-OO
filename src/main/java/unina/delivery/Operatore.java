@@ -14,16 +14,16 @@ public class Operatore {
 		codiceFiscale = cf;
 	}
 	
-	public String getEmail() {
+	protected String getEmail() {
 		return email;
 	}
-	public String getPassword() {
+	protected String getPassword() {
 		return password;
 	}
-	public int getSede() {
+	protected int getSede() {
 		return sede;
 	}
-	public String getCodiceFiscale() {
+	protected String getCodiceFiscale() {
 		return codiceFiscale;
 	}
 }

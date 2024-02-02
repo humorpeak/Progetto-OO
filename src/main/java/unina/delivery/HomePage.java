@@ -22,7 +22,7 @@ public class HomePage extends JFrame {
 	private JButton shipmentButton;
 	private JButton reportButton;
 	
-	public HomePage(Controller controller) {
+	HomePage(Controller controller) {
 		
 		myController = controller;
 		

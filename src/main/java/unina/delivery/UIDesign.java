@@ -17,7 +17,7 @@ public class UIDesign {
 	private static final Font FONT = new Font("Segoe UI Semibold", Font.PLAIN, 12);
 	private static final EmptyBorder BUTTON_BORDER = new EmptyBorder(5,16,5,16);
 	
-	public void setup() {
+	protected void setup() {
 		UIManager.put("ToolTip.background", SECONDARY_BACKGROUND_COLOR);
 		UIManager.put("ToolTip.border", false);
 		
