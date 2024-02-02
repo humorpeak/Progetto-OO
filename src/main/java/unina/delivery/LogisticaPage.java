@@ -118,6 +118,11 @@ public class LogisticaPage extends JFrame {
 		shippersScrollPane.setViewportView(shippersTable);
 		
 		JButton backButton = new JButton("Indietro");
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				backButtonPressed();
+			}
+		});
 		panel.add(backButton, "cell 1 5,alignx left,aligny top");
 		
 		JButton saveButton = new JButton("Salva");
@@ -136,6 +141,10 @@ public class LogisticaPage extends JFrame {
 		setMinimumSize(new Dimension(640, 480));
 	}
 	
+	private void backButtonPressed()
+	{
+		myController.backButtonPressedFromLogisticaToOrdiniPage();
+	}
 
 	private void applicaButtonPressed() {
 		LocalDate date = datePicker.getDate();

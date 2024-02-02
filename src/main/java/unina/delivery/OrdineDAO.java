@@ -177,7 +177,8 @@ public class OrdineDAO {
 
 	public void shipOrder(Ordine ordine, long idSpedizione) throws SQLException {
 		Statement st = controller.getMyConnection().createStatement();
-		st.executeQuery("UPDATE uninadelivery.ORDINE AS O SET idspedizione = " + idSpedizione + " stato = 'Spedito'"
-				+ "WHERE O.idordine = " + ordine.getIdOrdine());
+		st.executeUpdate("UPDATE uninadelivery.ORDINE SET idspedizione = " + idSpedizione
+				+ " WHERE idordine = " + ordine.getIdOrdine());
+		st.executeUpdate("UPDATE uninadelivery.ORDINE SET stato = 'Spedito' WHERE idordine = " + ordine.getIdOrdine());
 	}
 }

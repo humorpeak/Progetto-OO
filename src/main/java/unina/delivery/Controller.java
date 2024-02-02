@@ -212,6 +212,14 @@ public class Controller {
 		homePage.setVisible(true);
 	}
 	
+	protected void backButtonPressedFromLogisticaToOrdiniPage()
+	{
+		corrieriDisponibili = new ArrayList<>();
+		mezziDiTrasportoDisponibiliConCorriere = new ArrayList<>();
+		logisticaPage.setVisible(false);
+		ordiniPage.setVisible(true);
+	}
+	
 	public void confirmButtonPressed() {
 		//TODO other warnings etc
 		if (noOrdersSelected())
@@ -353,7 +361,7 @@ public class Controller {
 				}
 				catch (SQLException e)
 				{
-					System.out.println(e.getStackTrace());
+					e.printStackTrace();
 					JOptionPane.showMessageDialog(this.logisticaPage, "Errore durante la spedizione del prodotto codice " + o.ordine.getIdOrdine(), "Errore", JOptionPane.ERROR_MESSAGE);
 				}
 			}
