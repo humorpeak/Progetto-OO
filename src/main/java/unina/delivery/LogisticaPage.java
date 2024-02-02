@@ -65,12 +65,11 @@ public class LogisticaPage extends JFrame {
 		
 		JLabel dateLabel = new JLabel("Data programmata:");
 		filtersPanel.add(dateLabel, "cell 0 0,alignx right,aligny center");
-		
-		datePicker = new DatePicker();
-		datePicker.setPreferredSize(new Dimension(160, 19));
+
 		DatePickerSettings datePickerSettings = new DatePickerSettings();
+		datePicker = new DatePicker(datePickerSettings);
+		datePicker.setPreferredSize(new Dimension(160, 19));
 		datePickerSettings.setDateRangeLimits(LocalDate.now(), null);
-		datePicker.setSettings(datePickerSettings);
 		filtersPanel.add(datePicker, "cell 1 0 2 1,alignx left,aligny center");
 		
 		applyButton = new JButton("Applica");

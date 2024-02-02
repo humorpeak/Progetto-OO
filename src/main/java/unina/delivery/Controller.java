@@ -386,7 +386,7 @@ public class Controller {
 				catch (SQLException e)
 				{
 					e.printStackTrace();
-					JOptionPane.showMessageDialog(this.logisticaPage, "Errore durante la spedizione del prodotto codice " + o.ordine.getIdOrdine(), "Errore", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(this.logisticaPage, "Errore durante la spedizione del prodotto codice " + o.ordine.getSerialeOrdine(), "Errore", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}

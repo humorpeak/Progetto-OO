@@ -57,12 +57,6 @@ public class ReportPage extends JFrame {
 		private static final long serialVersionUID = 1L;
 		
 		private String columnNames[] = { "Acquirente", "Data", "Indirizzo"};
-		private Controller myController;
-		
-		OrdersReportTableModel(Controller controller)
-		{
-			myController = controller;
-		}
 		
 		@Override
 		public String getColumnName(int index) {
@@ -83,10 +77,6 @@ public class ReportPage extends JFrame {
 	class MaxOrdersTableModel extends OrdersReportTableModel {
 		private static final long serialVersionUID = 1L;
 
-		MaxOrdersTableModel(Controller controller) {
-			super(controller);
-		}
-		
 	    @Override
 	    public int getRowCount() {
 	    	return myController.countOrdersWithMaxNumOfProducts();
@@ -112,10 +102,6 @@ public class ReportPage extends JFrame {
 	
 	class MinOrdersTableModel extends OrdersReportTableModel {
 		private static final long serialVersionUID = 1L;
-
-		MinOrdersTableModel(Controller controller) {
-			super(controller);
-		}
 		
 	    @Override
 	    public int getRowCount() {
@@ -139,9 +125,7 @@ public class ReportPage extends JFrame {
 	    }
 	}
 	
-	ReportPage(Controller controller) {
-		myController = controller;
-		
+	ReportPage() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage((ReportPage.class.getResource("/unina/delivery/resources/logo.png"))));
 		setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));		
 		setTitle("UninaDelivery");
@@ -215,7 +199,7 @@ public class ReportPage extends JFrame {
 		maxtablePanel.setVisible(false);
 		resultsPanel.add(maxtablePanel, "cell 0 3 2 1,grow");
 		
-		TableModel maxDataModel = new MaxOrdersTableModel(myController);
+		TableModel maxDataModel = new MaxOrdersTableModel();
 		maxtable = new JTable(maxDataModel);
 		maxtable.setFocusable(false);
 		maxtable.setShowVerticalLines(false);
@@ -237,7 +221,7 @@ public class ReportPage extends JFrame {
 		mintablePanel.setVisible(false);
 		resultsPanel.add(mintablePanel, "cell 0 7 2 1,grow");
 		
-		TableModel minDataModel = new MinOrdersTableModel(myController);
+		TableModel minDataModel = new MinOrdersTableModel();
 		mintable = new JTable(minDataModel);
 		mintable.setFocusable(false);
 		mintable.setShowVerticalLines(false);

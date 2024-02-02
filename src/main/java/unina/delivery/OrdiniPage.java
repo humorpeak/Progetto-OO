@@ -123,7 +123,7 @@ public class OrdiniPage extends JFrame {
 		scrollPane = new JScrollPane();
 		panel.add(scrollPane, "cell 1 2 9 1,grow");
 		
-		TableModel dataModel = new OrdersTableModel(myController);
+		TableModel dataModel = new OrdersTableModel();
 		ordersTable = new JTable(dataModel);
 		ordersTable.setRowSelectionAllowed(false);
 		ordersTable.setRequestFocusEnabled(false);
@@ -297,12 +297,6 @@ public class OrdiniPage extends JFrame {
 	class OrdersTableModel extends AbstractTableModel{
 		private static final long serialVersionUID = 1L;
 		private String columnNames[] = { "", "Email", "Data", "Orario Inizio", "Orario Fine", "Peso"  };
-		private Controller myController;
-		
-		OrdersTableModel(Controller controller)
-		{
-			myController = controller;
-		}
 		
 		@Override
 		public String getColumnName(int index) {

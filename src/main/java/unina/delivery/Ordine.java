@@ -9,7 +9,7 @@ public class Ordine {
 	private String acquirente;
 	private String indirizzo;
 	private int peso;
-	private int idOrdine;
+	private int serialeOrdine;
 	
 	protected int getPeso() {
 		return peso;
@@ -35,19 +35,19 @@ public class Ordine {
 		return indirizzo;
 	}
 	
-	protected int getIdOrdine()
+	protected int getSerialeOrdine()
 	{
-		return idOrdine;
+		return serialeOrdine;
 	}
 	
-	Ordine(LocalDate d, LocalTime oi, LocalTime of, String a, String i, int p, int id) {
+	Ordine(LocalDate d, LocalTime oi, LocalTime of, String a, String i, int p, int seriale) {
 		data = d;
 		orarioinizio = oi;
 		orariofine = of;
 		acquirente = a;
 		indirizzo = i;
 		peso = p;
-		idOrdine = id;
+		serialeOrdine = seriale;
 	}
 	
 	Ordine(String a, LocalDate d, String i) {

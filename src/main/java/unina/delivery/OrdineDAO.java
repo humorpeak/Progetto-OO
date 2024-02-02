@@ -18,10 +18,6 @@ public class OrdineDAO {
 	protected ArrayList<Ordine> getOrdiniDaSpedireUnfiltered (int sede) {
 		
 		ArrayList<Ordine> listaordini = new ArrayList<Ordine>();
-		LocalDate data;
-		LocalTime orarioinizio;
-		LocalTime orariofine;
-		String indirizzo;
 		
 		System.out.println(sede);
 		try
@@ -89,9 +85,6 @@ public class OrdineDAO {
 	protected ArrayList<Ordine> getOrdiniWithMaxNumOfProducts (int year, int month) {
 		
 		ArrayList<Ordine> listaordini = new ArrayList<Ordine>();
-		String acquirente;
-		LocalDate data;
-		String indirizzo;
 
 		Date date = Date.valueOf(LocalDate.of(year,  month, 2));
 		
@@ -124,10 +117,7 @@ public class OrdineDAO {
 	protected ArrayList<Ordine> getOrdiniWithMinNumOfProducts (int year, int month) {
 		
 		ArrayList<Ordine> listaordini = new ArrayList<Ordine>();
-		String acquirente;
-		LocalDate data;
-		String indirizzo;
-
+		
 		Date date = Date.valueOf(LocalDate.of(year,  month, 2));
 		
 		try
@@ -159,8 +149,8 @@ public class OrdineDAO {
 	protected void shipOrder(Ordine ordine, long idSpedizione) throws SQLException {
 		Statement st = controller.getMyConnection().createStatement();
 		st.executeUpdate("UPDATE uninadelivery.ORDINE SET idspedizione = " + idSpedizione
-				+ " WHERE idordine = " + ordine.getIdOrdine());
-		st.executeUpdate("UPDATE uninadelivery.ORDINE SET stato = 'Spedito' WHERE idordine = " + ordine.getIdOrdine());
+				+ " WHERE idordine = " + ordine.getSerialeOrdine());
+		st.executeUpdate("UPDATE uninadelivery.ORDINE SET stato = 'Spedito' WHERE idordine = " + ordine.getSerialeOrdine());
 	}
 	
 	private String getIndirizzo(String cap, String città, String via, String civico, String edificio) {
