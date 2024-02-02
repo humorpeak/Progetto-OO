@@ -55,6 +55,7 @@ public class ReportPage extends JFrame {
 	private JPanel mintablePanel;
 	private JScrollPane maxscrollPane;
 	private JScrollPane minscrollPane;
+	private JButton backButton;
 	
 	abstract class OrdersReportTableModel extends AbstractTableModel{
 	
@@ -143,7 +144,7 @@ public class ReportPage extends JFrame {
 	public ReportPage(Controller controller) {
 		myController = controller;
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage((LoginPage.class.getResource("/unina/delivery/resources/logo.png"))));
+		setIconImage(Toolkit.getDefaultToolkit().getImage((ReportPage.class.getResource("/unina/delivery/resources/logo.png"))));
 		setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));		
 		setTitle("UninaDelivery");
 		
@@ -151,7 +152,7 @@ public class ReportPage extends JFrame {
 		setContentPane(panel);
 		panel.setMinimumSize(new Dimension(640, 400));
 		panel.setForeground(new Color(0, 0, 0));
-		panel.setLayout(new MigLayout("", "[][][grow][][][grow][][][]", "[][][][grow][]"));
+		panel.setLayout(new MigLayout("", "[][][grow][][][grow][][][]", "[][][][grow][][][]"));
 		
 		yearLabel = new JLabel("Anno: ");
 		panel.add(yearLabel, "cell 1 1,alignx right");
@@ -249,6 +250,35 @@ public class ReportPage extends JFrame {
 		minscrollPane.setPreferredSize(new Dimension(550, 100));
 		mintablePanel.add(minscrollPane);
 		
+		backButton = new JButton("Indietro");
+		backButton.setFocusPainted(false);
+		backButton.setBorderPainted(false);
+		backButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				backButton.setContentAreaFilled(false);
+				backButton.setOpaque(true);
+				backButton.setBackground(new Color(255, 213, 213));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				backButton.setContentAreaFilled(true);
+				backButton.setBackground(new Color(255, 128, 128));
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				backButton.setContentAreaFilled(false);
+				backButton.setOpaque(true);
+				backButton.setBackground(new Color(255, 170, 170));
+			}
+		});
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				myController.backButtonPressedFromReportToHomePage();
+			}
+		});
+		panel.add(backButton, "cell 1 5");
+		
 		calculateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -277,7 +307,7 @@ public class ReportPage extends JFrame {
 	protected void showResults(double averageNumberOfOrders) { //TODO aggiungere altri param !!!
 		
 		averageNumberOfOrdersLabel.setVisible(true);
-		actualAverageNumberOfOrdersLabel.setText("  " + averageNumberOfOrders);
+		actualAverageNumberOfOrdersLabel.setText(averageNumberOfOrders + " ");
 		maxProductsOrderLabel.setVisible(true);
 		
 		minProductsOrderLabel.setVisible(true);

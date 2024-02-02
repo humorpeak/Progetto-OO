@@ -156,6 +156,12 @@ public class OrdineDAO {
 		return listaordini;
 	}
 	
+	protected void shipOrder(Ordine ordine, long idSpedizione) throws SQLException {
+		Statement st = controller.getMyConnection().createStatement();
+		st.executeUpdate("UPDATE uninadelivery.ORDINE SET idspedizione = " + idSpedizione
+				+ " WHERE idordine = " + ordine.getIdOrdine());
+		st.executeUpdate("UPDATE uninadelivery.ORDINE SET stato = 'Spedito' WHERE idordine = " + ordine.getIdOrdine());
+	}
 	
 	private String getIndirizzo(String cap, String città, String via, String civico, String edificio) {
 		
@@ -173,12 +179,5 @@ public class OrdineDAO {
 	
 	OrdineDAO(Controller c){
 		controller = c;
-	}
-
-	public void shipOrder(Ordine ordine, long idSpedizione) throws SQLException {
-		Statement st = controller.getMyConnection().createStatement();
-		st.executeUpdate("UPDATE uninadelivery.ORDINE SET idspedizione = " + idSpedizione
-				+ " WHERE idordine = " + ordine.getIdOrdine());
-		st.executeUpdate("UPDATE uninadelivery.ORDINE SET stato = 'Spedito' WHERE idordine = " + ordine.getIdOrdine());
 	}
 }

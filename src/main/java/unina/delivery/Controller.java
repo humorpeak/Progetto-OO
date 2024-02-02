@@ -33,8 +33,13 @@ public class Controller {
 	
 	Controller() {
 		
+		try {
 		UIDesign uidesign = new UIDesign();
 		uidesign.setup();
+		}
+		catch (Exception e){
+			System.out.println("errore, default design");
+		}
 		
 		if (!attemptConnection())
 		{
@@ -46,7 +51,7 @@ public class Controller {
 			loginPage = new LoginPage(this);
 			homePage = new HomePage(this);
 			ordiniPage = new OrdiniPage(this);
-			reportPage = new ReportPage(this);
+			//reportPage = new ReportPage(this);
 			logisticaPage = new LogisticaPage(this);
 			
 			loginPage.setVisible(true);
@@ -157,8 +162,9 @@ public class Controller {
 	}
 	
 	protected void reportButtonPressed()
-	{
+	{	
 		homePage.setVisible(false);
+		reportPage = new ReportPage(this);
 		reportPage.setVisible(true);
 	}
 	
@@ -220,6 +226,12 @@ public class Controller {
 		ordiniPage.setVisible(true);
 	}
 	
+	public void backButtonPressedFromReportToHomePage() {
+		reportPage.setVisible(false);
+		homePage.setVisible(true);
+		//TODO altro
+	}
+	
 	public void confirmButtonPressed() {
 		//TODO other warnings etc
 		if (noOrdersSelected())
@@ -247,7 +259,6 @@ public class Controller {
 		}
 		return noOrdersSelected;
 	}
-	
 	
 	protected List<OrdineConSelezione> getFilteredOrdersRows() {
 		return filteredOrdersRows;
