@@ -155,9 +155,10 @@ public class LogisticaPage extends JFrame {
 		appliedInitialTime = initTime;
 		appliedFinalTime = finalTime;
 		vehiclesTable.clearSelection();
+		shippersTable.clearSelection();
 		myController.applicaButtonPressedLogisticaPage(date, initTime, finalTime);
-		vehiclesTable.invalidate();
 		vehiclesTable.repaint();
+		shippersTable.repaint();
 	}
 	
 	private void vehiclesTableButtonClicked(MouseEvent e) {
@@ -165,8 +166,7 @@ public class LogisticaPage extends JFrame {
     	if (selectedVehicleRow == -1) return;
 		String targa = (String) vehiclesTable.getValueAt(selectedVehicleRow, 1);
 		myController.retrieveCorrieriDisponibiliPerMezzoDiTrasporto(appliedDate, appliedInitialTime, appliedFinalTime, targa);
-		shippersTable.invalidate();
-		shippersTable.repaint();
+		shippersTable.revalidate();
 	}
 	
 	private void salvaClicked() {
