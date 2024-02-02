@@ -27,6 +27,8 @@ import java.awt.event.MouseEvent;
 import java.time.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
+import java.awt.Component;
 
 public class OrdiniPage extends JFrame {
 	private static final long serialVersionUID = 5710891036621600811L;
@@ -42,6 +44,7 @@ public class OrdiniPage extends JFrame {
 	private JButton applyButton;
 	private JButton backButton;
 	private JButton confirmButton;
+	private JLabel feedbackLabel;
 	
 	public OrdiniPage(Controller controller) {
 		myController = controller;
@@ -53,7 +56,6 @@ public class OrdiniPage extends JFrame {
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JPanel tablePanel = new JPanel();
-		tablePanel.setBackground(new Color(237, 51, 59));
 		getContentPane().add(tablePanel, BorderLayout.CENTER);
 		tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
 		
@@ -76,9 +78,12 @@ public class OrdiniPage extends JFrame {
 		    }
 		});
 		ordersTable.getColumnModel().getColumn(0).setMaxWidth(30);
+
+		feedbackLabel = new JLabel("Peso: - ; Mezzi disponibili: - ");
+		feedbackLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		tablePanel.add(feedbackLabel);
 		
 		scrollPane = new JScrollPane(ordersTable);
-		scrollPane.setBackground(new Color(255,0,255));
 		tablePanel.add(scrollPane);
 		
 		
@@ -186,8 +191,25 @@ public class OrdiniPage extends JFrame {
         if (row >= 0 && col == 0) {
         	myController.toggleOrder(row);
         }
-	}
+        
+        updateFeedback();
+    }
 	
+	private void updateFeedback() {
+		LocalDate ordersDate = myController.getSelectedOrdersDate();
+		String mezziDisponibili = "\u26A0";
+		if (ordersDate != null) {
+			myController.retrieveMezziDiTrasportoDisponibili(ordersDate,
+					myController.getSuggestedDepartureTimeForSelectedOrders(),
+					myController.getSuggestedArrivalTimeForSelectedOrders());
+			mezziDisponibili = ((Integer) myController.getNumberOfMezziDiTrasportoDisponibili()).toString();
+		}
+		/*
+		 * TODO if not exists mezzi con capacità >= al peso then mezzidisponibili = X
+		 */
+		feedbackLabel.setText("Peso: " + myController.calculateWeightForSelectedOrders() + "; Mezzi disponibili: " + mezziDisponibili);
+	}
+
 	class OrdersTableModel extends AbstractTableModel{
 		private static final long serialVersionUID = 1L;
 		private String columnNames[] = { "", "Email", "Data", "Orario Inizio", "Orario Fine", "Peso"  };

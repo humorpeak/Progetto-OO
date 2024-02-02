@@ -376,4 +376,62 @@ public class Controller {
 		}
 		return tot;
 	}
+
+	public int getNumberOfMezziDiTrasportoDisponibili() {
+		if (mezziDiTrasportoDisponibiliConCorriere == null) return 0;
+		return getMezziDiTrasportoDisponibiliConCorriere().size();
+	}
+
+	public LocalDate getSelectedOrdersDate() {
+		LocalDate result = null;
+		for (OrdineConSelezione o : ordersWithSelection)
+		{
+			if (o.selected)
+			{
+				if (result == null)
+				{
+					result = o.ordine.getData();
+				}
+				else {
+					if (result != o.ordine.getData())
+					{
+						return null;
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	protected LocalTime getSuggestedDepartureTimeForSelectedOrders() {
+		LocalTime result = null;
+		for (OrdineConSelezione o : ordersWithSelection)
+		{
+			if (o.selected)
+			{
+				LocalTime orarioInizio = o.ordine.getOrarioinizio();
+				if (result == null || result.isAfter(orarioInizio))
+				{
+					result = orarioInizio;
+				}
+			}
+		}
+		return result;
+	}
+	
+	protected LocalTime getSuggestedArrivalTimeForSelectedOrders() {
+		LocalTime result = null;
+		for (OrdineConSelezione o : ordersWithSelection)
+		{
+			if (o.selected)
+			{
+				LocalTime orarioFine = o.ordine.getOrariofine();
+				if (result == null || result.isBefore(orarioFine))
+				{
+					result = orarioFine;
+				}
+			}
+		}
+		return result;
+	}
 }
