@@ -9,6 +9,14 @@ public class Spedizione {
 	private String codiceFiscaleCorriere;
 	private String codiceFiscaleOperatore;
 	
+	public Spedizione(Timestamp partenza, Timestamp arrivoStimato, String targa, String codiceFiscaleCorriere,
+			String codiceFiscaleOperatore) {
+		this.partenza = partenza;
+		this.arrivoStimato = arrivoStimato;
+		this.targa = targa;
+		this.codiceFiscaleCorriere = codiceFiscaleCorriere;
+		this.codiceFiscaleOperatore = codiceFiscaleOperatore;
+	}
 	public Timestamp getPartenza() {
 		return partenza;
 	}

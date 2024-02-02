@@ -165,6 +165,7 @@ public class LogisticaPage extends JFrame {
     	int selectedVehicleRow = vehiclesTable.getSelectedRow();
     	if (selectedVehicleRow == -1) return;
 		String targa = (String) vehiclesTable.getValueAt(selectedVehicleRow, 1);
+		shippersTable.clearSelection();
 		myController.retrieveCorrieriDisponibiliPerMezzoDiTrasporto(appliedDate, appliedInitialTime, appliedFinalTime, targa);
 		shippersTable.revalidate();
 	}

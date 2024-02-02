@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import java.awt.Cursor;
@@ -189,7 +190,22 @@ public class OrdiniPage extends JFrame {
 	
 	private void confermaClicked()
 	{
-		myController.confirmButtonPressed();
+		if (myController.noOrdersSelected())
+		{
+			JOptionPane.showMessageDialog(this, "Non puoi creare una spedizione vuota", "Nessun ordine selezionato", JOptionPane.WARNING_MESSAGE);
+		}
+		else
+		{
+			if (!myController.existsMezzoDiTrasportoForWeight())
+			{
+				JOptionPane.showMessageDialog(this, "Il peso complessivo della spedizione che si vuole creare è superiore alla "
+						+ "capienza di ogni mezzo di trasporto della sede.", "Nessun mezzo disponibile", JOptionPane.WARNING_MESSAGE);
+			}
+			else
+			{
+				myController.openLogisticaPage();
+			}
+		}
 	}
 	
 	private boolean doesOrderSatisfyFilters(Ordine o) {
@@ -234,15 +250,19 @@ public class OrdiniPage extends JFrame {
 	private void updateFeedback() {
 		LocalDate ordersDate = myController.getSelectedOrdersDate();
 		String mezziDisponibili = "\u26A0";
-		if (ordersDate != null) {
-			myController.retrieveMezziDiTrasportoDisponibili(ordersDate,
-					myController.getSuggestedDepartureTimeForSelectedOrders(),
-					myController.getSuggestedArrivalTimeForSelectedOrders());
-			mezziDisponibili = ((Integer) myController.getNumberOfMezziDiTrasportoDisponibili()).toString();
+		if (!myController.existsMezzoDiTrasportoForWeight())
+		{
+			mezziDisponibili = "\u274C";
 		}
-		/*
-		 * TODO if not exists mezzi con capacità >= al peso then mezzidisponibili = X
-		 */
+		else
+		{
+			if (ordersDate != null) {
+				myController.retrieveMezziDiTrasportoDisponibili(ordersDate,
+						myController.getSuggestedDepartureTimeForSelectedOrders(),
+						myController.getSuggestedArrivalTimeForSelectedOrders());
+				mezziDisponibili = ((Integer) myController.getNumberOfMezziDiTrasportoDisponibili()).toString();
+			}
+		}
 		actualWeightLabel.setText(" " + myController.calculateWeightForSelectedOrders());
 		actualVehiclesLabel.setText(" " + mezziDisponibili);
 	}

@@ -213,7 +213,7 @@ public class Controller {
 		filteredOrdersRows.get(row).toggle();
 	}
 
-	public void backButtonPressedFromOrdiniToHomePage() {
+	protected void backButtonPressedFromOrdiniToHomePage() {
 		ordiniPage.setVisible(false);
 		homePage.setVisible(true);
 	}
@@ -226,27 +226,19 @@ public class Controller {
 		ordiniPage.setVisible(true);
 	}
 	
-	public void backButtonPressedFromReportToHomePage() {
+	protected void backButtonPressedFromReportToHomePage() {
 		reportPage.setVisible(false);
 		homePage.setVisible(true);
 		//TODO altro
 	}
 	
-	public void confirmButtonPressed() {
-		//TODO other warnings etc
-		if (noOrdersSelected())
-		{
-			JOptionPane.showMessageDialog(this.ordiniPage, "Non puoi creare una spedizione vuota", "Nessun ordine selezionato", JOptionPane.WARNING_MESSAGE);
-		}
-		else
-		{
-			ordiniPage.setVisible(false);
-			logisticaPage.setVisible(true);
-			retrieveMezziDiTrasportoDisponibili(null, null, null);
-		}
+	protected void openLogisticaPage() {
+		ordiniPage.setVisible(false);
+		logisticaPage.setVisible(true);
+		retrieveMezziDiTrasportoDisponibili(null, null, null);
 	}
 	
-	private boolean noOrdersSelected()
+	protected boolean noOrdersSelected()
 	{
 		Iterator<OrdineConSelezione> iter = ordersWithSelection.iterator();
 		boolean noOrdersSelected = true;
@@ -351,7 +343,8 @@ public class Controller {
 		
 		long idSpedizione = -1;
 		try {
-			idSpedizione = spedizioneDAO.create(partenza, arrivoStimato, targa, codiceFiscale, this.operatore.getCodiceFiscale());
+			Spedizione s = new Spedizione (partenza, arrivoStimato, targa, codiceFiscale, this.operatore.getCodiceFiscale());
+			idSpedizione = spedizioneDAO.create(s);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -444,5 +437,18 @@ public class Controller {
 			}
 		}
 		return result;
+	}
+
+	public boolean existsMezzoDiTrasportoForWeight() {
+		List<MezzoDiTrasporto> lista = mezzoDiTrasportoDAO.getMezziDiTrasportoDisponibili(null, null, null, this.operatore.getSede());
+		float peso = calculateWeightForSelectedOrders();
+		for (MezzoDiTrasporto mezzo : lista)
+		{
+			if (mezzo.getCapienza() >= peso)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
