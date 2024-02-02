@@ -5,7 +5,7 @@
 -- Dumped from database version 16.1
 -- Dumped by pg_dump version 16.1
 
--- Started on 2024-02-01 19:41:41
+-- Started on 2024-02-02 19:40:05
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -447,7 +447,7 @@ $$;
 ALTER FUNCTION uninadelivery.get_mezzi_di_trasporto_disponibili(inizio timestamp without time zone, fine timestamp without time zone) OWNER TO postgres;
 
 --
--- TOC entry 306 (class 1255 OID 17514)
+-- TOC entry 305 (class 1255 OID 17514)
 -- Name: get_mezzi_di_trasporto_disponibili_con_corriere(timestamp without time zone, timestamp without time zone, character); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -464,7 +464,7 @@ $$;
 ALTER FUNCTION uninadelivery.get_mezzi_di_trasporto_disponibili_con_corriere(inizio timestamp without time zone, fine timestamp without time zone, codicefiscalecorriere character) OWNER TO postgres;
 
 --
--- TOC entry 307 (class 1255 OID 17720)
+-- TOC entry 306 (class 1255 OID 17720)
 -- Name: get_mezzi_di_trasporto_disponibili_con_sede(timestamp without time zone, timestamp without time zone, integer); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -540,8 +540,8 @@ BEGIN
 	RETURN QUERY (
 		SELECT *
 		FROM uninadelivery.ORDINE AS O
-		WHERE (O.Data + O.OrarioFine > inizio OR inizio IS NULL) AND
-			(O.Data + O.OrarioInizio < fine OR fine IS NULL) AND
+		WHERE (O.Data + O.OrarioFine >= inizio OR inizio IS NULL) AND
+			(O.Data + O.OrarioInizio =< fine OR fine IS NULL) AND
 			(O.EmailAcquirente = emailUtente OR emailUtente IS NULL) AND
 			O.Stato <> 'Annullato'
 	);
@@ -552,7 +552,7 @@ $$;
 ALTER FUNCTION uninadelivery.get_ordini(inizio timestamp without time zone, fine timestamp without time zone, emailutente character varying) OWNER TO postgres;
 
 --
--- TOC entry 299 (class 1255 OID 17530)
+-- TOC entry 307 (class 1255 OID 17530)
 -- Name: get_ordini_da_spedire(timestamp without time zone, timestamp without time zone, character varying); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -563,8 +563,8 @@ BEGIN
 	RETURN QUERY (
 		SELECT *
 		FROM uninadelivery.ORDINE AS O
-		WHERE (O.Data + O.OrarioFine > inizio OR inizio IS NULL) AND
-			(O.Data + O.OrarioInizio < fine OR fine IS NULL) AND
+		WHERE (O.Data + O.OrarioFine >= inizio OR inizio IS NULL) AND
+			(O.Data + O.OrarioInizio =< fine OR fine IS NULL) AND
 			(O.EmailAcquirente = emailUtente OR emailUtente IS NULL) AND
 			O.Stato = 'Confermato'
 	);
@@ -575,7 +575,7 @@ $$;
 ALTER FUNCTION uninadelivery.get_ordini_da_spedire(inizio timestamp without time zone, fine timestamp without time zone, emailutente character varying) OWNER TO postgres;
 
 --
--- TOC entry 300 (class 1255 OID 17531)
+-- TOC entry 299 (class 1255 OID 17531)
 -- Name: get_ordini_da_spedire_by_sede(timestamp without time zone, timestamp without time zone, character varying, integer); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
@@ -586,8 +586,8 @@ BEGIN
     RETURN QUERY (
         SELECT *
         FROM uninadelivery.ORDINE AS O
-        WHERE (O.Data + O.OrarioFine > inizio OR inizio IS NULL) AND
-            (O.Data + O.OrarioInizio < fine OR fine IS NULL) AND
+        WHERE (O.Data + O.OrarioFine >= inizio OR inizio IS NULL) AND
+            (O.Data + O.OrarioInizio <= fine OR fine IS NULL) AND
             (O.EmailAcquirente = emailUtente OR emailUtente IS NULL) AND
             O.Stato = 'Confermato' AND
             (O.idsede = sede)
@@ -990,7 +990,7 @@ $$;
 ALTER PROCEDURE uninadelivery.test() OWNER TO postgres;
 
 --
--- TOC entry 301 (class 1255 OID 17547)
+-- TOC entry 300 (class 1255 OID 17547)
 -- Name: test_autenticazione_operatore(); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1016,7 +1016,7 @@ $$;
 ALTER PROCEDURE uninadelivery.test_autenticazione_operatore() OWNER TO postgres;
 
 --
--- TOC entry 302 (class 1255 OID 17548)
+-- TOC entry 301 (class 1255 OID 17548)
 -- Name: test_corriere_puo_guidare_mezzo_di_trasporto(); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1082,7 +1082,7 @@ $$;
 ALTER PROCEDURE uninadelivery.test_corriere_puo_guidare_mezzo_di_trasporto() OWNER TO postgres;
 
 --
--- TOC entry 303 (class 1255 OID 17549)
+-- TOC entry 302 (class 1255 OID 17549)
 -- Name: test_corriere_puo_guidare_mezzo_di_trasporto_stessa_sede(); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1116,7 +1116,7 @@ $$;
 ALTER PROCEDURE uninadelivery.test_corriere_puo_guidare_mezzo_di_trasporto_stessa_sede() OWNER TO postgres;
 
 --
--- TOC entry 304 (class 1255 OID 17550)
+-- TOC entry 303 (class 1255 OID 17550)
 -- Name: test_is_corriere_disponibile(); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1152,7 +1152,7 @@ $$;
 ALTER PROCEDURE uninadelivery.test_is_corriere_disponibile() OWNER TO postgres;
 
 --
--- TOC entry 305 (class 1255 OID 17551)
+-- TOC entry 304 (class 1255 OID 17551)
 -- Name: test_is_mezzo_di_trasporto_disponibile(); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
 --
 
@@ -1882,7 +1882,8 @@ INSERT INTO uninadelivery.ordine VALUES
 	(36, 'Confermato', '2024-01-15', '08:00:00', '16:00:00', NULL, 'tur1ng@libero.it', '2023-12-28', 4, '12345', 'nomecittà', 'via pinco', '1', NULL),
 	(37, 'Confermato', '2024-01-15', '08:00:00', '10:00:00', NULL, 'lovelace@yahoo.com', '2023-12-30', 2, '12345', 'nomecittà', 'via pinco', '1', NULL),
 	(38, 'Confermato', '2024-01-15', '17:00:00', '19:30:00', NULL, 'tur1ng@libero.it', '2023-12-01', 3, '12345', 'nomecittà', 'via pinco', '1', NULL),
-	(39, 'Confermato', '2024-01-15', '10:00:00', '12:00:00', NULL, 'bjork@gmail.com', '2023-12-01', 3, '12345', 'nomecittà', 'via pinco', '1', NULL);
+	(39, 'Confermato', '2024-01-15', '10:00:00', '12:00:00', NULL, 'bjork@gmail.com', '2023-12-01', 3, '12345', 'nomecittà', 'via pinco', '1', NULL),
+	(49, 'Confermato', '2024-01-16', '08:00:00', '10:00:00', NULL, 'lucarosso@gmail.com', '2024-01-13', 1, '12345', 'citta', 'via a', '3', NULL);
 
 
 --
@@ -1986,7 +1987,7 @@ SELECT pg_catalog.setval('uninadelivery.operatore_idsede_seq', 1, false);
 -- Name: ordine_idordine_seq; Type: SEQUENCE SET; Schema: uninadelivery; Owner: postgres
 --
 
-SELECT pg_catalog.setval('uninadelivery.ordine_idordine_seq', 47, true);
+SELECT pg_catalog.setval('uninadelivery.ordine_idordine_seq', 49, true);
 
 
 --
@@ -2022,7 +2023,7 @@ SELECT pg_catalog.setval('uninadelivery.sede_id_sede_seq', 4, true);
 -- Name: spedizione_idspedizione_seq; Type: SEQUENCE SET; Schema: uninadelivery; Owner: postgres
 --
 
-SELECT pg_catalog.setval('uninadelivery.spedizione_idspedizione_seq', 1, false);
+SELECT pg_catalog.setval('uninadelivery.spedizione_idspedizione_seq', 3, true);
 
 
 --
@@ -2339,7 +2340,7 @@ ALTER TABLE ONLY uninadelivery.spedizione
     ADD CONSTRAINT spedizione_targa_fkey FOREIGN KEY (targa) REFERENCES uninadelivery.mezzo_di_trasporto(targa);
 
 
--- Completed on 2024-02-01 19:41:41
+-- Completed on 2024-02-02 19:40:05
 
 --
 -- PostgreSQL database dump complete

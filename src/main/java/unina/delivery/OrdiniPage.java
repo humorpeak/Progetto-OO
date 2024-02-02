@@ -200,10 +200,10 @@ public class OrdiniPage extends JFrame {
 		boolean sameDate = date == null || o.getData().equals(date);
 		
 		LocalTime initialTime = initialTimePicker.getTime();
-		boolean afterInitialTime = initialTime == null || o.getOrarioinizio().isAfter(initialTime);
+		boolean afterInitialTime = initialTime == null || o.getOrarioinizio().isAfter(initialTime) || o.getOrarioinizio().equals(initialTime);
 
 		LocalTime finalTime = finalTimePicker.getTime();
-		boolean afterFinalTime = finalTime == null || o.getOrariofine().isBefore(finalTime);
+		boolean afterFinalTime = finalTime == null || o.getOrariofine().isBefore(finalTime) || o.getOrariofine().equals(finalTime);
 		
 		return sameEmail && sameDate && afterInitialTime && afterFinalTime;
 	}
