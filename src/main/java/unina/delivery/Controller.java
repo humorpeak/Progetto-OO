@@ -397,7 +397,7 @@ public class Controller {
 					result = o.ordine.getData();
 				}
 				else {
-					if (result != o.ordine.getData())
+					if (!result.equals(o.ordine.getData()))
 					{
 						return null;
 					}

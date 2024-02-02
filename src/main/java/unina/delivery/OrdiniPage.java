@@ -192,22 +192,42 @@ public class OrdiniPage extends JFrame {
 	{
 		if (myController.noOrdersSelected())
 		{
-			JOptionPane.showMessageDialog(this, "Non puoi creare una spedizione vuota", "Nessun ordine selezionato", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Non puoi creare una spedizione vuota", "Nessun ordine selezionato", JOptionPane.ERROR_MESSAGE);
 		}
 		else
 		{
 			if (!myController.existsMezzoDiTrasportoForWeight())
 			{
 				JOptionPane.showMessageDialog(this, "Il peso complessivo della spedizione che si vuole creare è superiore alla "
-						+ "capienza di ogni mezzo di trasporto della sede.", "Nessun mezzo disponibile", JOptionPane.WARNING_MESSAGE);
+						+ "capienza di ogni mezzo di trasporto della sede.", "Nessun mezzo disponibile", JOptionPane.ERROR_MESSAGE);
 			}
 			else
 			{
+				boolean confirm = generateWarningsBeforeConfirm();
+				if (confirm == false) return;
 				myController.openLogisticaPage();
 			}
 		}
 	}
 	
+	private boolean generateWarningsBeforeConfirm() {
+		LocalDate ordersDate = myController.getSelectedOrdersDate();
+		if (ordersDate == null)
+		{
+			int noSelected = JOptionPane.showConfirmDialog(this, "Si sta creando una spedizione per ordini la cui consegna è prevista in giorni diversi, è sicuro di voler continuare?", "Richiesta conferma", JOptionPane.YES_NO_OPTION);
+			if (noSelected == 1) return false;
+		}
+		else 
+		{
+			if (myController.getSuggestedDepartureTimeForSelectedOrders().isAfter(myController.getSuggestedArrivalTimeForSelectedOrders()))
+			{
+				int noSelected = JOptionPane.showConfirmDialog(this, "Non sarà possibile recapitare gli ordini selezionati con un'unica spedizione, è sicuro di voler continuare?", "Richiesta conferma", JOptionPane.YES_NO_OPTION);
+				if (noSelected == 1) return false;
+			}
+		}
+		return true;
+	}
+
 	private boolean doesOrderSatisfyFilters(Ordine o) {
 		String username = usernameField.getText();
 		boolean sameEmail = username.isEmpty() || o.getAcquirente().equals(username);
