@@ -86,20 +86,7 @@ public class LoginPage extends JFrame {
 		loginButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("login button pressed");
-				String email = usernameField.getText();
-				@SuppressWarnings("deprecation")
-				String password = passwordField.getText();
-				//c'era getPassword e si usava char[], ma i prepared statement hanno solo getString
-				if (email.isEmpty()) {
-					showWarning("Inserire email utente", "Email mancante");
-				}
-				else if (password.isEmpty()) {
-					showWarning("Inserire password", "Password mancante");
-				}
-				else {
-					myController.loginButtonPressed(email, password);
-				}
+				loginButtonPressed();
 			}
 			
 		});
@@ -128,5 +115,22 @@ public class LoginPage extends JFrame {
 	
 	protected void showError(String testo, String titolo) {
 		JOptionPane.showMessageDialog(this, testo, titolo, JOptionPane.ERROR_MESSAGE);
+	}
+	
+	protected void loginButtonPressed()
+	{
+		System.out.println("login button pressed");
+		String email = usernameField.getText();
+		@SuppressWarnings("deprecation")
+		String password = passwordField.getText();
+		if (email.isEmpty()) {
+			showWarning("Inserire email utente", "Email mancante");
+		}
+		else if (password.isEmpty()) {
+			showWarning("Inserire password", "Password mancante");
+		}
+		else {
+			myController.loginButtonPressed(email, password);
+		}
 	}
 }

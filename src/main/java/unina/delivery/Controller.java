@@ -374,6 +374,9 @@ public class Controller {
 		availableShippers = new ArrayList<>();
 		availableVehiclesWithShipper = new ArrayList<>();
 		this.ordiniPage.resetFilters();
+		
+		JOptionPane.showMessageDialog(this.logisticaPage, "Spedizione creata correttamente.", "Successo", JOptionPane.INFORMATION_MESSAGE);
+		this.logisticaPage.resetFilters();
 	}
 
 	private void setSelectedOrdersStateToShipped(long idSpedizione) {

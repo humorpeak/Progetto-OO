@@ -64,8 +64,7 @@ public class HomePage extends JFrame {
 		shipmentButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("shipment button pressed");
-				myController.shipmentButtonPressed();
+				shipmentButtonPressed();
 			}
 			
 		});
@@ -98,8 +97,7 @@ public class HomePage extends JFrame {
 		reportButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("report button pressed");
-				myController.reportButtonPressed();
+				reportButtonPressed();
 			}
 			
 		});
@@ -119,5 +117,15 @@ public class HomePage extends JFrame {
 	
 	protected void showInformation(String testo, String titolo) {
 		JOptionPane.showMessageDialog(this, testo, titolo, JOptionPane.INFORMATION_MESSAGE, null);
+	}
+	
+	private void reportButtonPressed()
+	{
+		myController.reportButtonPressed();
+	}
+	
+	private void shipmentButtonPressed()
+	{
+		myController.shipmentButtonPressed();
 	}
 }

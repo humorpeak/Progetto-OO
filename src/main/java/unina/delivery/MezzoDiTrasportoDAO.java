@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MezzoDiTrasportoDAO {
-	Controller myController;
+	private Controller myController;
 	
 	MezzoDiTrasportoDAO(Controller controller)
 	{

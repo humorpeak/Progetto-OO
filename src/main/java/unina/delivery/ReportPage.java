@@ -257,20 +257,14 @@ public class ReportPage extends JFrame {
 		});
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				myController.backButtonPressedFromReportToHomePage();
+				backButtonPressed();
 			}
 		});
 		panel.add(backButton, "cell 1 5");
 		
 		calculateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				int year = Integer.valueOf(String.valueOf(yearBox.getSelectedItem()));
-				int month = Integer.valueOf(monthBox.getSelectedIndex()) + 1;
-				
-				System.out.println(year + " / " + month);
-				
-				myController.calculateButtonPressed(year, month);
+				calcolaButtonPressed();
 			}
 		});
 		
@@ -285,6 +279,18 @@ public class ReportPage extends JFrame {
                 myController.exit();
             }
         });
+	}
+	
+	private void backButtonPressed()
+	{
+		myController.backButtonPressedFromReportToHomePage();
+	}
+	
+	private void calcolaButtonPressed()
+	{
+		int year = Integer.valueOf(String.valueOf(yearBox.getSelectedItem()));
+		int month = Integer.valueOf(monthBox.getSelectedIndex()) + 1;
+		myController.calculateButtonPressed(year, month);
 	}
 
 	protected void showResults(double averageNumberOfOrders) {

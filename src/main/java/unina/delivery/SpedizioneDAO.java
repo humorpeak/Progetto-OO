@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class SpedizioneDAO {
-	Controller myController;
+	private Controller myController;
 	
 	SpedizioneDAO(Controller controller)
 	{

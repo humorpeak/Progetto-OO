@@ -33,7 +33,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class OrdiniPage extends JFrame {
 	
-	private static final long serialVersionUID = 5710891036621600811L;
+	private static final long serialVersionUID = 1L;
 	private Controller myController;
 	private JPanel panel;
 	private JPanel filtersPanel;
@@ -148,7 +148,7 @@ public class OrdiniPage extends JFrame {
 		backButton.setToolTipText("Clicca qui per tornare alla Home.");
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				myController.backButtonPressedFromOrdiniToHomePage();
+				backButtonPressed();
 			}
 		});
 		panel.add(backButton, "cell 1 4,alignx left");
@@ -185,6 +185,11 @@ public class OrdiniPage extends JFrame {
                 myController.exit();
             }
         });
+	}
+	
+	private void backButtonPressed()
+	{
+		myController.backButtonPressedFromOrdiniToHomePage();
 	}
 	
 	private void confermaClicked()
