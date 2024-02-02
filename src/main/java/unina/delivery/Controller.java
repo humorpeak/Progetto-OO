@@ -244,7 +244,6 @@ public class Controller {
 	protected void backButtonPressedFromReportToHomePage() {
 		reportPage.setVisible(false);
 		homePage.setVisible(true);
-		//TODO altro
 	}
 	
 	protected void openLogisticaPage() {

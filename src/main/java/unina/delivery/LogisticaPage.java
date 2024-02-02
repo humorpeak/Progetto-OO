@@ -22,14 +22,13 @@ import javax.swing.table.TableModel;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
 import javax.swing.ListSelectionModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class LogisticaPage extends JFrame {
-	
+	private static final long serialVersionUID = 1L;
 	private Controller myController;
 	private JPanel panel;
 	private JTable vehiclesTable;

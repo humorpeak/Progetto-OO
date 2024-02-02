@@ -7,21 +7,18 @@ import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.TimePicker;
 
 import javax.swing.JFrame;
-import javax.swing.BoxLayout;
 import javax.swing.JTextField;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import java.awt.Cursor;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 
@@ -31,10 +28,7 @@ import java.awt.event.MouseEvent;
 import java.time.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.SwingConstants;
-import java.awt.Component;
 import net.miginfocom.swing.MigLayout;
-import unina.delivery.LogisticaPage.CorrieriTableModel;
 
 
 public class OrdiniPage extends JFrame {

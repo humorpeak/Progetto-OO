@@ -5,7 +5,6 @@ import java.awt.Font;
 
 import javax.swing.JFrame;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -14,8 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-
 import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
@@ -24,7 +21,6 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JComboBox;
 import java.awt.Rectangle;
 
-import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
@@ -58,8 +54,8 @@ public class ReportPage extends JFrame {
 	private JButton backButton;
 	
 	abstract class OrdersReportTableModel extends AbstractTableModel{
-	
 		private static final long serialVersionUID = 1L;
+		
 		private String columnNames[] = { "Acquirente", "Data", "Indirizzo"};
 		private Controller myController;
 		
@@ -85,7 +81,8 @@ public class ReportPage extends JFrame {
 	}
 	
 	class MaxOrdersTableModel extends OrdersReportTableModel {
-		
+		private static final long serialVersionUID = 1L;
+
 		MaxOrdersTableModel(Controller controller) {
 			super(controller);
 		}
@@ -114,7 +111,8 @@ public class ReportPage extends JFrame {
 	}
 	
 	class MinOrdersTableModel extends OrdersReportTableModel {
-		
+		private static final long serialVersionUID = 1L;
+
 		MinOrdersTableModel(Controller controller) {
 			super(controller);
 		}
