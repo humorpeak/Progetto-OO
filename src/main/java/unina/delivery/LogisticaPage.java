@@ -22,6 +22,7 @@ import javax.swing.table.TableModel;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
 import javax.swing.ListSelectionModel;
 import java.awt.event.MouseAdapter;
@@ -171,6 +172,7 @@ public class LogisticaPage extends JFrame {
 	private void salvaClicked() {
 		int selectedVehicleRow = vehiclesTable.getSelectedRow();
 		int selectedShipperRow = shippersTable.getSelectedRow();
+		
     	if (selectedVehicleRow == -1)
     	{
     		JOptionPane.showMessageDialog(this, "Selezionare un mezzo di trasporto", "Nessun mezzo selezionato", JOptionPane.WARNING_MESSAGE);
@@ -188,6 +190,10 @@ public class LogisticaPage extends JFrame {
 		    	}
 		    	else
 		    	{
+		    		String message = "Confermi di voler creare una spedizione per il giorno " + appliedDate + " in partenza alle ore " + appliedInitialTime + " con arrivo stimato alle " + appliedFinalTime + "?";
+		    		int noPressed = JOptionPane.showConfirmDialog(this, message, "Conferma", JOptionPane.YES_NO_OPTION);
+		    		if (noPressed == 1) return;
+		    		
 		        	String targa = (String) vehiclesTable.getValueAt(selectedVehicleRow, 1);
 		        	String codiceFiscale = (String) shippersTable.getValueAt(selectedShipperRow, 3);
 		        	

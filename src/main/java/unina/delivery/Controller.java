@@ -367,5 +367,13 @@ public class Controller {
 			}
 		}
 	}
-
+	
+	protected float calculateWeightForSelectedOrders()
+	{
+		float tot = 0;
+		for (OrdineConSelezione o : ordersWithSelection) {
+			if (o.selected) tot += o.ordine.getPeso();
+		}
+		return tot;
+	}
 }

@@ -27,7 +27,8 @@ public class MezzoDiTrasportoDAO {
 		}
 		System.out.println(begin);
 		System.out.println(end);
-		String queryMezziDisponibili = "SELECT * FROM uninadelivery.get_mezzi_di_trasporto_disponibili_con_sede(?, ?, ?)";
+		float pesoOrdini = myController.calculateWeightForSelectedOrders();
+		String queryMezziDisponibili = "SELECT * FROM uninadelivery.get_mezzi_di_trasporto_disponibili_con_sede(?, ?, ?) AS M WHERE M.capienza >= "+pesoOrdini;
 		List<MezzoDiTrasporto> result = new ArrayList<>();
 		try {
 			PreparedStatement ps = myController.getMyConnection().prepareStatement(queryMezziDisponibili);
