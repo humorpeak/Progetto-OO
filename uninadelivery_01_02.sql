@@ -541,7 +541,7 @@ BEGIN
 		SELECT *
 		FROM uninadelivery.ORDINE AS O
 		WHERE (O.Data + O.OrarioFine >= inizio OR inizio IS NULL) AND
-			(O.Data + O.OrarioInizio =< fine OR fine IS NULL) AND
+			(O.Data + O.OrarioInizio <= fine OR fine IS NULL) AND
 			(O.EmailAcquirente = emailUtente OR emailUtente IS NULL) AND
 			O.Stato <> 'Annullato'
 	);
@@ -564,7 +564,7 @@ BEGIN
 		SELECT *
 		FROM uninadelivery.ORDINE AS O
 		WHERE (O.Data + O.OrarioFine >= inizio OR inizio IS NULL) AND
-			(O.Data + O.OrarioInizio =< fine OR fine IS NULL) AND
+			(O.Data + O.OrarioInizio <= fine OR fine IS NULL) AND
 			(O.EmailAcquirente = emailUtente OR emailUtente IS NULL) AND
 			O.Stato = 'Confermato'
 	);
