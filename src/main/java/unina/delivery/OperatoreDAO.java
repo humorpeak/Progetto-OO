@@ -29,6 +29,7 @@ public class OperatoreDAO {
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, e, "Errore", JOptionPane.ERROR_MESSAGE);
 		}
 		return false;

@@ -214,7 +214,7 @@ public class OrdiniPage extends JFrame {
 		panel.add(backButton, "cell 1 4,alignx left");
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				backButtonPressed(); //TODO avviso
+				backButtonPressed();
 			}
 		});
 		
@@ -275,7 +275,8 @@ public class OrdiniPage extends JFrame {
 	
 	private void backButtonPressed()
 	{
-		myController.backButtonPressedFromOrdiniToHomePage();
+		int noSelected = JOptionPane.showConfirmDialog(this, "Tornando indietro perderai tutto il lavoro fatto, continuare?", "Richiesta conferma", JOptionPane.YES_NO_OPTION);
+		if (noSelected == 0) myController.backButtonPressedFromOrdiniToHomePage();
 	}
 	
 	private void confermaClicked()
@@ -370,6 +371,10 @@ public class OrdiniPage extends JFrame {
 		LocalDate ordersDate = myController.getSelectedOrdersDate();
 		String mezziDisponibili = "warning";
 		actualVehiclesLabel.setToolTipText("Le date degli ordini selezionati non coincidono");
+		if (myController.noOrdersSelected())
+		{
+			actualVehiclesLabel.setToolTipText("Non è possibile generare una spedizione senza prima selezionare ordini");
+		}
 		if (!myController.existsMezzoDiTrasportoForWeight())
 		{
 			mezziDisponibili = "error";

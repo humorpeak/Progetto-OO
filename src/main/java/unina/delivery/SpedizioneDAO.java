@@ -12,7 +12,6 @@ public class SpedizioneDAO {
 		myController = controller;
 	}
 	
-	
 	/**
 	 * @param Spedizione to insert into the SPEDIZIONE table in the database
 	 * @return
