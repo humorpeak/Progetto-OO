@@ -377,15 +377,21 @@ public class Controller {
 		if (idSpedizione == -1) return;
 		
 		boolean ok = setSelectedOrdersStateToShipped(idSpedizione);
-		availableShippers = new ArrayList<>();
-		availableVehiclesWithShipper = new ArrayList<>();
-		this.ordiniPage.resetFilters();
-		
 		if (ok)
 		{
 			JOptionPane.showMessageDialog(this.logisticaPage, "Spedizione creata correttamente.", "Successo", JOptionPane.INFORMATION_MESSAGE);
 		}
+		else
+		{
+			JOptionPane.showMessageDialog(this.logisticaPage, "Il database ha riscontrato un problema, sarete reindirizzati alla Home Page.", "Fallimento", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		availableShippers = new ArrayList<>();
+		availableVehiclesWithShipper = new ArrayList<>();
+		this.ordiniPage.resetFilters();
 		this.logisticaPage.resetFilters();
+		this.logisticaPage.setVisible(false);
+		this.homePage.setVisible(false);
 	}
 
 	private boolean setSelectedOrdersStateToShipped(long idSpedizione) {
