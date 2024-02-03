@@ -81,12 +81,33 @@ public class LogisticaPage extends JFrame {
 		filtersPanel.add(datePicker, "cell 1 0 2 1,alignx left,aligny center");
 		
 		applyButton = new JButton("Applica");
+		applyButton.setFocusPainted(false);
+		applyButton.setBorderPainted(false);
+		applyButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				applyButton.setContentAreaFilled(false);
+				applyButton.setOpaque(true);
+				applyButton.setBackground(new Color(255, 213, 213));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				applyButton.setContentAreaFilled(true);
+				applyButton.setBackground(new Color(255, 128, 128));
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				applyButton.setContentAreaFilled(false);
+				applyButton.setOpaque(true);
+				applyButton.setBackground(new Color(255, 170, 170));
+			}
+		});
+		filtersPanel.add(applyButton, "cell 7 0 1 2,alignx right,aligny center");
 		applyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				applicaButtonPressed();
 			}
 		});
-		filtersPanel.add(applyButton, "cell 7 0 1 2,alignx right,aligny center");
 		
 		initialTimePickerLabel = new JLabel("Orario di partenza:");
 		filtersPanel.add(initialTimePickerLabel, "cell 0 1,alignx right,aligny center");
@@ -144,20 +165,62 @@ public class LogisticaPage extends JFrame {
 		});
 		
 		backButton = new JButton("Indietro");
+		backButton.setFocusPainted(false);
+		backButton.setBorderPainted(false);
+		backButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				backButton.setContentAreaFilled(false);
+				backButton.setOpaque(true);
+				backButton.setBackground(new Color(255, 213, 213));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				backButton.setContentAreaFilled(true);
+				backButton.setBackground(new Color(255, 128, 128));
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				backButton.setContentAreaFilled(false);
+				backButton.setOpaque(true);
+				backButton.setBackground(new Color(255, 170, 170));
+			}
+		});
+		panel.add(backButton, "cell 1 5,alignx left,aligny top");
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				backButtonPressed();
 			}
 		});
-		panel.add(backButton, "cell 1 5,alignx left,aligny top");
 		
 		saveButton = new JButton("Salva");
+		saveButton.setFocusPainted(false);
+		saveButton.setBorderPainted(false);
+		saveButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				saveButton.setContentAreaFilled(false);
+				saveButton.setOpaque(true);
+				saveButton.setBackground(new Color(255, 213, 213));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				saveButton.setContentAreaFilled(true);
+				saveButton.setBackground(new Color(255, 128, 128));
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				saveButton.setContentAreaFilled(false);
+				saveButton.setOpaque(true);
+				saveButton.setBackground(new Color(255, 170, 170));
+			}
+		});
+		panel.add(saveButton, "cell 3 5,alignx right,aligny top");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				salvaClicked();
 			}
 		});
-		panel.add(saveButton, "cell 3 5,alignx right,aligny top");
 		
 		
 		setSize(new Dimension(940, 480));

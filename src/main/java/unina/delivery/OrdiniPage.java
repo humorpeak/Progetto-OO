@@ -104,23 +104,65 @@ public class OrdiniPage extends JFrame {
 		filtersPanel.add(finalTimePicker, "flowx,cell 7 0");
 		
 		applyButton = new JButton("Applica");
+		applyButton.setFocusPainted(false);
+		applyButton.setBorderPainted(false);
+		applyButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				applyButton.setContentAreaFilled(false);
+				applyButton.setOpaque(true);
+				applyButton.setBackground(new Color(255, 213, 213));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				applyButton.setContentAreaFilled(true);
+				applyButton.setBackground(new Color(255, 128, 128));
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				applyButton.setContentAreaFilled(false);
+				applyButton.setOpaque(true);
+				applyButton.setBackground(new Color(255, 170, 170));
+			}
+		});
 		applyButton.setToolTipText("Clicca qui per applicare i filtri.");
+		filtersPanel.add(applyButton, "cell 9 0");
 		applyButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				applyFilters();
 			}
 		});
-		filtersPanel.add(applyButton, "cell 9 0");
 		
 		resetButton = new JButton("Reset");
+		resetButton.setFocusPainted(false);
+		resetButton.setBorderPainted(false);
+		resetButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				resetButton.setContentAreaFilled(false);
+				resetButton.setOpaque(true);
+				resetButton.setBackground(new Color(255, 213, 213));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				resetButton.setContentAreaFilled(true);
+				resetButton.setBackground(new Color(255, 128, 128));
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				resetButton.setContentAreaFilled(false);
+				resetButton.setOpaque(true);
+				resetButton.setBackground(new Color(255, 170, 170));
+			}
+		});
+		resetButton.setToolTipText("Clicca qui per resettare i tuoi filtri.");
+		filtersPanel.add(resetButton, "cell 10 0");
 		resetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				resetFilters();
 			}
 		});
-		resetButton.setToolTipText("Clicca qui per resettare i tuoi filtri.");
-		filtersPanel.add(resetButton, "cell 10 0");
 		
 		scrollPane = new JScrollPane();
 		panel.add(scrollPane, "cell 1 2 9 1,grow");
@@ -147,13 +189,34 @@ public class OrdiniPage extends JFrame {
 		scrollPane.setViewportView(ordersTable);
 		
 		backButton = new JButton("Indietro");
-		backButton.setToolTipText("Clicca qui per tornare alla Home.");
-		backButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				backButtonPressed();
+		backButton.setFocusPainted(false);
+		backButton.setBorderPainted(false);
+		backButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				backButton.setContentAreaFilled(false);
+				backButton.setOpaque(true);
+				backButton.setBackground(new Color(255, 213, 213));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				backButton.setContentAreaFilled(true);
+				backButton.setBackground(new Color(255, 128, 128));
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				backButton.setContentAreaFilled(false);
+				backButton.setOpaque(true);
+				backButton.setBackground(new Color(255, 170, 170));
 			}
 		});
+		backButton.setToolTipText("Clicca qui per tornare alla Home.");
 		panel.add(backButton, "cell 1 4,alignx left");
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				backButtonPressed(); //TODO avviso
+			}
+		});
 		
 		weightLabel = new JLabel("Peso totale:");
 		panel.add(weightLabel, "cell 3 4");
@@ -168,13 +231,34 @@ public class OrdiniPage extends JFrame {
 		panel.add(actualVehiclesLabel, "cell 7 4");
 		
 		confirmButton = new JButton("Conferma");
+		confirmButton.setFocusPainted(false);
+		confirmButton.setBorderPainted(false);
+		confirmButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				confirmButton.setContentAreaFilled(false);
+				confirmButton.setOpaque(true);
+				confirmButton.setBackground(new Color(255, 213, 213));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				confirmButton.setContentAreaFilled(true);
+				confirmButton.setBackground(new Color(255, 128, 128));
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				confirmButton.setContentAreaFilled(false);
+				confirmButton.setOpaque(true);
+				confirmButton.setBackground(new Color(255, 170, 170));
+			}
+		});
 		confirmButton.setToolTipText("Clicca qui per confermare gli ordini selezionati e andare avanti.");
+		panel.add(confirmButton, "cell 9 4,alignx right");
 		confirmButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				confermaClicked();
 			}
 		});
-		panel.add(confirmButton, "cell 9 4,alignx right");
 		
 		setBackground(new Color(255, 234, 234));
 		setSize(new Dimension(940, 480));
