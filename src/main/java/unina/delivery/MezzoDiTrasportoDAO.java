@@ -25,8 +25,6 @@ public class MezzoDiTrasportoDAO {
 			begin = Timestamp.valueOf(LocalDateTime.of(date, inizio));
 			end = Timestamp.valueOf(LocalDateTime.of(date, fine));
 		}
-		System.out.println(begin);
-		System.out.println(end);
 		float pesoOrdini = myController.calculateWeightForSelectedOrders();
 		String queryMezziDisponibili = "SELECT * FROM uninadelivery.get_mezzi_di_trasporto_disponibili_con_sede(?, ?, ?) AS M WHERE M.capienza >= "+pesoOrdini;
 		List<MezzoDiTrasporto> result = new ArrayList<>();
@@ -35,16 +33,12 @@ public class MezzoDiTrasportoDAO {
 			ps.setTimestamp(1, begin);
 			ps.setTimestamp(2, end);
 			ps.setInt(3, sede);
-			System.out.println(sede);
 			ResultSet rs = ps.executeQuery();
 
 			while (rs.next())
 			{
 				String targa = rs.getString("targa");
-				if (getCorrieriDisponibili(date, inizio, fine, targa).isEmpty())
-				{
-					continue;
-				}
+				if (getCorrieriDisponibili(date, inizio, fine, targa).isEmpty()) continue;
 				String tipoMezzo = rs.getString("tipoMezzo");
 				String patenteRichiesta = rs.getString("patenteRichiesta");
 				float capienza = rs.getFloat("capienza");
@@ -93,7 +87,7 @@ public class MezzoDiTrasportoDAO {
 		}
 		catch(Exception e)
 		{
-			System.out.println(e.getStackTrace());
+			e.printStackTrace();
 		}
 		return result;
 	}
