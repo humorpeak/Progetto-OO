@@ -20,7 +20,6 @@ import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -52,6 +51,8 @@ public class LogisticaPage extends JFrame {
 	private JButton backButton;
 	private JLabel shippersLabel;
 	private JButton saveButton;
+	private MezziDiTrasportoTableModel vehiclesDataModel;
+	private CorrieriTableModel shippersDataModel;
 	
 	LogisticaPage(Controller controller) {
 		myController = controller;
@@ -108,7 +109,7 @@ public class LogisticaPage extends JFrame {
 		vehiclesScrollPane = new JScrollPane();
 		panel.add(vehiclesScrollPane, "cell 1 3,grow");
 		
-		TableModel vehiclesDataModel = new MezziDiTrasportoTableModel();
+		vehiclesDataModel = new MezziDiTrasportoTableModel();
 		vehiclesTable = new JTable(vehiclesDataModel);
 		vehiclesTable.setRequestFocusEnabled(false);
 		vehiclesTable.setFocusable(false);
@@ -116,19 +117,13 @@ public class LogisticaPage extends JFrame {
 		vehiclesTable.setShowVerticalLines(false);
 		vehiclesTable.setShowGrid(false);
 		vehiclesTable.setBorder(null);
-		vehiclesTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				vehiclesTableButtonClicked(e);
-			}
-		});
 		vehiclesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		vehiclesScrollPane.setViewportView(vehiclesTable);
 		
 		shippersScrollPane = new JScrollPane();
 		panel.add(shippersScrollPane, "cell 3 3,grow");
 		
-		TableModel shippersDataModel = new CorrieriTableModel();
+		shippersDataModel = new CorrieriTableModel();
 		shippersTable = new JTable(shippersDataModel);
 		shippersTable.setRequestFocusEnabled(false);
 		shippersTable.setFocusable(false);
@@ -138,6 +133,15 @@ public class LogisticaPage extends JFrame {
 		shippersTable.setBorder(null);
 		shippersTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		shippersScrollPane.setViewportView(shippersTable);
+		
+
+		vehiclesTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				vehiclesTableButtonClicked(e);
+				shippersDataModel.fireTableDataChanged();
+			}
+		});
 		
 		backButton = new JButton("Indietro");
 		backButton.addActionListener(new ActionListener() {
@@ -156,7 +160,6 @@ public class LogisticaPage extends JFrame {
 		panel.add(saveButton, "cell 3 5,alignx right,aligny top");
 		
 		
-		//setBackground(new Color(255, 234, 234));
 		setSize(new Dimension(940, 480));
 		setLocationRelativeTo(null);				
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -186,21 +189,16 @@ public class LogisticaPage extends JFrame {
 		appliedDate = date;
 		appliedInitialTime = initTime;
 		appliedFinalTime = finalTime;
-		vehiclesTable.clearSelection();
-		shippersTable.clearSelection();
 		myController.applicaButtonPressedLogisticaPage(date, initTime, finalTime);
-		vehiclesTable.repaint();
-		shippersTable.repaint();
+		vehiclesDataModel.fireTableDataChanged();
+		shippersDataModel.fireTableDataChanged();
 	}
 	
 	private void vehiclesTableButtonClicked(MouseEvent e) {
     	int selectedVehicleRow = vehiclesTable.getSelectedRow();
     	if (selectedVehicleRow == -1) return;
 		String targa = (String) vehiclesTable.getValueAt(selectedVehicleRow, 1);
-		shippersTable.clearSelection();
 		myController.retrieveAvailableShippersForVehicle(appliedDate, appliedInitialTime, appliedFinalTime, targa);
-		shippersTable.invalidate();
-		shippersTable.repaint();
 	}
 	
 	private void salvaClicked() {

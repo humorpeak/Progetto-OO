@@ -56,6 +56,7 @@ public class OrdiniPage extends JFrame {
 	private JLabel usernameLabel;
 	private JTextField usernameField;
 	private JButton confirmButton;
+	private OrdersTableModel dataModel;
 	
 	OrdiniPage(Controller controller) {
 		myController = controller;
@@ -124,7 +125,7 @@ public class OrdiniPage extends JFrame {
 		scrollPane = new JScrollPane();
 		panel.add(scrollPane, "cell 1 2 9 1,grow");
 		
-		TableModel dataModel = new OrdersTableModel();
+		dataModel = new OrdersTableModel();
 		ordersTable = new JTable(dataModel);
 		ordersTable.setRowSelectionAllowed(false);
 		ordersTable.setRequestFocusEnabled(false);
@@ -259,7 +260,7 @@ public class OrdiniPage extends JFrame {
 			}
 		}
 		myController.setFilteredOrdersRows(filteredOrdersRows);
-		repaint();
+		dataModel.fireTableDataChanged();
 	}
 	
 	protected void resetFilters() {
@@ -275,6 +276,7 @@ public class OrdiniPage extends JFrame {
         int col = ordersTable.columnAtPoint(evt.getPoint());
         if (row >= 0 && col == 0) {
         	myController.toggleOrder(row);
+    		dataModel.fireTableDataChanged();
         }
         
         updateFeedback();

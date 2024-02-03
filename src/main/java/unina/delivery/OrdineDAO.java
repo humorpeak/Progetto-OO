@@ -19,7 +19,6 @@ public class OrdineDAO {
 		
 		ArrayList<Ordine> listaordini = new ArrayList<Ordine>();
 		
-		System.out.println(sede);
 		try
 		{	
 			String query = "SELECT * FROM uninadelivery.get_ordini_da_spedire_by_sede(null, null, null, ?)";
