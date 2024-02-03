@@ -42,12 +42,10 @@ public class ReportPage extends JFrame {
 	private JPanel resultsPanel;
 	private JLabel averageNumberOfOrdersLabel;
 	private JLabel actualAverageNumberOfOrdersLabel;
-	private JTable maxtable;
-	private JTable mintable;
+	private JTable ordersWithMaxNumOfProductsTable;
+	private JTable ordersWithMinNumOfProductsTable;
 	private JLabel maxProductsOrderLabel;
-	private JLabel maxNumberOfProductsLabel;
 	private JLabel minProductsOrderLabel;
-	private JLabel minNumberOfProductsLabel;
 	private JPanel maxtablePanel;
 	private JPanel mintablePanel;
 	private JScrollPane maxscrollPane;
@@ -194,43 +192,37 @@ public class ReportPage extends JFrame {
 		maxProductsOrderLabel.setVisible(false);
 		resultsPanel.add(maxProductsOrderLabel, "cell 0 2");
 		
-		maxNumberOfProductsLabel = new JLabel("");
-		resultsPanel.add(maxNumberOfProductsLabel, "cell 1 2,alignx right");
-		
 		maxtablePanel = new JPanel();
 		maxtablePanel.setVisible(false);
 		resultsPanel.add(maxtablePanel, "cell 0 3 2 1,grow");
 		
 		TableModel maxDataModel = new MaxOrdersTableModel();
-		maxtable = new JTable(maxDataModel);
-		maxtable.setFocusable(false);
-		maxtable.setShowVerticalLines(false);
-		maxtable.setShowGrid(false);
-		maxtable.setRowSelectionAllowed(false);
+		ordersWithMaxNumOfProductsTable = new JTable(maxDataModel);
+		ordersWithMaxNumOfProductsTable.setFocusable(false);
+		ordersWithMaxNumOfProductsTable.setShowVerticalLines(false);
+		ordersWithMaxNumOfProductsTable.setShowGrid(false);
+		ordersWithMaxNumOfProductsTable.setRowSelectionAllowed(false);
 		
-		maxscrollPane = new JScrollPane(maxtable);
+		maxscrollPane = new JScrollPane(ordersWithMaxNumOfProductsTable);
 		maxscrollPane.setPreferredSize(new Dimension(550, 100));
 		maxtablePanel.add(maxscrollPane);
 		
 		minProductsOrderLabel = new JLabel("Ordini con il minor numero di prodotti");
 		minProductsOrderLabel.setVisible(false);
 		resultsPanel.add(minProductsOrderLabel, "flowy,cell 0 6");
-		
-		minNumberOfProductsLabel = new JLabel("");
-		resultsPanel.add(minNumberOfProductsLabel, "cell 1 6,alignx right");
-		
+
 		mintablePanel = new JPanel();
 		mintablePanel.setVisible(false);
 		resultsPanel.add(mintablePanel, "cell 0 7 2 1,grow");
 		
 		TableModel minDataModel = new MinOrdersTableModel();
-		mintable = new JTable(minDataModel);
-		mintable.setFocusable(false);
-		mintable.setShowVerticalLines(false);
-		mintable.setShowGrid(false);
-		mintable.setRowSelectionAllowed(false);
+		ordersWithMinNumOfProductsTable = new JTable(minDataModel);
+		ordersWithMinNumOfProductsTable.setFocusable(false);
+		ordersWithMinNumOfProductsTable.setShowVerticalLines(false);
+		ordersWithMinNumOfProductsTable.setShowGrid(false);
+		ordersWithMinNumOfProductsTable.setRowSelectionAllowed(false);
 		
-		minscrollPane = new JScrollPane(mintable);
+		minscrollPane = new JScrollPane(ordersWithMinNumOfProductsTable);
 		minscrollPane.setPreferredSize(new Dimension(550, 100));
 		mintablePanel.add(minscrollPane);
 		
@@ -297,15 +289,16 @@ public class ReportPage extends JFrame {
 	protected void showResults(double averageNumberOfOrders) {
 		averageNumberOfOrdersLabel.setVisible(true);
 		actualAverageNumberOfOrdersLabel.setText(averageNumberOfOrders + " ");
-		maxProductsOrderLabel.setVisible(true);
-		minProductsOrderLabel.setVisible(true);
 		
+		maxProductsOrderLabel.setVisible(true);
 		maxtablePanel.setVisible(true);
-		maxtable.invalidate();
-		maxtable.repaint();
+		ordersWithMaxNumOfProductsTable.invalidate();
+		ordersWithMaxNumOfProductsTable.repaint();
+
+		minProductsOrderLabel.setVisible(true);
 		mintablePanel.setVisible(true);
-		mintable.invalidate();
-		mintable.repaint();
+		ordersWithMinNumOfProductsTable.invalidate();
+		ordersWithMinNumOfProductsTable.repaint();
 	}
 	
 	private void exitButtonPressed() {
