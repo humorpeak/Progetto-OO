@@ -181,14 +181,14 @@ public class ReportPage extends JFrame {
 		panel.add(resultsPanel, "cell 1 3 7 1,alignx center,aligny center");
 		resultsPanel.setLayout(new MigLayout("", "[grow][grow]", "[][][][grow][grow][][][grow]"));
 		
-		averageNumberOfOrdersLabel = new JLabel("Numero medio di ordini giornalieri:");
+		averageNumberOfOrdersLabel = new JLabel("Numero medio di ordini effettuati ogni giorno:");
 		averageNumberOfOrdersLabel.setVisible(false);
 		resultsPanel.add(averageNumberOfOrdersLabel, "cell 0 0");
 		
 		actualAverageNumberOfOrdersLabel = new JLabel("");
 		resultsPanel.add(actualAverageNumberOfOrdersLabel, "cell 1 0,alignx right");
 		
-		maxProductsOrderLabel = new JLabel("Ordini con il maggior numero di prodotti");
+		maxProductsOrderLabel = new JLabel("Ordini (consegnati/da consegnare) con il maggior numero di prodotti");
 		maxProductsOrderLabel.setVisible(false);
 		resultsPanel.add(maxProductsOrderLabel, "cell 0 2");
 		
@@ -207,7 +207,7 @@ public class ReportPage extends JFrame {
 		maxscrollPane.setPreferredSize(new Dimension(550, 100));
 		maxtablePanel.add(maxscrollPane);
 		
-		minProductsOrderLabel = new JLabel("Ordini con il minor numero di prodotti");
+		minProductsOrderLabel = new JLabel("Ordini (consegnati/da consegnare) con il minor numero di prodotti");
 		minProductsOrderLabel.setVisible(false);
 		resultsPanel.add(minProductsOrderLabel, "flowy,cell 0 6");
 

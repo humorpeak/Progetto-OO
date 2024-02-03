@@ -193,7 +193,7 @@ public class Controller {
 		List<OrdineConSelezione> filteredOrdersRows = new ArrayList<>();
 		for (OrdineConSelezione row : getOrdersWithSelection())
 		{
-			if (doesOrderSatisfyFilters(row.ordine))
+			if (this.ordiniPage.doesOrderSatisfyFilters(row.ordine))
 			{
 				filteredOrdersRows.add(row);
 			}
