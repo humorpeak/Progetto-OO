@@ -304,12 +304,14 @@ public class OrdiniPage extends JFrame {
 	
 	private void setVehiclesLabelCustomText(String testo) {
 		
+		
+		//TODO fix! + tool tip
 		actualVehiclesLabel.setText(" ");
-		if (testo.equals("error") && myController.getOrdersWithSelection().isEmpty()) {
+		if (testo.equals("error")) {
 			actualVehiclesLabel.setIcon(new ImageIcon(getClass().getResource("/unina/delivery/resources/error.png")));
 			
 		}
-		else if (testo.equals("warning") && myController.getOrdersWithSelection().isEmpty()) {
+		else if (testo.equals("warning")) {
 			actualVehiclesLabel.setIcon(new ImageIcon(getClass().getResource("/unina/delivery/resources/warning.png")));
 		}
 		else {

@@ -45,6 +45,8 @@ public class UIDesign {
 		UIManager.put("ComboBox.background", Color.white);
 		UIManager.put("ComboBox.font", FONT);
 		UIManager.put("ComboBox.selectionBackground", SECONDARY_BACKGROUND_COLOR);
+		
+		UIManager.put("Table.selectionBackground", SECONDARY_BACKGROUND_COLOR);
 	
 		UIManager.put("ScrollBar.border", Color.white);
 		UIManager.put("ScrollBar.background", Color.white);

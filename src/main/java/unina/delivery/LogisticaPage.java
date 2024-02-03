@@ -1,6 +1,7 @@
 package unina.delivery;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -109,6 +110,12 @@ public class LogisticaPage extends JFrame {
 		
 		TableModel vehiclesDataModel = new MezziDiTrasportoTableModel(myController);
 		vehiclesTable = new JTable(vehiclesDataModel);
+		vehiclesTable.setRequestFocusEnabled(false);
+		vehiclesTable.setFocusable(false);
+		vehiclesTable.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		vehiclesTable.setShowVerticalLines(false);
+		vehiclesTable.setShowGrid(false);
+		vehiclesTable.setBorder(null);
 		vehiclesTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -123,6 +130,12 @@ public class LogisticaPage extends JFrame {
 		
 		TableModel shippersDataModel = new CorrieriTableModel(myController);
 		shippersTable = new JTable(shippersDataModel);
+		shippersTable.setRequestFocusEnabled(false);
+		shippersTable.setFocusable(false);
+		shippersTable.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		shippersTable.setShowVerticalLines(false);
+		shippersTable.setShowGrid(false);
+		shippersTable.setBorder(null);
 		shippersTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		shippersScrollPane.setViewportView(shippersTable);
 		
@@ -144,10 +157,10 @@ public class LogisticaPage extends JFrame {
 		
 		
 		//setBackground(new Color(255, 234, 234));
-		setSize(new Dimension(640, 480));
+		setSize(new Dimension(980, 480));
 		setLocationRelativeTo(null);				
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setMinimumSize(new Dimension(640, 480));
+		setMinimumSize(new Dimension(980, 480));
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
