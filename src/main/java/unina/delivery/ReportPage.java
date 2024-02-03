@@ -16,8 +16,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JComboBox;
 import java.awt.Rectangle;

@@ -22,6 +22,7 @@ public class Controller {
 	private Operatore operatore;
 	private OperatoreDAO operatoredao;
 	private OrdineDAO ordinedao;
+	private CorriereDAO corriereDAO;
 	private MezzoDiTrasportoDAO mezzoDiTrasportoDAO;
 	private Spedizione spedizione;
 	private SpedizioneDAO spedizionedao;
@@ -51,6 +52,7 @@ public class Controller {
 		{
 			mezzoDiTrasportoDAO = new MezzoDiTrasportoDAO(this);
 			spedizionedao = new SpedizioneDAO(this);
+			corriereDAO = new CorriereDAO(this);
 			loginPage = new LoginPage(this);
 			homePage = new HomePage(this);
 			ordiniPage = new OrdiniPage(this);
@@ -345,7 +347,7 @@ public class Controller {
 	 */
 	protected int getNumberOfAvailableShippers(LocalDate date, LocalTime beginning, LocalTime end, String targa)
 	{
-		return mezzoDiTrasportoDAO.getNumeroDiCorrieriDisponibili(date, beginning, end, targa);
+		return corriereDAO.getNumeroDiCorrieriDisponibili(date, beginning, end, targa);
 	}
 	
 	/**
@@ -367,7 +369,7 @@ public class Controller {
 	
 	protected void retrieveAvailableShippersForVehicle(LocalDate date, LocalTime beginning, LocalTime end, String targa)
 	{
-		availableShippers = mezzoDiTrasportoDAO.getCorrieriDisponibili(date, beginning, end, targa);
+		availableShippers = corriereDAO.getCorrieriDisponibili(date, beginning, end, targa);
 	}
 
 	protected void createShipment(LocalDate appliedDate, LocalTime appliedInitialTime, LocalTime appliedFinalTime, String targa, String codiceFiscale) {

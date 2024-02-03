@@ -8,9 +8,6 @@ import com.github.lgooddatepicker.components.TimePicker;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.Color;
