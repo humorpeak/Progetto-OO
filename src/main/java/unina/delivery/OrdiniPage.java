@@ -227,7 +227,7 @@ public class OrdiniPage extends JFrame {
 		{
 			if (myController.getSuggestedDepartureTimeForSelectedOrders().isAfter(myController.getSuggestedArrivalTimeForSelectedOrders()))
 			{
-				int noSelected = JOptionPane.showConfirmDialog(this, "Non sarà possibile recapitare gli ordini selezionati con un'unica spedizione, è sicuro di voler continuare?", "Richiesta conferma", JOptionPane.YES_NO_OPTION);
+				int noSelected = JOptionPane.showConfirmDialog(this, "Probabilmente non sarà possibile recapitare in orario gli ordini selezionati con un'unica spedizione perché questi hanno orari troppo differenti, è sicuro di voler continuare?", "Richiesta conferma", JOptionPane.YES_NO_OPTION);
 				if (noSelected == 1) return false;
 			}
 		}
@@ -285,17 +285,21 @@ public class OrdiniPage extends JFrame {
 	private void updateFeedback() {
 		LocalDate ordersDate = myController.getSelectedOrdersDate();
 		String mezziDisponibili = "warning";
+		actualVehiclesLabel.setToolTipText("Le date degli ordini selezionati non coincidono");
 		if (!myController.existsMezzoDiTrasportoForWeight())
 		{
 			mezziDisponibili = "error";
+			actualVehiclesLabel.setToolTipText("Non esistono mezzi abbastanza capienti da contenere tutti gli ordini selezionati");
 		}
 		else
 		{
 			if (ordersDate != null) {
-				myController.retrieveAvailableVehicles(ordersDate,
-						myController.getSuggestedDepartureTimeForSelectedOrders(),
-						myController.getSuggestedArrivalTimeForSelectedOrders());
+				LocalTime depTime = myController.getSuggestedDepartureTimeForSelectedOrders();
+				LocalTime arrivalTime = myController.getSuggestedArrivalTimeForSelectedOrders();
+				myController.retrieveAvailableVehicles(ordersDate, depTime, arrivalTime);
 				mezziDisponibili = ((Integer) myController.getNumberOfAvailableVehiclesWithShipper()).toString();
+				actualVehiclesLabel.setToolTipText("Il numero di mezzi di trasporto che saranno certamente in grado di recapitare gli "
+						+ "ordini selezionati in orario");
 			}
 		}
 		

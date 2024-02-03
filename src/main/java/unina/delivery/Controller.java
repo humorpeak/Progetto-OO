@@ -447,7 +447,7 @@ public class Controller {
 			if (o.selected)
 			{
 				LocalTime orarioInizio = o.ordine.getOrarioinizio();
-				if (result == null || result.isAfter(orarioInizio))
+				if (result == null || result.isBefore(orarioInizio))
 				{
 					result = orarioInizio;
 				}
@@ -463,7 +463,7 @@ public class Controller {
 			if (o.selected)
 			{
 				LocalTime orarioFine = o.ordine.getOrariofine();
-				if (result == null || result.isBefore(orarioFine))
+				if (result == null || result.isAfter(orarioFine))
 				{
 					result = orarioFine;
 				}
