@@ -68,7 +68,7 @@ public class OrdiniPage extends JFrame {
 		setContentPane(panel);
 		panel.setMinimumSize(new Dimension(640, 400));
 		panel.setForeground(new Color(0, 0, 0));
-		panel.setLayout(new MigLayout("", "[10px:n,left][200px][][][][40px][][][][200px][10px:n,right]", "[10px:n,top][][grow][][][10px:n,bottom]"));
+		panel.setLayout(new MigLayout("", "[10px:n,left][200px,grow][grow][grow][grow][40px,grow][grow][grow][grow][200px,grow][10px:n,right]", "[10px:n,top][][grow][][][10px:n,bottom]"));
 		
 		filtersPanel = new JPanel();
 		panel.add(filtersPanel, "cell 1 1 9 1,alignx center,growy");

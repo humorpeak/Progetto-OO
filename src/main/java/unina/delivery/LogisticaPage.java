@@ -157,10 +157,10 @@ public class LogisticaPage extends JFrame {
 		
 		
 		//setBackground(new Color(255, 234, 234));
-		setSize(new Dimension(980, 480));
+		setSize(new Dimension(940, 480));
 		setLocationRelativeTo(null);				
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setMinimumSize(new Dimension(980, 480));
+		setMinimumSize(new Dimension(940, 480));
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
