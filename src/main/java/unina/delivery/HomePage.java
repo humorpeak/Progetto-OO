@@ -105,12 +105,12 @@ public class HomePage extends JFrame {
 		setBackground(new Color(255, 234, 234));
 		setSize(new Dimension(640, 480));
 		setLocationRelativeTo(null);				
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setMinimumSize(new Dimension(640, 480));
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
-                myController.exit();
+            	exitButtonPressed();
             }
         });
 	}
@@ -127,5 +127,10 @@ public class HomePage extends JFrame {
 	private void shipmentButtonPressed()
 	{
 		myController.shipmentButtonPressed();
+	}
+	
+	private void exitButtonPressed() {
+    	int noSelected = JOptionPane.showConfirmDialog(this, "Sei sicuro di voler uscire dalla tua area di lavoro?", "", JOptionPane.YES_NO_OPTION);
+        if (noSelected == 0) myController.exit();
 	}
 }

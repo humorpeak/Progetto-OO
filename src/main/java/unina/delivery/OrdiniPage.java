@@ -177,12 +177,12 @@ public class OrdiniPage extends JFrame {
 		setBackground(new Color(255, 234, 234));
 		setSize(new Dimension(940, 480));
 		setLocationRelativeTo(null);				
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setMinimumSize(new Dimension(940, 480));
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
-                myController.exit();
+                exitButtonPressed();
             }
         });
 	}
@@ -298,6 +298,11 @@ public class OrdiniPage extends JFrame {
 		actualWeightLabel.setText(" " + myController.calculateWeightForSelectedOrders());
 		actualVehiclesLabel.setText(" " + mezziDisponibili);
 	}
+	
+	private void exitButtonPressed() {
+    	int noSelected = JOptionPane.showConfirmDialog(this, "Sei sicuro di voler uscire dalla tua area di lavoro? Il tuo lavoro andrà perso.", "", JOptionPane.YES_NO_OPTION);
+        if (noSelected == 0) myController.exit();
+	}
 
 	class OrdersTableModel extends AbstractTableModel{
 		private static final long serialVersionUID = 1L;
@@ -348,5 +353,4 @@ public class OrdiniPage extends JFrame {
 	    	}
 	    }
 	}
-
 }

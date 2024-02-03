@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
@@ -271,12 +272,12 @@ public class ReportPage extends JFrame {
 		setBackground(new Color(255, 234, 234));
 		setSize(new Dimension(640, 480));
 		setLocationRelativeTo(null);				
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setMinimumSize(new Dimension(640, 480));
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
-                myController.exit();
+                exitButtonPressed();
             }
         });
 	}
@@ -305,5 +306,10 @@ public class ReportPage extends JFrame {
 		mintablePanel.setVisible(true);
 		mintable.invalidate();
 		mintable.repaint();
+	}
+	
+	private void exitButtonPressed() {
+    	int noSelected = JOptionPane.showConfirmDialog(this, "Sei sicuro di voler uscire dalla tua area di lavoro?", "", JOptionPane.YES_NO_OPTION);
+        if (noSelected == 0) myController.exit();
 	}
 }

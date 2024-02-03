@@ -146,8 +146,14 @@ public class LogisticaPage extends JFrame {
 		//setBackground(new Color(255, 234, 234));
 		setSize(new Dimension(640, 480));
 		setLocationRelativeTo(null);				
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setMinimumSize(new Dimension(640, 480));
+		
+		addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+            	exitButtonPressed();
+            }
+        });
 	}
 	
 	private void backButtonPressed()
@@ -319,5 +325,10 @@ public class LogisticaPage extends JFrame {
 		datePicker.setDate(null);
 		initialTimePicker.setTime(null);
 		finalTimePicker.setTime(null);
+	}
+	
+	private void exitButtonPressed() {
+    	int noSelected = JOptionPane.showConfirmDialog(this, "Sei sicuro di voler uscire dalla tua area di lavoro? Il tuo lavoro andrà perso.", "", JOptionPane.YES_NO_OPTION);
+        if (noSelected == 0) myController.exit();
 	}
 }
