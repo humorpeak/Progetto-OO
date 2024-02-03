@@ -57,7 +57,7 @@ public class LogisticaPage extends JFrame {
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage((LoginPage.class.getResource("/unina/delivery/resources/logo.png"))));
 		setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));		
-		setTitle("UninaDelivery");
+		setTitle("UninaDelivery - Creazione Spedizione");
 		
 		panel = new JPanel();
 		setContentPane(panel);

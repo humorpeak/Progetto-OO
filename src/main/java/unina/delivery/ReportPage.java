@@ -128,7 +128,7 @@ public class ReportPage extends JFrame {
 		myController = controller;
 		setIconImage(Toolkit.getDefaultToolkit().getImage((ReportPage.class.getResource("/unina/delivery/resources/logo.png"))));
 		setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));		
-		setTitle("UninaDelivery");
+		setTitle("UninaDelivery - Report");
 		
 		panel = new JPanel();
 		setContentPane(panel);

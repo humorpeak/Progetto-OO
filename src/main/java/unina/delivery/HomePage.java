@@ -28,7 +28,7 @@ public class HomePage extends JFrame {
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage((HomePage.class.getResource("/unina/delivery/resources/logo.png"))));
 		setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));		
-		setTitle("UninaDelivery");
+		setTitle("UninaDelivery - Home");
 		
 		panel = new JPanel();
 		setContentPane(panel);

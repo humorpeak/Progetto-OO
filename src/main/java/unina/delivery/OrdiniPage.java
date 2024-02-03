@@ -22,6 +22,7 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Toolkit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -61,7 +62,7 @@ public class OrdiniPage extends JFrame {
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage((ReportPage.class.getResource("/unina/delivery/resources/logo.png"))));
 		setFont(new Font("Segoe UI Semibold", Font.PLAIN, 12));		
-		setTitle("UninaDelivery");
+		setTitle("UninaDelivery - Creazione Spedizione");
 		
 		panel = new JPanel();
 		setContentPane(panel);
@@ -281,10 +282,10 @@ public class OrdiniPage extends JFrame {
 	
 	private void updateFeedback() {
 		LocalDate ordersDate = myController.getSelectedOrdersDate();
-		String mezziDisponibili = "\u26A0";
+		String mezziDisponibili = "warning";
 		if (!myController.existsMezzoDiTrasportoForWeight())
 		{
-			mezziDisponibili = "\u274C";
+			mezziDisponibili = "error";
 		}
 		else
 		{
@@ -295,8 +296,25 @@ public class OrdiniPage extends JFrame {
 				mezziDisponibili = ((Integer) myController.getNumberOfAvailableVehiclesWithShipper()).toString();
 			}
 		}
+		
 		actualWeightLabel.setText(" " + myController.calculateWeightForSelectedOrders());
-		actualVehiclesLabel.setText(" " + mezziDisponibili);
+		setVehiclesLabelCustomText(mezziDisponibili);
+		
+	}
+	
+	private void setVehiclesLabelCustomText(String testo) {
+		
+		actualVehiclesLabel.setText(" ");
+		if (testo.equals("error") && myController.getOrdersWithSelection().isEmpty()) {
+			actualVehiclesLabel.setIcon(new ImageIcon(getClass().getResource("/unina/delivery/resources/error.png")));
+			
+		}
+		else if (testo.equals("warning") && myController.getOrdersWithSelection().isEmpty()) {
+			actualVehiclesLabel.setIcon(new ImageIcon(getClass().getResource("/unina/delivery/resources/warning.png")));
+		}
+		else {
+			actualVehiclesLabel.setText(" " + testo);
+		}
 	}
 	
 	private void exitButtonPressed() {
