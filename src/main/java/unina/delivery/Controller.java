@@ -188,6 +188,18 @@ public class Controller {
 		this.filteredOrdersRows = filteredOrdersRows;
 	}
 
+	protected void updateFilteredRowsOrdiniPage()
+	{
+		List<OrdineConSelezione> filteredOrdersRows = new ArrayList<>();
+		for (OrdineConSelezione row : getOrdersWithSelection())
+		{
+			if (doesOrderSatisfyFilters(row.ordine))
+			{
+				filteredOrdersRows.add(row);
+			}
+		}
+		setFilteredOrdersRows(filteredOrdersRows);
+	}
 
 	protected void setOrderList(ArrayList<Ordine> listaordini) {
 		ordersWithSelection = new ArrayList<OrdineConSelezione>(listaordini.size());
@@ -391,7 +403,7 @@ public class Controller {
 		this.ordiniPage.resetFilters();
 		this.logisticaPage.resetFilters();
 		this.logisticaPage.setVisible(false);
-		this.homePage.setVisible(false);
+		this.homePage.setVisible(true);
 	}
 
 	private boolean setSelectedOrdersStateToShipped(long idSpedizione) {

@@ -49,6 +49,8 @@ public class ReportPage extends JFrame {
 	private JScrollPane maxscrollPane;
 	private JScrollPane minscrollPane;
 	private JButton backButton;
+	private MaxOrdersTableModel maxDataModel;
+	MinOrdersTableModel minDataModel;
 	
 	abstract class OrdersReportTableModel extends AbstractTableModel{
 		private static final long serialVersionUID = 1L;
@@ -194,7 +196,7 @@ public class ReportPage extends JFrame {
 		maxtablePanel.setVisible(false);
 		resultsPanel.add(maxtablePanel, "cell 0 3 2 1,grow");
 		
-		TableModel maxDataModel = new MaxOrdersTableModel();
+		maxDataModel = new MaxOrdersTableModel();
 		ordersWithMaxNumOfProductsTable = new JTable(maxDataModel);
 		ordersWithMaxNumOfProductsTable.setFocusable(false);
 		ordersWithMaxNumOfProductsTable.setShowVerticalLines(false);
@@ -213,7 +215,7 @@ public class ReportPage extends JFrame {
 		mintablePanel.setVisible(false);
 		resultsPanel.add(mintablePanel, "cell 0 7 2 1,grow");
 		
-		TableModel minDataModel = new MinOrdersTableModel();
+		minDataModel = new MinOrdersTableModel();
 		ordersWithMinNumOfProductsTable = new JTable(minDataModel);
 		ordersWithMinNumOfProductsTable.setFocusable(false);
 		ordersWithMinNumOfProductsTable.setShowVerticalLines(false);
@@ -290,13 +292,11 @@ public class ReportPage extends JFrame {
 		
 		maxProductsOrderLabel.setVisible(true);
 		maxtablePanel.setVisible(true);
-		ordersWithMaxNumOfProductsTable.invalidate();
-		ordersWithMaxNumOfProductsTable.repaint();
+		maxDataModel.fireTableDataChanged();
 
 		minProductsOrderLabel.setVisible(true);
 		mintablePanel.setVisible(true);
-		ordersWithMinNumOfProductsTable.invalidate();
-		ordersWithMinNumOfProductsTable.repaint();
+		minDataModel.fireTableDataChanged();
 	}
 	
 	private void exitButtonPressed() {

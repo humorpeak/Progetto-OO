@@ -319,7 +319,7 @@ public class OrdiniPage extends JFrame {
 		return true;
 	}
 
-	private boolean doesOrderSatisfyFilters(Ordine o) {
+	protected boolean doesOrderSatisfyFilters(Ordine o) {
 		String username = usernameField.getText();
 		boolean sameEmail = username.isEmpty() || o.getAcquirente().equals(username);
 
@@ -336,15 +336,7 @@ public class OrdiniPage extends JFrame {
 	}
 	
 	private void applyFilters() {
-		List<OrdineConSelezione> filteredOrdersRows = new ArrayList<>();
-		for (OrdineConSelezione row : myController.getOrdersWithSelection())
-		{
-			if (doesOrderSatisfyFilters(row.ordine))
-			{
-				filteredOrdersRows.add(row);
-			}
-		}
-		myController.setFilteredOrdersRows(filteredOrdersRows);
+		myController.updateFilteredRowsOrdiniPage();
 		dataModel.fireTableDataChanged();
 	}
 	
