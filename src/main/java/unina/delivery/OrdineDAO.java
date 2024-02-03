@@ -10,22 +10,44 @@ public class OrdineDAO {
 	
 	private Controller controller;
 	
+	private ResultSet callOrdiniDaSpedireBySede(int sede) throws SQLException
+	{
+		String query = "SELECT * FROM uninadelivery.get_ordini_da_spedire_by_sede(null, null, null, ?)";
+		PreparedStatement ps = controller.getMyConnection().prepareStatement(query);
+		ps.setInt(1, sede);
+		return ps.executeQuery();
+	}
+	
+	private ResultSet callMinNumberOfProducts(int year, int month) throws SQLException
+	{
+		Date date = Date.valueOf(LocalDate.of(year,  month, 2));
+		String query = "SELECT * FROM uninadelivery.get_ordini_min_numero_prodotti_in_mese_per_sede(?, ?)";
+		PreparedStatement ps = controller.getMyConnection().prepareStatement(query);
+		ps.setDate(1, date);
+		ps.setInt(2, controller.getOperatore().getSede());
+		return ps.executeQuery();
+	}
+	
+	private ResultSet callMaxNumberOfProducts(int year, int month) throws SQLException
+	{
+		Date date = Date.valueOf(LocalDate.of(year,  month, 2));
+		String query = "SELECT * FROM uninadelivery.get_ordini_max_numero_prodotti_in_mese_per_sede(?, ?)";
+		PreparedStatement ps = controller.getMyConnection().prepareStatement(query);
+		ps.setDate(1, date);
+		ps.setInt(2, controller.getOperatore().getSede());
+		return ps.executeQuery();
+	}
+	
 	/**
 	 * Calls a SQL function to get ready to ship orders of sede and arranges them in an ArrayList
 	 * @param sede
 	 * @return ArrayList of orders, empty if there are no orders to ship
 	 */
 	protected ArrayList<Ordine> getOrdiniDaSpedireUnfiltered (int sede) {
-		
 		ArrayList<Ordine> listaordini = new ArrayList<Ordine>();
 		
-		try
-		{	
-			String query = "SELECT * FROM uninadelivery.get_ordini_da_spedire_by_sede(null, null, null, ?)";
-			PreparedStatement ps = controller.getMyConnection().prepareStatement(query);
-			ps.setInt(1, sede);
-			ResultSet rs = ps.executeQuery();
-
+		try {
+			ResultSet rs = callOrdiniDaSpedireBySede(sede);
 			PreparedStatement get_peso = controller.getMyConnection().prepareStatement("SELECT * FROM uninadelivery.get_peso_totale(?)");
 			int peso;
 			
@@ -44,19 +66,17 @@ public class OrdineDAO {
 								peso,
 								rs.getInt("idordine"));
 				
-				System.out.println(ordine.toString());
 				listaordini.add(ordine);
 			}
 		}
-		catch (Exception e)
+		catch (SQLException e)
 		{
-			JOptionPane.showMessageDialog(null, e, "Errore", JOptionPane.ERROR_MESSAGE);
+			return null;
 		}
 		return listaordini;
 	}
 	
 	protected double getAverageNumberOfOrders(int year, int month) {
-		
 		double averageNumberOfOrders = 0;
 		Date date = Date.valueOf(LocalDate.of(year,  month, 2));
 		
@@ -70,8 +90,6 @@ public class OrdineDAO {
 			
 			cs.execute();
 			averageNumberOfOrders = cs.getDouble(1);
-			
-			System.out.println("average " + averageNumberOfOrders);
 		}
 		catch (Exception e)
 		{
@@ -81,68 +99,45 @@ public class OrdineDAO {
 		return averageNumberOfOrders;
 	}
 	
-	protected ArrayList<Ordine> getOrdiniWithMaxNumOfProducts (int year, int month) {
-		
+	private ArrayList<Ordine> getOrdersByResultSet(ResultSet rs) throws SQLException
+	{
 		ArrayList<Ordine> listaordini = new ArrayList<Ordine>();
-
-		Date date = Date.valueOf(LocalDate.of(year,  month, 2));
-		
-		try
-		{	
-			String query = "SELECT * FROM uninadelivery.get_ordini_max_numero_prodotti_in_mese_per_sede(?, ?)";
-			PreparedStatement ps = controller.getMyConnection().prepareStatement(query);
-			ps.setDate(1, date);
-			ps.setInt(2, controller.getOperatore().getSede());
-			ResultSet rs = ps.executeQuery();
-			
-			while (rs.next())
-			{
-				Ordine ordine = new Ordine (
-								rs.getString("emailacquirente"),
-								rs.getDate("data").toLocalDate(),
-								getIndirizzo(rs.getString("cap"), rs.getString("città"), rs.getString("via"), rs.getString("civico"), rs.getString("edificio")));
-				
-				System.out.println(ordine.toString());
-				listaordini.add(ordine);
-			}
-		}
-		catch (Exception e)
+		while (rs.next())
 		{
-			JOptionPane.showMessageDialog(null, e, "Errore", JOptionPane.ERROR_MESSAGE);
+			Ordine ordine = new Ordine (
+				rs.getString("emailacquirente"),
+				rs.getDate("data").toLocalDate(),
+				getIndirizzo(rs.getString("cap"), rs.getString("città"), rs.getString("via"), rs.getString("civico"), rs.getString("edificio")));
+			
+			listaordini.add(ordine);
 		}
 		return listaordini;
 	}
 	
-	protected ArrayList<Ordine> getOrdiniWithMinNumOfProducts (int year, int month) {
-		
-		ArrayList<Ordine> listaordini = new ArrayList<Ordine>();
-		
-		Date date = Date.valueOf(LocalDate.of(year,  month, 2));
-		
+	protected ArrayList<Ordine> getOrdiniWithMaxNumOfProducts (int year, int month) {
 		try
 		{	
-			String query = "SELECT * FROM uninadelivery.get_ordini_min_numero_prodotti_in_mese_per_sede(?, ?)";
-			PreparedStatement ps = controller.getMyConnection().prepareStatement(query);
-			ps.setDate(1, date);
-			ps.setInt(2, controller.getOperatore().getSede());
-			ResultSet rs = ps.executeQuery();
-			
-			while (rs.next())
-			{
-				Ordine ordine = new Ordine (
-								rs.getString("emailacquirente"),
-								rs.getDate("data").toLocalDate(),
-								getIndirizzo(rs.getString("cap"), rs.getString("città"), rs.getString("via"), rs.getString("civico"), rs.getString("edificio")));
-				
-				System.out.println(ordine.toString());
-				listaordini.add(ordine);
-			}
+			ResultSet rs = callMaxNumberOfProducts(year, month);
+			return getOrdersByResultSet(rs);
 		}
 		catch (Exception e)
 		{
 			JOptionPane.showMessageDialog(null, e, "Errore", JOptionPane.ERROR_MESSAGE);
+			return new ArrayList<Ordine>();
 		}
-		return listaordini;
+	}
+	
+	protected ArrayList<Ordine> getOrdiniWithMinNumOfProducts (int year, int month) {
+		try
+		{	
+			ResultSet rs = callMinNumberOfProducts(year, month);
+			return getOrdersByResultSet(rs);
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, e, "Errore", JOptionPane.ERROR_MESSAGE);
+			return new ArrayList<Ordine>();
+		}
 	}
 	
 	protected void shipOrder(Ordine ordine, long idSpedizione) throws SQLException {

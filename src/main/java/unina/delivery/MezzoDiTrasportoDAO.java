@@ -45,12 +45,11 @@ public class MezzoDiTrasportoDAO {
 				MezzoDiTrasporto mezzo = new MezzoDiTrasporto(targa, tipoMezzo, patenteRichiesta, capienza);
 				mezzo.setNumeroCorrieriDisponibili(myController.getNumberOfAvailableShippers(date, inizio, fine, targa));
 				result.add(mezzo);
-				System.out.println(mezzo);
 			}
 		}
 		catch(Exception e)
 		{
-			System.out.println(e.getStackTrace());
+			e.printStackTrace();
 		}
 		return result;
 	}
