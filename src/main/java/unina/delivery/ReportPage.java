@@ -33,11 +33,9 @@ public class ReportPage extends JFrame {
 	private Controller myController;
 	private JPanel panel;
 	private JLabel yearLabel;
-	@SuppressWarnings("rawtypes")
-	private JComboBox yearBox;
+	private JComboBox<Object> yearBox;
 	private JLabel monthLabel;
-	@SuppressWarnings("rawtypes")
-	private JComboBox monthBox;
+	private JComboBox<Object> monthBox;
 	private JButton calculateButton;
 	private JPanel resultsPanel;
 	private JLabel averageNumberOfOrdersLabel;
@@ -139,16 +137,16 @@ public class ReportPage extends JFrame {
 		yearLabel = new JLabel("Anno: ");
 		panel.add(yearLabel, "cell 1 1,alignx right");
 		
-		yearBox = new JComboBox();
-		yearBox.setModel(new DefaultComboBoxModel(new String[] {"2024", "2023", "2022", "2021"}));
+		yearBox = new JComboBox<Object>();
+		yearBox.setModel(new DefaultComboBoxModel<Object>(new String[] {"2024", "2023", "2022", "2021"}));
 		yearBox.setToolTipText("Seleziona l'anno di cui desideri visualizzare i report.");
 		panel.add(yearBox, "cell 2 1,growx");
 		
 		monthLabel = new JLabel("Mese: ");
 		panel.add(monthLabel, "cell 4 1,alignx right");
 		
-		monthBox = new JComboBox();
-		monthBox.setModel(new DefaultComboBoxModel(new String[] {"Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"}));
+		monthBox = new JComboBox<Object>();
+		monthBox.setModel(new DefaultComboBoxModel<Object>(new String[] {"Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"}));
 		monthBox.setToolTipText("Seleziona il mese di cui desideri visualizzare i report.");
 		panel.add(monthBox, "cell 5 1,growx");
 		

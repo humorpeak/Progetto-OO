@@ -22,6 +22,8 @@ public class Controller {
 	private OperatoreDAO operatoredao;
 	private OrdineDAO ordinedao;
 	private MezzoDiTrasportoDAO mezzoDiTrasportoDAO;
+	private Spedizione spedizione;
+	private SpedizioneDAO spedizionedao;
 	private ArrayList<Ordine> ordersList;
 	private ArrayList<Ordine> ordersWithMaxNumberOfProducts;
 	private ArrayList<Ordine> ordersWithMinNumberOfProducts;
@@ -47,6 +49,7 @@ public class Controller {
 		else
 		{
 			mezzoDiTrasportoDAO = new MezzoDiTrasportoDAO(this);
+			spedizionedao = new SpedizioneDAO(this);
 			loginPage = new LoginPage(this);
 			homePage = new HomePage(this);
 			ordiniPage = new OrdiniPage(this);
@@ -354,14 +357,13 @@ public class Controller {
 	}
 
 	protected void createShipment(LocalDate appliedDate, LocalTime appliedInitialTime, LocalTime appliedFinalTime, String targa, String codiceFiscale) {
-		SpedizioneDAO spedizioneDAO = new SpedizioneDAO(this);
 		Timestamp departure = Timestamp.valueOf(LocalDateTime.of(appliedDate, appliedInitialTime));
 		Timestamp estimatedArrival = Timestamp.valueOf(LocalDateTime.of(appliedDate, appliedFinalTime));
 		
 		long idSpedizione = -1;
 		try {
-			Spedizione s = new Spedizione (departure, estimatedArrival, targa, codiceFiscale, this.operatore.getCodiceFiscale());
-			idSpedizione = spedizioneDAO.create(s);
+			spedizione = new Spedizione (departure, estimatedArrival, targa, codiceFiscale, this.operatore.getCodiceFiscale());
+			idSpedizione = spedizionedao.create(spedizione);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.err.println("Errore: Forse hai dimenticato di eseguire questa riga di codice dopo aver effettuato il backup: "

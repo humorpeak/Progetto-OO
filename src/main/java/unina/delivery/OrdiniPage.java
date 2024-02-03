@@ -303,9 +303,7 @@ public class OrdiniPage extends JFrame {
 	}
 	
 	private void setVehiclesLabelCustomText(String testo) {
-		
-		
-		//TODO fix! + tool tip
+		actualVehiclesLabel.setIcon(null);
 		actualVehiclesLabel.setText(" ");
 		if (testo.equals("error")) {
 			actualVehiclesLabel.setIcon(new ImageIcon(getClass().getResource("/unina/delivery/resources/error.png")));
