@@ -6,14 +6,6 @@ public class Corriere {
 	private String cognome;
 	private String tipoPatente;
 	
-	Corriere(String cf, String n, String c, String p)
-	{
-		codiceFiscale = cf;
-		nome = n;
-		cognome = c;
-		tipoPatente = p;
-	}
-	
 	protected String getCodiceFiscale() {
 		return codiceFiscale;
 	}
@@ -25,5 +17,13 @@ public class Corriere {
 	}
 	protected String getTipoPatente() {
 		return tipoPatente;
+	}
+	
+	Corriere(String cf, String n, String c, String p)
+	{
+		codiceFiscale = cf;
+		nome = n;
+		cognome = c;
+		tipoPatente = p;
 	}
 }
