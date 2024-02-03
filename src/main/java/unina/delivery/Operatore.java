@@ -7,13 +7,6 @@ public class Operatore {
 	private int sede;
 	private String codiceFiscale;
 	
-	Operatore(String e, String p, int s, String cf) {
-		email = e;
-		password = p;
-		sede = s;
-		codiceFiscale = cf;
-	}
-	
 	protected String getEmail() {
 		return email;
 	}
@@ -25,5 +18,12 @@ public class Operatore {
 	}
 	protected String getCodiceFiscale() {
 		return codiceFiscale;
+	}
+	
+	Operatore(String e, String p, int s, String cf) {
+		email = e;
+		password = p;
+		sede = s;
+		codiceFiscale = cf;
 	}
 }

@@ -9,15 +9,6 @@ public class Spedizione {
 	private String codiceFiscaleCorriere;
 	private String codiceFiscaleOperatore;
 	
-	Spedizione(Timestamp partenza, Timestamp arrivoStimato, String targa, String codiceFiscaleCorriere,
-			String codiceFiscaleOperatore) {
-		this.partenza = partenza;
-		this.arrivoStimato = arrivoStimato;
-		this.targa = targa;
-		this.codiceFiscaleCorriere = codiceFiscaleCorriere;
-		this.codiceFiscaleOperatore = codiceFiscaleOperatore;
-	}
-	
 	protected Timestamp getPartenza() {
 		return partenza;
 	}
@@ -46,6 +37,15 @@ public class Spedizione {
 		return codiceFiscaleOperatore;
 	}
 	protected void setCodiceFiscaleOperatore(String codiceFiscaleOperatore) {
+		this.codiceFiscaleOperatore = codiceFiscaleOperatore;
+	}
+	
+	Spedizione(Timestamp partenza, Timestamp arrivoStimato, String targa, String codiceFiscaleCorriere,
+			String codiceFiscaleOperatore) {
+		this.partenza = partenza;
+		this.arrivoStimato = arrivoStimato;
+		this.targa = targa;
+		this.codiceFiscaleCorriere = codiceFiscaleCorriere;
 		this.codiceFiscaleOperatore = codiceFiscaleOperatore;
 	}
 }

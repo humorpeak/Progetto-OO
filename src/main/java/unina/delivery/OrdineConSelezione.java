@@ -2,7 +2,7 @@ package unina.delivery;
 
 public class OrdineConSelezione {
 	public Ordine ordine;
-	public boolean selected;
+	protected boolean selected;
 	OrdineConSelezione(Ordine o)
 	{
 		selected = false;

@@ -5,8 +5,11 @@ import java.sql.*;
 import javax.swing.JOptionPane;
 
 public class OperatoreDAO {
-	
 	private Controller controller;
+	
+	OperatoreDAO(Controller c){
+		controller = c;
+	}
 	
 	/**
 	 * Checks whether the table operatore contains a row with given email and password
@@ -88,9 +91,5 @@ public class OperatoreDAO {
 		}
 		
 		return cf;
-	}
-	
-	OperatoreDAO(Controller c){
-		controller = c;
 	}
 }

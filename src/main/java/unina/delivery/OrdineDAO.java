@@ -7,8 +7,11 @@ import javax.swing.JOptionPane;
 import java.time.*;
 
 public class OrdineDAO {
-	
 	private Controller controller;
+	
+	OrdineDAO(Controller c){
+		controller = c;
+	}
 	
 	private ResultSet callOrdiniDaSpedireBySede(int sede) throws SQLException
 	{
@@ -159,9 +162,5 @@ public class OrdineDAO {
 		}
 		
 		return indirizzo;
-	}
-	
-	OrdineDAO(Controller c){
-		controller = c;
 	}
 }

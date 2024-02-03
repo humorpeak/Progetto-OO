@@ -34,6 +34,54 @@ public class Controller {
 	private List<MezzoDiTrasporto> availableVehiclesWithShipper;
 	private List<Corriere> availableShippers;
 	
+	protected void setFilteredOrdersRows(List<OrdineConSelezione> filteredOrdersRows) {
+		this.filteredOrdersRows = filteredOrdersRows;
+	}
+	
+	protected void setOrdersWithSelection(List<OrdineConSelezione> ordersWithSelection) {
+		this.ordersWithSelection = ordersWithSelection;
+	}
+	
+	protected List<OrdineConSelezione> getFilteredOrdersRows() {
+		return filteredOrdersRows;
+	}
+	
+	protected List<OrdineConSelezione> getOrdersWithSelection() {
+		return ordersWithSelection;
+	}
+	
+	protected List<Ordine> getOrdiniWithMaxNumOfProductsRows() {
+		return ordersWithMaxNumberOfProducts;
+	}
+	
+	protected List<Ordine> getOrdiniWithMinNumOfProductsRows() {
+		return ordersWithMinNumberOfProducts;
+	}
+	
+	protected Operatore getOperatore() {
+		return operatore;
+	}
+
+	protected void setOperatore(Operatore operatore) {
+		this.operatore = operatore;
+	}
+	
+	protected Connection getMyConnection() {
+		return myConnection;
+	}
+
+	protected void setMyConnection(Connection myConnection) {
+		this.myConnection = myConnection;
+	}
+	
+	protected List<Corriere> getCorrieriDisponibili() {
+		return availableShippers;
+	}
+
+	protected List<MezzoDiTrasporto> getAvailableVehiclesWithShipper() {
+		return availableVehiclesWithShipper;
+	}
+	
 	Controller() {
 		try {
 			uidesign = new UIDesign();
@@ -185,10 +233,6 @@ public class Controller {
 		reportPage = new ReportPage(this);
 		reportPage.setVisible(true);
 	}
-	
-	protected void setFilteredOrdersRows(List<OrdineConSelezione> filteredOrdersRows) {
-		this.filteredOrdersRows = filteredOrdersRows;
-	}
 
 	protected void updateFilteredRowsOrdiniPage()
 	{
@@ -213,8 +257,29 @@ public class Controller {
 		setFilteredOrdersRows (ordersWithSelection);
 	}
 	
-	protected void setOrdersWithSelection(List<OrdineConSelezione> ordersWithSelection) {
-		this.ordersWithSelection = ordersWithSelection;
+	/**
+	 * @return the number of available vehicles that have at least one shipper
+	 */
+	protected int getNumberOfAvailableVehiclesWithShipper() {
+		if (availableVehiclesWithShipper == null) return 0;
+		return availableVehiclesWithShipper.size();
+	}
+	
+	/**
+	 * @return the number of available shippers for the filters applied in OrdiniPage
+	 */
+	protected int getNumberOfAvailableShippers()
+	{
+		if (availableShippers == null) return 0;
+		return availableShippers.size();
+	}
+	
+	/**
+	 * @return the number of available shippers for the given filters
+	 */
+	protected int getNumberOfAvailableShippers(LocalDate date, LocalTime beginning, LocalTime end, String targa)
+	{
+		return corriereDAO.getNumeroDiCorrieriDisponibili(date, beginning, end, targa);
 	}
 	
 	protected void shipmentButtonPressed()
@@ -289,67 +354,6 @@ public class Controller {
 		return noOrdersSelected;
 	}
 	
-	protected List<OrdineConSelezione> getFilteredOrdersRows() {
-		return filteredOrdersRows;
-	}
-	
-	protected List<OrdineConSelezione> getOrdersWithSelection() {
-		return ordersWithSelection;
-	}
-	
-	protected List<Ordine> getOrdiniWithMaxNumOfProductsRows() {
-		return ordersWithMaxNumberOfProducts;
-	}
-	
-	protected List<Ordine> getOrdiniWithMinNumOfProductsRows() {
-		return ordersWithMinNumberOfProducts;
-	}
-	
-	protected Operatore getOperatore() {
-		return operatore;
-	}
-
-	protected void setOperatore(Operatore operatore) {
-		this.operatore = operatore;
-	}
-	
-	protected Connection getMyConnection() {
-		return myConnection;
-	}
-
-	protected void setMyConnection(Connection myConnection) {
-		this.myConnection = myConnection;
-	}
-
-	/**
-	 * @return the number of available vehicles that have at least one shipper
-	 */
-	protected int getNumberOfAvailableVehiclesWithShipper() {
-		if (availableVehiclesWithShipper == null) return 0;
-		return availableVehiclesWithShipper.size();
-	}
-
-	protected List<MezzoDiTrasporto> getAvailableVehiclesWithShipper() {
-		return availableVehiclesWithShipper;
-	}
-	
-	/**
-	 * @return the number of available shippers for the filters applied in OrdiniPage
-	 */
-	protected int getNumberOfAvailableShippers()
-	{
-		if (availableShippers == null) return 0;
-		return availableShippers.size();
-	}
-	
-	/**
-	 * @return the number of available shippers for the given filters
-	 */
-	protected int getNumberOfAvailableShippers(LocalDate date, LocalTime beginning, LocalTime end, String targa)
-	{
-		return corriereDAO.getNumeroDiCorrieriDisponibili(date, beginning, end, targa);
-	}
-	
 	/**
 	 * updates controller's field "availableVehiclesWithShipper"
 	 */
@@ -361,10 +365,6 @@ public class Controller {
 	protected void applicaButtonPressedLogisticaPage(LocalDate date, LocalTime beginning, LocalTime end) {
 		retrieveAvailableVehicles(date,beginning,end);
 		availableShippers = new ArrayList<Corriere>();
-	}
-	
-	protected List<Corriere> getCorrieriDisponibili() {
-		return availableShippers;
 	}
 	
 	protected void retrieveAvailableShippersForVehicle(LocalDate date, LocalTime beginning, LocalTime end, String targa)

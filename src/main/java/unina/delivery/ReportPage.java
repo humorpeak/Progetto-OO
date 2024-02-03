@@ -48,79 +48,7 @@ public class ReportPage extends JFrame {
 	private JScrollPane minscrollPane;
 	private JButton backButton;
 	private MaxOrdersTableModel maxDataModel;
-	MinOrdersTableModel minDataModel;
-	
-	abstract class OrdersReportTableModel extends AbstractTableModel{
-		private static final long serialVersionUID = 1L;
-		
-		private String columnNames[] = { "Acquirente", "Data", "Indirizzo"};
-		
-		@Override
-		public String getColumnName(int index) {
-		    return columnNames[index];
-		}
-		
-		@Override
-	      public Class<?> getColumnClass(int col) {
-	        return String.class;
-	    }
-		
-	    @Override
-	    public int getColumnCount() {
-	    	return columnNames.length;
-	    }
-	}
-	
-	class MaxOrdersTableModel extends OrdersReportTableModel {
-		private static final long serialVersionUID = 1L;
-
-	    @Override
-	    public int getRowCount() {
-	    	return myController.countOrdersWithMaxNumOfProducts();
-	    }
-	    
-	    @Override
-	    public Object getValueAt(int row, int col) { 
-	    	Ordine riga = myController.getOrdiniWithMaxNumOfProductsRows().get(row);
-	    	System.out.println(riga);
-	    	switch(col)
-	    	{
-	    	case 0:
-	    		return riga.getAcquirente();
-	    	case 1:
-	    		return riga.getData().toString();
-	    	case 2:
-	    		return riga.getIndirizzo();
-	    	default:
-	    		return "error";
-	    	}
-	    }
-	}
-	
-	class MinOrdersTableModel extends OrdersReportTableModel {
-		private static final long serialVersionUID = 1L;
-		
-	    @Override
-	    public int getRowCount() {
-	    	return myController.countOrdersWithMinNumOfProducts();
-	    }
-	    
-	    @Override
-	    public Object getValueAt(int row, int col) { 
-	    	Ordine riga = myController.getOrdiniWithMinNumOfProductsRows().get(row);
-	    	switch(col)
-	    	{
-	    	case 0:
-	    		return riga.getAcquirente();
-	    	case 1:
-	    		return riga.getData().toString();
-	    	case 2:
-	    		return riga.getIndirizzo();
-	    	default:
-	    		return "error";
-	    	}
-	    }
-	}
+	private MinOrdersTableModel minDataModel;
 	
 	ReportPage(Controller controller) {
 		myController = controller;
@@ -300,5 +228,77 @@ public class ReportPage extends JFrame {
 	private void exitButtonPressed() {
     	int noSelected = JOptionPane.showConfirmDialog(this, "Sei sicuro di voler uscire dalla tua area di lavoro?", "", JOptionPane.YES_NO_OPTION);
         if (noSelected == 0) myController.exit();
+	}
+	
+	abstract class OrdersReportTableModel extends AbstractTableModel{
+		private static final long serialVersionUID = 1L;
+		
+		private String columnNames[] = { "Acquirente", "Data", "Indirizzo"};
+		
+		@Override
+		public String getColumnName(int index) {
+		    return columnNames[index];
+		}
+		
+		@Override
+	      public Class<?> getColumnClass(int col) {
+	        return String.class;
+	    }
+		
+	    @Override
+	    public int getColumnCount() {
+	    	return columnNames.length;
+	    }
+	}
+	
+	class MaxOrdersTableModel extends OrdersReportTableModel {
+		private static final long serialVersionUID = 1L;
+
+	    @Override
+	    public int getRowCount() {
+	    	return myController.countOrdersWithMaxNumOfProducts();
+	    }
+	    
+	    @Override
+	    public Object getValueAt(int row, int col) { 
+	    	Ordine riga = myController.getOrdiniWithMaxNumOfProductsRows().get(row);
+	    	System.out.println(riga);
+	    	switch(col)
+	    	{
+	    	case 0:
+	    		return riga.getAcquirente();
+	    	case 1:
+	    		return riga.getData().toString();
+	    	case 2:
+	    		return riga.getIndirizzo();
+	    	default:
+	    		return "error";
+	    	}
+	    }
+	}
+	
+	class MinOrdersTableModel extends OrdersReportTableModel {
+		private static final long serialVersionUID = 1L;
+		
+	    @Override
+	    public int getRowCount() {
+	    	return myController.countOrdersWithMinNumOfProducts();
+	    }
+	    
+	    @Override
+	    public Object getValueAt(int row, int col) { 
+	    	Ordine riga = myController.getOrdiniWithMinNumOfProductsRows().get(row);
+	    	switch(col)
+	    	{
+	    	case 0:
+	    		return riga.getAcquirente();
+	    	case 1:
+	    		return riga.getData().toString();
+	    	case 2:
+	    		return riga.getIndirizzo();
+	    	default:
+	    		return "error";
+	    	}
+	    }
 	}
 }
