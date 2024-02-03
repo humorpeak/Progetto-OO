@@ -3,8 +3,6 @@ package unina.delivery;
 import java.sql.Timestamp;
 
 public class Spedizione {
-	@SuppressWarnings("unused")
-	private Controller myController;
 	private Timestamp partenza;
 	private Timestamp arrivoStimato;
 	private String targa;
@@ -13,16 +11,6 @@ public class Spedizione {
 	
 	Spedizione(Timestamp partenza, Timestamp arrivoStimato, String targa, String codiceFiscaleCorriere,
 			String codiceFiscaleOperatore) {
-		this.partenza = partenza;
-		this.arrivoStimato = arrivoStimato;
-		this.targa = targa;
-		this.codiceFiscaleCorriere = codiceFiscaleCorriere;
-		this.codiceFiscaleOperatore = codiceFiscaleOperatore;
-	}
-	
-	Spedizione(Controller controller, Timestamp partenza, Timestamp arrivoStimato, String targa, String codiceFiscaleCorriere,
-			String codiceFiscaleOperatore) {
-		this.myController = controller;
 		this.partenza = partenza;
 		this.arrivoStimato = arrivoStimato;
 		this.targa = targa;

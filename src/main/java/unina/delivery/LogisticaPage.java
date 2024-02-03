@@ -108,7 +108,7 @@ public class LogisticaPage extends JFrame {
 		vehiclesScrollPane = new JScrollPane();
 		panel.add(vehiclesScrollPane, "cell 1 3,grow");
 		
-		TableModel vehiclesDataModel = new MezziDiTrasportoTableModel(myController);
+		TableModel vehiclesDataModel = new MezziDiTrasportoTableModel();
 		vehiclesTable = new JTable(vehiclesDataModel);
 		vehiclesTable.setRequestFocusEnabled(false);
 		vehiclesTable.setFocusable(false);
@@ -128,7 +128,7 @@ public class LogisticaPage extends JFrame {
 		shippersScrollPane = new JScrollPane();
 		panel.add(shippersScrollPane, "cell 3 3,grow");
 		
-		TableModel shippersDataModel = new CorrieriTableModel(myController);
+		TableModel shippersDataModel = new CorrieriTableModel();
 		shippersTable = new JTable(shippersDataModel);
 		shippersTable.setRequestFocusEnabled(false);
 		shippersTable.setFocusable(false);
@@ -214,7 +214,7 @@ public class LogisticaPage extends JFrame {
 	    	{
 	    		if (appliedDate == null || appliedInitialTime == null || appliedFinalTime == null)
 		    	{
-	    			JOptionPane.showMessageDialog(this, "Si prega di riempire i campi 'data', 'orario inizio' e 'orario fine'", "Data o orario mancanti", JOptionPane.WARNING_MESSAGE);
+	    			JOptionPane.showMessageDialog(this, "Si prega di cliccare 'Applica' dopo aver riempito i campi 'data', 'orario inizio' e 'orario fine'", "Data o orario mancanti", JOptionPane.WARNING_MESSAGE);
 		    	}
 		    	else
 		    	{
@@ -234,12 +234,6 @@ public class LogisticaPage extends JFrame {
 	class MezziDiTrasportoTableModel extends AbstractTableModel{
 		private static final long serialVersionUID = 1L;
 		private String columnNames[] = { "Tipo", "Targa", "Capienza", "Corrieri disponibili"};
-		private Controller myController;
-		
-		MezziDiTrasportoTableModel(Controller controller)
-		{
-			myController = controller;
-		}
 		
 		@Override
 		public String getColumnName(int index) {
@@ -284,12 +278,6 @@ public class LogisticaPage extends JFrame {
 	class CorrieriTableModel extends AbstractTableModel{
 		private static final long serialVersionUID = 1L;
 		private String columnNames[] = { "Nome", "Cognome", "Patente", "Codice Fiscale"};
-		private Controller myController;
-		
-		CorrieriTableModel(Controller controller)
-		{
-			myController = controller;
-		}
 		
 		@Override
 		public String getColumnName(int index) {
