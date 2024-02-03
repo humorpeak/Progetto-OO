@@ -13,6 +13,7 @@ public class Controller {
 	}
 
 	private Connection myConnection;
+	private UIDesign uidesign;
 	private LoginPage loginPage;
 	private HomePage homePage;
 	private OrdiniPage ordiniPage;
@@ -34,7 +35,7 @@ public class Controller {
 	
 	Controller() {
 		try {
-			UIDesign uidesign = new UIDesign();
+			uidesign = new UIDesign();
 			uidesign.setup();
 		}
 		catch (Exception e){
@@ -235,6 +236,7 @@ public class Controller {
 		availableShippers = new ArrayList<>();
 		availableVehiclesWithShipper = new ArrayList<>();
 		this.logisticaPage.resetFilters();
+		this.ordiniPage.resetFilters();
 	}
 	
 	protected void backButtonPressedFromLogisticaToOrdiniPage()
@@ -374,17 +376,20 @@ public class Controller {
 		}
 		if (idSpedizione == -1) return;
 		
-		setSelectedOrdersStateToShipped(idSpedizione);
-		
+		boolean ok = setSelectedOrdersStateToShipped(idSpedizione);
 		availableShippers = new ArrayList<>();
 		availableVehiclesWithShipper = new ArrayList<>();
 		this.ordiniPage.resetFilters();
 		
-		JOptionPane.showMessageDialog(this.logisticaPage, "Spedizione creata correttamente.", "Successo", JOptionPane.INFORMATION_MESSAGE);
+		if (ok)
+		{
+			JOptionPane.showMessageDialog(this.logisticaPage, "Spedizione creata correttamente.", "Successo", JOptionPane.INFORMATION_MESSAGE);
+		}
 		this.logisticaPage.resetFilters();
 	}
 
-	private void setSelectedOrdersStateToShipped(long idSpedizione) {
+	private boolean setSelectedOrdersStateToShipped(long idSpedizione) {
+		boolean result = true;
 		for (OrdineConSelezione o : ordersWithSelection) {
 			if (o.selected)
 			{
@@ -395,9 +400,11 @@ public class Controller {
 				{
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(this.logisticaPage, "Errore durante la spedizione del prodotto codice " + o.ordine.getSerialeOrdine(), "Errore", JOptionPane.ERROR_MESSAGE);
+					result = false;
 				}
 			}
 		}
+		return result;
 	}
 	
 	/**

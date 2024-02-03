@@ -178,6 +178,11 @@ public class LogisticaPage extends JFrame {
 		LocalDate date = datePicker.getDate();
 		LocalTime initTime = initialTimePicker.getTime();
 		LocalTime finalTime = finalTimePicker.getTime();
+		if (finalTime != null && finalTime.isBefore(initTime))
+		{
+			JOptionPane.showMessageDialog(this, "La data di arrivo deve essere successiva alla data di partenza.", "Impossibile applicare", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
 		appliedDate = date;
 		appliedInitialTime = initTime;
 		appliedFinalTime = finalTime;
@@ -194,7 +199,8 @@ public class LogisticaPage extends JFrame {
 		String targa = (String) vehiclesTable.getValueAt(selectedVehicleRow, 1);
 		shippersTable.clearSelection();
 		myController.retrieveAvailableShippersForVehicle(appliedDate, appliedInitialTime, appliedFinalTime, targa);
-		shippersTable.revalidate();
+		shippersTable.invalidate();
+		shippersTable.repaint();
 	}
 	
 	private void salvaClicked() {
