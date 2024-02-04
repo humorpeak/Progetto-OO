@@ -63,7 +63,7 @@ public class LogisticaPage extends JFrame {
 		
 		panel = new JPanel();
 		setContentPane(panel);
-		panel.setMinimumSize(new Dimension(640, 400));
+		panel.setMinimumSize(new Dimension(940, 400));
 		panel.setForeground(new Color(0, 0, 0));
 		panel.setLayout(new MigLayout("", "[5px:10px,left][10px:200px,grow][5px:n][10px:200px,grow][5px:10px,right]", "[::60px,grow,top][][][grow][][][10px:n,bottom]"));
 		
@@ -224,9 +224,9 @@ public class LogisticaPage extends JFrame {
 		
 		
 		setSize(new Dimension(940, 480));
+		setMinimumSize(new Dimension(1240, 480));
 		setLocationRelativeTo(null);				
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setMinimumSize(new Dimension(940, 480));
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {

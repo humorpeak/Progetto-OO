@@ -64,7 +64,7 @@ public class OrdiniPage extends JFrame {
 		
 		panel = new JPanel();
 		setContentPane(panel);
-		panel.setMinimumSize(new Dimension(640, 400));
+		panel.setMinimumSize(new Dimension(940, 400));
 		panel.setForeground(new Color(0, 0, 0));
 		panel.setLayout(new MigLayout("", "[10px:n,left][200px,grow][grow][grow][grow][40px,grow][grow][grow][grow][200px,grow][10px:n,right]", "[10px:n,top][][grow][][][10px:n,bottom]"));
 		
@@ -258,10 +258,11 @@ public class OrdiniPage extends JFrame {
 		});
 		
 		setBackground(new Color(255, 234, 234));
+		
 		setSize(new Dimension(940, 480));
+		setMinimumSize(new Dimension(1240, 480));
 		setLocationRelativeTo(null);				
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setMinimumSize(new Dimension(940, 480));
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
