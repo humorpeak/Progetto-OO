@@ -33,13 +33,18 @@
     <dependency>
 	    <groupId>org.postgresql</groupId>
 	    <artifactId>postgresql</artifactId>
-	    <version>42.2.0</version>
+	    <version>42.7.1</version>
 	</dependency>
 	<dependency>
-		<groupId>com.github.lgooddatepicker</groupId>
-	    <artifactId>LGoodDatePicker</artifactId>
-	    <version>11.2.1</version>
+	  <groupId>com.github.lgooddatepicker</groupId>
+	  <artifactId>LGoodDatePicker</artifactId>
+	  <version>11.2.1</version>
 	</dependency>
+  <dependency>
+    <groupId>com.miglayout</groupId>
+    <artifactId>miglayout-swing</artifactId>
+    <version>4.2</version>
+  </dependency>
   </dependencies>
 
   <build>
