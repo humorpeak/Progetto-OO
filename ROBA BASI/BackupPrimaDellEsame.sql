@@ -261,11 +261,11 @@ DECLARE
   targamezzo uninadelivery.MEZZO_DI_TRASPORTO.targa%TYPE;
 BEGIN
   -- esci se spedizione null
-  IF NEW.idspedizione IS NULL THEN
+  IF NEW.idspedizione IS NULL OR OLD.idspedizione = NEW.idspedizione THEN
     RETURN NEW;
   END IF;
 
-  SELECT S.arrivostimato, S.partenza, S.targa INTO arrivostimato, partenza,targamezzo
+  SELECT S.arrivostimato, S.partenza, S.targa INTO arrivostimato, partenza, targamezzo
   FROM uninadelivery.SPEDIZIONE AS S
   WHERE S.idspedizione = NEW.idspedizione;
 
@@ -275,16 +275,13 @@ BEGIN
       JOIN uninadelivery.PRODOTTO AS P ON P.idprodotto = D.idprodotto
   WHERE O.idspedizione = NEW.idspedizione;
 
-  SELECT SUM(P.peso * D.quantità) INTO peso_ordine
-  FROM (uninadelivery.ORDINE AS O JOIN uninadelivery.DETTAGLI_ORDINE AS D ON O.idordine = D.idordine)
-      JOIN uninadelivery.PRODOTTO AS P ON P.idprodotto = D.idprodotto
-  WHERE O.idordine = NEW.idordine;
+  peso_ordine := uninadelivery.get_peso_totale(NEW.idordine);
 
   peso_totale := peso_totale + peso_ordine;
 
   -- controlla se è stata superata la capienza massima del mezzo (raise exception)
   IF peso_totale > (SELECT capienza FROM uninadelivery.MEZZO_DI_TRASPORTO AS M WHERE M.targa = targamezzo) THEN
-    RAISE 'In seguito all''inserimento o all''aggiornamento dell''ordine, è stata superata la capienza massima del mezzo di trasporto selezionato.';
+    RAISE 'In seguito all''inserimento dell''ordine nella spedizione, è stata superata la capienza massima del mezzo di trasporto selezionato.';
     RETURN OLD;
   END IF;
   IF NEW.data + NEW.orarioinizio > arrivostimato OR NEW.data + NEW.orariofine < partenza THEN
@@ -298,40 +295,6 @@ $$;
 ALTER FUNCTION uninadelivery.controllo_capienza_e_tempi_ordine_aggiunto_a_spedizione() OWNER TO postgres;
 
 --
--- TOC entry 255 (class 1255 OID 17989)
--- Name: corriere_puo_guidare_mezzo_di_trasporto(character, character); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
---
-
-CREATE FUNCTION uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(codicefiscalecorriere character, targamezzo character) RETURNS boolean
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-	patente_corriere uninadelivery.CORRIERE.tipopatente%TYPE;
-	patente_richiesta uninadelivery.MEZZO_DI_TRASPORTO.patenterichiesta%TYPE;
-	corriere_attivo BOOLEAN;
-	mezzo_attivo BOOLEAN;
-BEGIN
-	SELECT tipopatente, attivo INTO patente_corriere, corriere_attivo
-	FROM uninadelivery.CORRIERE AS C
-	WHERE C.codicefiscale = codicefiscalecorriere;
-	
-	SELECT patenterichiesta, attivo INTO patente_richiesta, mezzo_attivo
-	FROM uninadelivery.MEZZO_DI_TRASPORTO AS M
-	WHERE M.targa = targamezzo;
-	
-	RETURN (corriere_attivo = true AND mezzo_attivo = true) AND (
-			patente_corriere = 'C' OR patente_corriere = 'C1' OR patente_corriere = 'CE' OR
-			patente_corriere = 'BE' AND patente_richiesta <> 'C' AND patente_richiesta <> 'B96' OR
-			patente_corriere = 'B' AND patente_richiesta = 'B' OR
-			patente_corriere = 'B96' AND patente_richiesta <> 'C'
-	);
-END;
-$$;
-
-
-ALTER FUNCTION uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(codicefiscalecorriere character, targamezzo character) OWNER TO postgres;
-
---
 -- TOC entry 256 (class 1255 OID 17990)
 -- Name: corriere_puo_guidare_mezzo_di_trasporto_stessa_sede(character, character); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
@@ -342,17 +305,25 @@ CREATE FUNCTION uninadelivery.corriere_puo_guidare_mezzo_di_trasporto_stessa_sed
 DECLARE
 	sede_corriere uninadelivery.CORRIERE.idsede%TYPE;
 	sede_mezzo uninadelivery.MEZZO_DI_TRASPORTO.idsede%TYPE;
-	richiesta BOOLEAN;
+	patente_corriere uninadelivery.CORRIERE.tipopatente%TYPE;
+	patente_richiesta uninadelivery.MEZZO_DI_TRASPORTO.patenterichiesta%TYPE;
+	corriere_attivo BOOLEAN;
+	mezzo_attivo BOOLEAN;
 BEGIN
-	SELECT idsede INTO sede_corriere
+	SELECT idsede, tipopatente, attivo INTO sede_corriere, patente_corriere, corriere_attivo
 	FROM uninadelivery.CORRIERE AS C
 	WHERE C.codicefiscale = codicefiscalecorriere;
 	
-	SELECT idsede INTO sede_mezzo
+	SELECT idsede, patenterichiesta, attivo INTO sede_mezzo, patente_richiesta, mezzo_attivo
 	FROM uninadelivery.MEZZO_DI_TRASPORTO AS M
 	WHERE M.targa = targamezzo;
 	
-	RETURN uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(codicefiscalecorriere, targamezzo) AND sede_corriere = sede_mezzo;
+	RETURN corriere_attivo = true AND mezzo_attivo = true AND sede_corriere = sede_mezzo AND (
+			patente_corriere = 'C' OR patente_corriere = 'C1' OR patente_corriere = 'CE' OR
+			patente_corriere = 'BE' AND patente_richiesta <> 'C' AND patente_richiesta <> 'B96' OR
+			patente_corriere = 'B' AND patente_richiesta = 'B' OR
+			patente_corriere = 'B96' AND patente_richiesta <> 'C'
+	);
 END;
 $$;
 
@@ -557,10 +528,10 @@ ALTER TABLE uninadelivery.ordine OWNER TO postgres;
 
 --
 -- TOC entry 264 (class 1255 OID 18026)
--- Name: get_ordini(timestamp without time zone, timestamp without time zone, character varying); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
+-- Name: get_ordini_validi(timestamp without time zone, timestamp without time zone, character varying); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE FUNCTION uninadelivery.get_ordini(inizio timestamp without time zone, fine timestamp without time zone, emailutente character varying) RETURNS SETOF uninadelivery.ordine
+CREATE FUNCTION uninadelivery.get_ordini_validi(inizio timestamp without time zone, fine timestamp without time zone, emailutente character varying) RETURNS SETOF uninadelivery.ordine
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -576,7 +547,7 @@ END;
 $$;
 
 
-ALTER FUNCTION uninadelivery.get_ordini(inizio timestamp without time zone, fine timestamp without time zone, emailutente character varying) OWNER TO postgres;
+ALTER FUNCTION uninadelivery.get_ordini_validi(inizio timestamp without time zone, fine timestamp without time zone, emailutente character varying) OWNER TO postgres;
 
 --
 -- TOC entry 265 (class 1255 OID 18027)
@@ -643,7 +614,7 @@ BEGIN
 		SELECT O.*
 		FROM uninadelivery.ORDINE AS O JOIN (
 			SELECT MAX(uninadelivery.numero_prodotti_in_ordine(O.idordine)) AS num_ordini
-			FROM uninadelivery.get_ordini(primo_giorno_di_mese, primo_giorno_mese_successivo, null) AS O
+			FROM uninadelivery.get_ordini_validi(primo_giorno_di_mese, primo_giorno_mese_successivo, null) AS O
 			WHERE O.idsede = sede
 		) ON uninadelivery.numero_prodotti_in_ordine(O.idordine) = num_ordini
 	);
@@ -671,7 +642,7 @@ BEGIN
 		SELECT O.*
 		FROM uninadelivery.ORDINE AS O JOIN (
 			SELECT MIN(uninadelivery.numero_prodotti_in_ordine(O.idordine)) AS num_ordini
-			FROM uninadelivery.get_ordini(primo_giorno_di_mese, primo_giorno_mese_successivo, null) AS O
+			FROM uninadelivery.get_ordini_validi(primo_giorno_di_mese, primo_giorno_mese_successivo, null) AS O
 			WHERE O.idsede = sede
 		) ON uninadelivery.numero_prodotti_in_ordine(O.idordine) = num_ordini
 	);
@@ -908,12 +879,14 @@ DECLARE
 BEGIN
 	SELECT stato, idsede INTO s, ids FROM uninadelivery.ORDINE AS O WHERE O.idordine = NEW.idordine;
 	IF s <> 'In elaborazione' THEN
-		RAISE 'Impossibile inserire nuovi dettagli_ordine in riferimento ad un ordine che non sia in elaborazione';
+		RAISE 'Impossibile aggiungere prodotti ad un ordine che non sia in elaborazione';
+		RETURN OLD;
 	END IF;
 	
 	IF (SELECT quantità FROM uninadelivery.disponibilità AS D
 		WHERE D.idprodotto = NEW.idprodotto AND D.idsede = ids) < NEW.quantità THEN
-		RAISE 'Impossibile creare dettagli_ordine con quantità più grande di quella disponibile nella sede ordine';
+		RAISE 'Impossibile aggiungere prodotti all''ordine per mancanza di disponibilità';
+		RETURN OLD;
 	END IF;
 	
 	UPDATE uninadelivery.disponibilità AS D SET quantità = quantità - NEW.quantità
