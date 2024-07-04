@@ -53,8 +53,8 @@ CREATE FUNCTION uninadelivery.acquirente_eliminato() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
+	UPDATE uninadelivery.ORDINE as O SET stato = 'Annullato' WHERE O.emailacquirente = OLD.email AND NOT (O.stato = 'Ricevuto' OR O.stato = 'Spedito');
 	UPDATE uninadelivery.ORDINE as O SET emailacquirente = null WHERE O.emailacquirente = OLD.email;
-	UPDATE uninadelivery.ORDINE as O SET stato = 'Annullato' WHERE O.emailacquirente = OLD.email AND O.stato <> 'Ricevuto';
 	RETURN OLD;
 END;
 $$;
@@ -73,15 +73,13 @@ CREATE FUNCTION uninadelivery.annulla_ordine() RETURNS trigger
 DECLARE
 	dettagli uninadelivery.DETTAGLI_ORDINE%ROWTYPE;
 BEGIN
-	IF NEW.stato = 'Annullato' THEN
-		FOR dettagli IN (SELECT *
-					FROM uninadelivery.DETTAGLI_ORDINE AS D
-					WHERE D.idordine = NEW.idordine
-		) LOOP
-			UPDATE uninadelivery.DISPONIBILITà AS D SET quantità = quantità + dettagli.quantità
-				WHERE D.idprodotto = dettagli.idprodotto AND D.idsede = NEW.idsede;
-		END LOOP;
-	END IF;
+	FOR dettagli IN (SELECT *
+				FROM uninadelivery.DETTAGLI_ORDINE AS D
+				WHERE D.idordine = NEW.idordine
+	) LOOP
+		UPDATE uninadelivery.DISPONIBILITà AS D SET quantità = quantità + dettagli.quantità
+			WHERE D.idprodotto = dettagli.idprodotto AND D.idsede = NEW.idsede;
+	END LOOP;
 	RETURN NEW;
 END;
 $$;
@@ -122,7 +120,7 @@ BEGIN
 		AND EXISTS(SELECT * FROM uninadelivery.dettagli_ordine WHERE idordine = idordine_in) THEN
 		UPDATE uninadelivery.ordine as O SET stato = 'Confermato' WHERE idordine = idordine_in;
 	ELSE
-		RAISE NOTICE 'ordine non trovato, vuoto o in uno stato diverso da quello di elaborazione';
+		RAISE 'ordine non trovato, vuoto o in uno stato diverso da quello di elaborazione';
 	END IF;
 END;
 $$;
@@ -164,10 +162,10 @@ ALTER FUNCTION uninadelivery.controlla_idsede_spedizione() OWNER TO postgres;
 
 --
 -- TOC entry 252 (class 1255 OID 17986)
--- Name: controlla_disponibilità(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
+-- Name: controlla_disponibilità_corriere_e_mezzo(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE FUNCTION uninadelivery.controlla_disponibilità() RETURNS trigger
+CREATE FUNCTION uninadelivery.controlla_disponibilità_corriere_e_mezzo() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 DECLARE
@@ -189,7 +187,7 @@ END;
 $$;
 
 
-ALTER FUNCTION uninadelivery.controlla_disponibilità() OWNER TO postgres;
+ALTER FUNCTION uninadelivery.controlla_disponibilità_corriere_e_mezzo() OWNER TO postgres;
 
 --
 -- TOC entry 253 (class 1255 OID 17987)
@@ -218,13 +216,15 @@ CREATE OR REPLACE FUNCTION uninadelivery.controlla_ordine_spedito() RETURNS trig
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	IF OLD.stato <> 'Confermato' THEN
+	IF OLD.stato IS NULL OR OLD.stato <> 'Confermato' THEN
 		RAISE 'Si tenta di spedire un ordine in uno stato diverso da quello di confermato';
 		RETURN OLD;
 	END IF;
 	RETURN NEW;
 END;
 $$;
+
+ALTER FUNCTION uninadelivery.controlla_ordine_spedito() OWNER TO postgres;
 
 CREATE OR REPLACE FUNCTION uninadelivery.controlla_ordine_confermato() RETURNS trigger
     LANGUAGE plpgsql
@@ -244,6 +244,20 @@ $$;
 
 
 ALTER FUNCTION uninadelivery.controlla_ordine_confermato() OWNER TO postgres;
+
+CREATE OR REPLACE FUNCTION uninadelivery.controlla_ordine_ricevuto() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	IF OLD.stato IS NULL OR OLD.stato <> 'Spedito' THEN
+		RAISE 'Si tenta di impostare un ordine che non è stato ancora spedito come ''ricevuto''';
+		RETURN OLD;
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+ALTER FUNCTION uninadelivery.controlla_ordine_ricevuto() OWNER TO postgres;
 
 --
 -- TOC entry 254 (class 1255 OID 17988)
@@ -520,7 +534,9 @@ CREATE TABLE uninadelivery.ordine (
     edificio character varying,
     CONSTRAINT check_date CHECK (((dataeffettuazione < CURRENT_DATE) AND (data > dataeffettuazione))),
     CONSTRAINT intervallo_per_orari_ordine CHECK (((orarioinizio > '06:00:00'::time without time zone) AND (orariofine < '22:00:00'::time without time zone))),
-    CONSTRAINT intervallominimo CHECK ((orariofine >= (orarioinizio + '02:00:00'::interval)))
+    CONSTRAINT intervallominimo CHECK ((orariofine >= (orarioinizio + '02:00:00'::interval))),
+	CONSTRAINT idspedizione_null_quando_in_elaborazione CHECK (idspedizione IS NULL OR stato <> 'In elaborazione'),
+	CONSTRAINT spedito_o_ricevuto_solo_se_spedizione_associata CHECK (NOT (stato = 'Spedito' OR stato = 'Ricevuto') OR (idspedizione IS NOT NULL))
 );
 
 
@@ -2158,6 +2174,9 @@ CREATE TRIGGER acquirente_eliminato BEFORE DELETE ON uninadelivery.acquirente FO
 
 CREATE TRIGGER ordine_confermato BEFORE INSERT OR UPDATE OF stato ON uninadelivery.ordine FOR EACH ROW WHEN (NEW.stato = 'Confermato') EXECUTE FUNCTION uninadelivery.controlla_ordine_confermato();
 
+CREATE TRIGGER ordine_ricevuto BEFORE INSERT OR UPDATE OF stato ON uninadelivery.ordine FOR EACH ROW WHEN (NEW.stato = 'Ricevuto') EXECUTE FUNCTION uninadelivery.controlla_ordine_ricevuto();
+
+
 --
 -- TOC entry 4855 (class 2620 OID 18136)
 -- Name: dettagli_ordine dettagli_ordine_eliminato; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
@@ -2195,7 +2214,7 @@ CREATE TRIGGER ordine_aggiunto_a_spedizione BEFORE INSERT OR UPDATE OF idspedizi
 -- Name: ordine ordine_annullato; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE TRIGGER ordine_annullato BEFORE UPDATE OF stato ON uninadelivery.ordine FOR EACH ROW EXECUTE FUNCTION uninadelivery.annulla_ordine();
+CREATE TRIGGER ordine_annullato BEFORE UPDATE OF stato ON uninadelivery.ordine FOR EACH ROW WHEN (NEW.stato = 'Annullato') EXECUTE FUNCTION uninadelivery.annulla_ordine();
 
 
 --
@@ -2211,7 +2230,7 @@ CREATE TRIGGER ordine_modificato_attributi_costanti BEFORE UPDATE OF data, orari
 -- Name: ordine ordine_spedizione; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE TRIGGER ordine_spedizione BEFORE UPDATE OF idspedizione ON uninadelivery.ordine FOR EACH ROW WHEN (NEW.idspedizione <> OLD.idspedizione) EXECUTE FUNCTION uninadelivery.controlla_ordine_spedizione();
+CREATE TRIGGER ordine_spedizione BEFORE INSERT OR UPDATE OF idspedizione ON uninadelivery.ordine FOR EACH ROW EXECUTE FUNCTION uninadelivery.controlla_ordine_spedizione();
 
 CREATE TRIGGER ordine_spedito BEFORE INSERT OR UPDATE OF stato ON uninadelivery.ordine FOR EACH ROW WHEN (NEW.stato = 'Spedito') EXECUTE FUNCTION uninadelivery.controlla_ordine_spedito();
 
@@ -2220,7 +2239,7 @@ CREATE TRIGGER ordine_spedito BEFORE INSERT OR UPDATE OF stato ON uninadelivery.
 -- Name: spedizione spedizione_inserita_o_aggiornata_controllo_disponibilita; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE TRIGGER spedizione_inserita_o_aggiornata_controllo_disponibilita BEFORE INSERT OR UPDATE OF idspedizione, partenza, arrivostimato, codicefiscalecorriere, codicefiscaleoperatore, targa ON uninadelivery.spedizione FOR EACH ROW EXECUTE FUNCTION uninadelivery.controlla_disponibilità();
+CREATE TRIGGER spedizione_inserita_o_aggiornata_controllo_disponibilita BEFORE INSERT OR UPDATE OF idspedizione, partenza, arrivostimato, codicefiscalecorriere, codicefiscaleoperatore, targa ON uninadelivery.spedizione FOR EACH ROW EXECUTE FUNCTION uninadelivery.controlla_disponibilità_corriere_e_mezzo();
 
 
 --
