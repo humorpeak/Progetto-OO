@@ -200,7 +200,7 @@ CREATE FUNCTION uninadelivery.controlla_ordine_spedizione() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	IF (NEW.idspedizione IS null OR NEW.idspedizione <> OLD.idspedizione) AND (NEW.stato = 'Spedito' OR NEW.stato = 'Ricevuto') THEN
+	IF NEW.idspedizione IS null AND (NEW.stato = 'Spedito' OR NEW.stato = 'Ricevuto') THEN
 		RAISE 'L''ordine è già stato spedito o ricevuto';
 		RETURN OLD;
 	ELSEIF NEW.idspedizione IS NOT null AND NEW.stato <> 'Confermato' THEN
@@ -2211,7 +2211,7 @@ CREATE TRIGGER ordine_modificato_attributi_costanti BEFORE UPDATE OF data, orari
 -- Name: ordine ordine_spedizione; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE TRIGGER ordine_spedizione BEFORE UPDATE OF idspedizione ON uninadelivery.ordine FOR EACH ROW EXECUTE FUNCTION uninadelivery.controlla_ordine_spedizione() WHEN NEW.idspedizione <> OLD.idspedizione;
+CREATE TRIGGER ordine_spedizione BEFORE UPDATE OF idspedizione ON uninadelivery.ordine FOR EACH ROW WHEN (NEW.idspedizione <> OLD.idspedizione) EXECUTE FUNCTION uninadelivery.controlla_ordine_spedizione();
 
 CREATE TRIGGER ordine_spedito BEFORE INSERT OR UPDATE OF stato ON uninadelivery.ordine FOR EACH ROW WHEN (NEW.stato = 'Spedito') EXECUTE FUNCTION uninadelivery.controlla_ordine_spedito();
 
