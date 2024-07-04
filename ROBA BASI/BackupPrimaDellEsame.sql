@@ -109,10 +109,10 @@ ALTER FUNCTION uninadelivery.autenticazione_operatore(email_op character varying
 
 --
 -- TOC entry 250 (class 1255 OID 17984)
--- Name: conferma_ordine(integer); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
+-- Name: conferma_ordine_in_elaborazione(integer); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE PROCEDURE uninadelivery.conferma_ordine(IN idordine_in integer)
+CREATE PROCEDURE uninadelivery.conferma_ordine_in_elaborazione(IN idordine_in integer)
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -126,7 +126,7 @@ END;
 $$;
 
 
-ALTER PROCEDURE uninadelivery.conferma_ordine(IN idordine_in integer) OWNER TO postgres;
+ALTER PROCEDURE uninadelivery.conferma_ordine_in_elaborazione(IN idordine_in integer) OWNER TO postgres;
 
 --
 -- TOC entry 251 (class 1255 OID 17985)
@@ -171,7 +171,7 @@ CREATE FUNCTION uninadelivery.controlla_disponibilità_corriere_e_mezzo() RETURN
 DECLARE
     puo_guidare BOOLEAN;
 BEGIN
-    puo_guidare := uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(NEW.codicefiscalecorriere,NEW.targa);
+    puo_guidare := uninadelivery.corriere_puo_guidare_mezzo_di_trasporto_stessa_sede(NEW.codicefiscalecorriere,NEW.targa);
 
     IF uninadelivery.is_corriere_disponibile(NEW.codicefiscalecorriere,NEW.partenza,NEW.arrivostimato) AND
         uninadelivery.is_mezzo_di_trasporto_disponibile(NEW.targa,NEW.partenza,NEW.arrivostimato) AND
@@ -180,7 +180,7 @@ BEGIN
     ELSEIF puo_guidare THEN
         RAISE 'Il corriere o il mezzo selezionati non sono disponibili in questo orario';
     ELSE
-        RAISE 'la patente del corriere selezionato non è adatta al mezzo di trasporto selezionato.';
+        RAISE 'la patente del corriere selezionato non è adatta al mezzo di trasporto selezionato oppure non appartengono alla stessa sede.';
     END IF;
     RETURN OLD;
 END;
@@ -250,7 +250,7 @@ CREATE OR REPLACE FUNCTION uninadelivery.controlla_ordine_ricevuto() RETURNS tri
     AS $$
 BEGIN
 	IF OLD.stato IS NULL OR OLD.stato <> 'Spedito' THEN
-		RAISE 'Si tenta di impostare un ordine che non è stato ancora spedito come ''ricevuto''';
+		RAISE 'Si tenta di impostare a ''ricevuto'' un ordine che non è stato ancora spedito';
 		RETURN OLD;
 	END IF;
 	RETURN NEW;
@@ -274,7 +274,7 @@ DECLARE
   partenza uninadelivery.SPEDIZIONE.partenza%TYPE;
   targamezzo uninadelivery.MEZZO_DI_TRASPORTO.targa%TYPE;
 BEGIN
-  -- esci se spedizione null
+  -- esci se spedizione null o non è cambiata
   IF NEW.idspedizione IS NULL OR OLD.idspedizione = NEW.idspedizione THEN
     RETURN NEW;
   END IF;
@@ -527,12 +527,12 @@ CREATE TABLE uninadelivery.ordine (
     emailacquirente character varying,
     dataeffettuazione date NOT NULL,
     idsede integer,
-    cap character varying DEFAULT '12345'::character varying NOT NULL,
-    "città" character varying DEFAULT 'nomecittà'::character varying NOT NULL,
-    via character varying DEFAULT 'via pinco'::character varying NOT NULL,
-    civico character varying DEFAULT '1'::character varying NOT NULL,
+    cap character varying NOT NULL,
+    "città" character varying NOT NULL,
+    via character varying NOT NULL,
+    civico character varying NOT NULL,
     edificio character varying,
-    CONSTRAINT check_date CHECK (((dataeffettuazione < CURRENT_DATE) AND (data > dataeffettuazione))),
+    CONSTRAINT check_date CHECK (((dataeffettuazione <= CURRENT_DATE) AND (data > dataeffettuazione))),
     CONSTRAINT intervallo_per_orari_ordine CHECK (((orarioinizio > '06:00:00'::time without time zone) AND (orariofine < '22:00:00'::time without time zone))),
     CONSTRAINT intervallominimo CHECK ((orariofine >= (orarioinizio + '02:00:00'::interval))),
 	CONSTRAINT idspedizione_null_quando_in_elaborazione CHECK (idspedizione IS NULL OR stato <> 'In elaborazione'),
@@ -995,7 +995,6 @@ DECLARE
 	res BOOLEAN;
 BEGIN
 	CALL uninadelivery.test_autenticazione_operatore();
-	CALL uninadelivery.test_corriere_puo_guidare_mezzo_di_trasporto();
 	CALL uninadelivery.test_corriere_puo_guidare_mezzo_di_trasporto_stessa_sede();
 	CALL uninadelivery.test_is_corriere_disponibile();
 	CALL uninadelivery.test_is_mezzo_di_trasporto_disponibile();
@@ -1031,71 +1030,6 @@ $$;
 
 ALTER PROCEDURE uninadelivery.test_autenticazione_operatore() OWNER TO postgres;
 
---
--- TOC entry 283 (class 1255 OID 18045)
--- Name: test_corriere_puo_guidare_mezzo_di_trasporto(); Type: PROCEDURE; Schema: uninadelivery; Owner: postgres
---
-
-CREATE PROCEDURE uninadelivery.test_corriere_puo_guidare_mezzo_di_trasporto()
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-	res BOOLEAN;
-	corriereB VARCHAR;
-	corriereBE VARCHAR;
-	corriereB96 VARCHAR;
-	corriereC VARCHAR;
-	targaB VARCHAR;
-	targaBE VARCHAR;
-	targaB96 VARCHAR;
-	targaC VARCHAR;
-BEGIN
-	RAISE NOTICE 'TEST corriere_puo_guidare_mezzo_di_trasporto';
-	corriereB := 'PLLCRL80A01H703F';
-	corriereB96 := 'BRTGNN80A01H703L';
-	corriereBE := 'FZZGNN80A01H703G';
-	corriereC := 'GLLCRL80A01H703Y';
-	targaB := 'FE819PP';
-	targaBE := 'DD420BB';
-	targaB96 := 'CA991EP';
-	targaC := 'CZ711DY';
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereB, targaB);
-	RAISE NOTICE 'patente B può guidare mezzo con patente richiesta B: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereB, targaBE);
-	RAISE NOTICE 'patente B può guidare mezzo con patente richiesta BE: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereB, targaB96);
-	RAISE NOTICE 'patente B può guidare mezzo con patente richiesta B96: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereB, targaC);
-	RAISE NOTICE 'patente B può guidare mezzo con patente richiesta C: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereBE, targaB);
-	RAISE NOTICE 'patente BE può guidare mezzo con patente richiesta B: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereBE, targaBE);
-	RAISE NOTICE 'patente BE può guidare mezzo con patente richiesta BE: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereBE, targaB96);
-	RAISE NOTICE 'patente BE può guidare mezzo con patente richiesta B96: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereBE, targaC);
-	RAISE NOTICE 'patente BE può guidare mezzo con patente richiesta C: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereB96, targaB);
-	RAISE NOTICE 'patente B96 può guidare mezzo con patente richiesta B: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereB96, targaBE);
-	RAISE NOTICE 'patente B96 può guidare mezzo con patente richiesta BE: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereB96, targaB96);
-	RAISE NOTICE 'patente B96 può guidare mezzo con patente richiesta B96: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereB96, targaC);
-	RAISE NOTICE 'patente B96 può guidare mezzo con patente richiesta C: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereC, targaB);
-	RAISE NOTICE 'patente C può guidare mezzo con patente richiesta B: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereC, targaBE);
-	RAISE NOTICE 'patente C può guidare mezzo con patente richiesta BE: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereC, targaB96);
-	RAISE NOTICE 'patente C può guidare mezzo con patente richiesta B96: %', res;
-	SELECT * INTO res FROM uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(corriereC, targaC);
-	RAISE NOTICE 'patente C può guidare mezzo con patente richiesta C: %', res;
-END;
-$$;
-
-
-ALTER PROCEDURE uninadelivery.test_corriere_puo_guidare_mezzo_di_trasporto() OWNER TO postgres;
 
 --
 -- TOC entry 284 (class 1255 OID 18046)
@@ -2214,7 +2148,7 @@ CREATE TRIGGER ordine_aggiunto_a_spedizione BEFORE INSERT OR UPDATE OF idspedizi
 -- Name: ordine ordine_annullato; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE TRIGGER ordine_annullato BEFORE UPDATE OF stato ON uninadelivery.ordine FOR EACH ROW WHEN (NEW.stato = 'Annullato') EXECUTE FUNCTION uninadelivery.annulla_ordine();
+CREATE TRIGGER ordine_annullato BEFORE UPDATE OF stato ON uninadelivery.ordine FOR EACH ROW WHEN (NEW.stato = 'Annullato' AND (OLD.stato IS NULL OR OLD.stato <> 'Annullato')) EXECUTE FUNCTION uninadelivery.annulla_ordine();
 
 
 --
