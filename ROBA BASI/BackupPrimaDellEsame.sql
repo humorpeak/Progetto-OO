@@ -164,10 +164,10 @@ ALTER FUNCTION uninadelivery.controlla_idsede_spedizione() OWNER TO postgres;
 
 --
 -- TOC entry 252 (class 1255 OID 17986)
--- Name: controlla_intervalli_spedizione(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
+-- Name: controlla_disponibilità(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE FUNCTION uninadelivery.controlla_intervalli_spedizione() RETURNS trigger
+CREATE FUNCTION uninadelivery.controlla_disponibilità() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 DECLARE
@@ -189,7 +189,7 @@ END;
 $$;
 
 
-ALTER FUNCTION uninadelivery.controlla_intervalli_spedizione() OWNER TO postgres;
+ALTER FUNCTION uninadelivery.controlla_disponibilità() OWNER TO postgres;
 
 --
 -- TOC entry 253 (class 1255 OID 17987)
@@ -2220,7 +2220,7 @@ CREATE TRIGGER ordine_spedito BEFORE INSERT OR UPDATE OF stato ON uninadelivery.
 -- Name: spedizione spedizione_inserita_o_aggiornata_controllo_disponibilita; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE TRIGGER spedizione_inserita_o_aggiornata_controllo_disponibilita BEFORE INSERT OR UPDATE OF idspedizione, partenza, arrivostimato, codicefiscalecorriere, codicefiscaleoperatore, targa ON uninadelivery.spedizione FOR EACH ROW EXECUTE FUNCTION uninadelivery.controlla_intervalli_spedizione();
+CREATE TRIGGER spedizione_inserita_o_aggiornata_controllo_disponibilita BEFORE INSERT OR UPDATE OF idspedizione, partenza, arrivostimato, codicefiscalecorriere, codicefiscaleoperatore, targa ON uninadelivery.spedizione FOR EACH ROW EXECUTE FUNCTION uninadelivery.controlla_disponibilità();
 
 
 --
