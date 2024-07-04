@@ -139,7 +139,6 @@ CREATE FUNCTION uninadelivery.controlla_idsede_spedizione() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 DECLARE
-    idsedeordine uninadelivery.SEDE.idsede%TYPE;
     idsedeoperatore uninadelivery.SEDE.idsede%TYPE;
     idsedecorriere uninadelivery.SEDE.idsede%TYPE;
     idsedemezzo uninadelivery.SEDE.idsede%TYPE;
@@ -176,8 +175,9 @@ DECLARE
 BEGIN
     puo_guidare := uninadelivery.corriere_puo_guidare_mezzo_di_trasporto(NEW.codicefiscalecorriere,NEW.targa);
 
-    IF (uninadelivery.is_corriere_disponibile(NEW.codicefiscalecorriere,NEW.partenza,NEW.arrivostimato) OR (OLD.codicefiscalecorriere = NEW.codicefiscalecorriere)) AND
-            (uninadelivery.is_mezzo_di_trasporto_disponibile(NEW.targa,NEW.partenza,NEW.arrivostimato) OR (OLD.targa = NEW.targa)) AND puo_guidare THEN
+    IF uninadelivery.is_corriere_disponibile(NEW.codicefiscalecorriere,NEW.partenza,NEW.arrivostimato) AND
+        uninadelivery.is_mezzo_di_trasporto_disponibile(NEW.targa,NEW.partenza,NEW.arrivostimato) AND
+		puo_guidare THEN
             RETURN NEW;
     ELSEIF puo_guidare THEN
         RAISE 'Il corriere o il mezzo selezionati non sono disponibili in questo orario';
@@ -193,22 +193,18 @@ ALTER FUNCTION uninadelivery.controlla_intervalli_spedizione() OWNER TO postgres
 
 --
 -- TOC entry 253 (class 1255 OID 17987)
--- Name: controlla_ordine_spedito(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
+-- Name: controlla_ordine_spedizione(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE FUNCTION uninadelivery.controlla_ordine_spedito() RETURNS trigger
+CREATE FUNCTION uninadelivery.controlla_ordine_spedizione() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	IF NEW.idspedizione IS null AND NEW.stato = 'Spedito' THEN
-		RAISE 'non è possibile impostare lo stato di un ordine a spedito se non gli sono associate spedizioni';
+	IF (NEW.idspedizione IS null OR NEW.idspedizione <> OLD.idspedizione) AND (NEW.stato = 'Spedito' OR NEW.stato = 'Ricevuto') THEN
+		RAISE 'L''ordine è già stato spedito o ricevuto';
 		RETURN OLD;
-	ELSEIF NEW.idspedizione IS NOT null AND (NEW.stato <> 'Confermato' OR NOT EXISTS(
-		SELECT *
-		FROM uninadelivery.DETTAGLI_ORDINE as D
-		WHERE D.idordine = NEW.idordine
-	)) THEN
-		RAISE 'Si tenta di spedire un ordine vuoto o in elaborazione';
+	ELSEIF NEW.idspedizione IS NOT null AND NEW.stato <> 'Confermato' THEN
+		RAISE 'Si tenta di spedire un ordine non confermato';
 		RETURN OLD;
 	END IF;
 	RETURN NEW;
@@ -216,7 +212,38 @@ END;
 $$;
 
 
-ALTER FUNCTION uninadelivery.controlla_ordine_spedito() OWNER TO postgres;
+ALTER FUNCTION uninadelivery.controlla_ordine_spedizione() OWNER TO postgres;
+
+CREATE OR REPLACE FUNCTION uninadelivery.controlla_ordine_spedito() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	IF OLD.stato <> 'Confermato' THEN
+		RAISE 'Si tenta di spedire un ordine in uno stato diverso da quello di confermato';
+		RETURN OLD;
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION uninadelivery.controlla_ordine_confermato() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	IF NOT EXISTS(
+		SELECT *
+		FROM uninadelivery.DETTAGLI_ORDINE as D
+		WHERE D.idordine = NEW.idordine
+	) THEN
+		RAISE 'Si tenta di confermare un ordine vuoto';
+		RETURN OLD;
+	END IF;
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION uninadelivery.controlla_ordine_confermato() OWNER TO postgres;
 
 --
 -- TOC entry 254 (class 1255 OID 17988)
@@ -2156,6 +2183,7 @@ ALTER TABLE ONLY uninadelivery.spedizione
 
 CREATE TRIGGER acquirente_eliminato BEFORE DELETE ON uninadelivery.acquirente FOR EACH ROW EXECUTE FUNCTION uninadelivery.acquirente_eliminato();
 
+CREATE TRIGGER ordine_confermato BEFORE INSERT OR UPDATE OF stato ON uninadelivery.ordine FOR EACH ROW WHEN (NEW.stato = 'Confermato') EXECUTE FUNCTION uninadelivery.controlla_ordine_confermato();
 
 --
 -- TOC entry 4855 (class 2620 OID 18136)
@@ -2207,18 +2235,19 @@ CREATE TRIGGER ordine_modificato_attributi_costanti BEFORE UPDATE OF data, orari
 
 --
 -- TOC entry 4853 (class 2620 OID 18142)
--- Name: ordine ordine_spedito; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
+-- Name: ordine ordine_spedizione; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE TRIGGER ordine_spedito BEFORE UPDATE OF idspedizione ON uninadelivery.ordine FOR EACH ROW EXECUTE FUNCTION uninadelivery.controlla_ordine_spedito();
+CREATE TRIGGER ordine_spedizione BEFORE UPDATE OF idspedizione ON uninadelivery.ordine FOR EACH ROW EXECUTE FUNCTION uninadelivery.controlla_ordine_spedizione() WHEN NEW.idspedizione <> OLD.idspedizione;
 
+CREATE TRIGGER ordine_spedito BEFORE INSERT OR UPDATE OF stato ON uninadelivery.ordine FOR EACH ROW WHEN (NEW.stato = 'Spedito') EXECUTE FUNCTION uninadelivery.controlla_ordine_spedito();
 
 --
 -- TOC entry 4858 (class 2620 OID 18143)
 -- Name: spedizione spedizione_inserita_o_aggiornata_controllo_disponibilita; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE TRIGGER spedizione_inserita_o_aggiornata_controllo_disponibilita BEFORE INSERT OR UPDATE ON uninadelivery.spedizione FOR EACH ROW EXECUTE FUNCTION uninadelivery.controlla_intervalli_spedizione();
+CREATE TRIGGER spedizione_inserita_o_aggiornata_controllo_disponibilita BEFORE INSERT OR UPDATE OF idspedizione, partenza, arrivostimato, codicefiscalecorriere, codicefiscaleoperatore, targa ON uninadelivery.spedizione FOR EACH ROW EXECUTE FUNCTION uninadelivery.controlla_intervalli_spedizione();
 
 
 --
@@ -2226,7 +2255,7 @@ CREATE TRIGGER spedizione_inserita_o_aggiornata_controllo_disponibilita BEFORE I
 -- Name: spedizione spedizione_inserita_o_aggiornata_controllo_idsede; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE TRIGGER spedizione_inserita_o_aggiornata_controllo_idsede BEFORE INSERT OR UPDATE ON uninadelivery.spedizione FOR EACH ROW EXECUTE FUNCTION uninadelivery.controlla_idsede_spedizione();
+CREATE TRIGGER spedizione_inserita_o_aggiornata_controllo_idsede BEFORE INSERT OR UPDATE OF idspedizione, codicefiscalecorriere, codicefiscaleoperatore, targa ON uninadelivery.spedizione FOR EACH ROW EXECUTE FUNCTION uninadelivery.controlla_idsede_spedizione();
 
 
 --
