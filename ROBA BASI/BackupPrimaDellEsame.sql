@@ -15,7 +15,7 @@ SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET xmloption = content;
-SET client_min_messages = warning;
+SET client_min_messages = notice;
 SET row_security = off;
 
 --
@@ -304,9 +304,9 @@ BEGIN
     RAISE 'In seguito all''inserimento dell''ordine nella spedizione, è stata superata la capienza massima del mezzo di trasporto selezionato.';
   END IF;
 
-  -- controlla gli intervalli (raise notice)
+  -- controlla gli intervalli (raise warning)
   IF NEW.data + NEW.orarioinizio > arrivostimato OR NEW.data + NEW.orariofine < partenza THEN
-    RAISE NOTICE 'Attenzione, l''ordine è stato inserito in una spedizione che non lo consegnerà in orario, avvisare il destinatario.';
+    RAISE WARNING 'Attenzione, l''ordine è stato inserito in una spedizione che non lo consegnerà in orario, avvisare il destinatario.';
   END IF;
   RETURN NEW;
 END;
@@ -540,7 +540,7 @@ CREATE TABLE uninadelivery.ordine (
     civico character varying NOT NULL,
     edificio character varying,
     CONSTRAINT check_date CHECK (((dataeffettuazione <= CURRENT_DATE) AND (data > dataeffettuazione))),
-    CONSTRAINT intervallo_per_orari_ordine CHECK (((orarioinizio > '06:00:00'::time without time zone) AND (orariofine < '22:00:00'::time without time zone))),
+    CONSTRAINT intervallo_per_orari_ordine CHECK (((orarioinizio >= '06:00:00'::time without time zone) AND (orariofine <= '22:00:00'::time without time zone))),
     CONSTRAINT intervallominimo CHECK ((orariofine >= (orarioinizio + '02:00:00'::interval))),
 	CONSTRAINT idspedizione_null_quando_in_elaborazione CHECK (idspedizione IS NULL OR stato <> 'In elaborazione'),
 	CONSTRAINT spedito_o_ricevuto_solo_se_spedizione_associata CHECK (NOT (stato = 'Spedito' OR stato = 'Ricevuto') OR (idspedizione IS NOT NULL))
@@ -725,7 +725,10 @@ CREATE FUNCTION uninadelivery.impossibile_modificare_dettagli_ordine() RETURNS t
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	RAISE 'Si è tentato di modificare un dettagli_ordine dopo la sua creazione';
+	IF (SELECT stato FROM uninadelivery.ORDINE WHERE idordine = NEW.idordine) <> 'In elaborazione' THEN
+		RAISE 'Si è tentato di modificare un dettagli_ordine dopo la sua creazione';
+	END IF;
+	RETURN NEW;
 END;
 $$;
 
@@ -792,19 +795,34 @@ ALTER FUNCTION uninadelivery.is_mezzo_di_trasporto_disponibile(targamezzoditrasp
 
 --
 -- TOC entry 274 (class 1255 OID 18036)
--- Name: non_cancellare_dettagli_ordini(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
+-- Name: dettagli_ordini_cancellati(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE FUNCTION uninadelivery.non_cancellare_dettagli_ordini() RETURNS trigger
+CREATE FUNCTION uninadelivery.dettagli_ordini_cancellati() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
+DECLARE
+	stato_ordine uninadelivery.ORDINE.stato%TYPE;
+	sede_ordine uninadelivery.ORDINE.idsede%TYPE;
 BEGIN
-	RAISE 'Non è possibile cancellare i dettagli ordine in nessun caso.';
+	SELECT stato INTO stato_ordine FROM uninadelivery.ORDINE WHERE idordine = OLD.idordine;
+
+	IF (stato_ordine <> 'In elaborazione' AND stato_ordine <> 'Annullato') THEN
+		RAISE 'Non è possibile cancellare i dettagli di un ordine che non sia in elaborazione o annullato.';
+	END IF;
+
+	IF (stato_ordine = 'In elaborazione') THEN
+		SELECT idsede INTO sede_ordine FROM uninadelivery.ORDINE AS O WHERE O.idordine = OLD.idordine;
+
+		UPDATE uninadelivery.disponibilità AS D SET quantità = quantità + OLD.quantità
+			WHERE D.idprodotto = OLD.idprodotto AND D.idsede = sede_ordine;
+	END IF;
+	RETURN NEW;
 END;
 $$;
 
 
-ALTER FUNCTION uninadelivery.non_cancellare_dettagli_ordini() OWNER TO postgres;
+ALTER FUNCTION uninadelivery.dettagli_ordini_cancellati() OWNER TO postgres;
 
 --
 -- TOC entry 275 (class 1255 OID 18037)
@@ -874,17 +892,12 @@ ALTER FUNCTION uninadelivery.numero_medio_ordini_in_mese_by_sede(data date, sede
 CREATE FUNCTION uninadelivery.numero_prodotti_in_ordine(ordine integer) RETURNS integer
     LANGUAGE plpgsql
     AS $$
-DECLARE
-	ris INT;
 BEGIN
-	SELECT Q.somma INTO ris
-	FROM (
-		SELECT SUM (D.quantità) AS somma
+	RETURN (
+		SELECT SUM (D.quantità)
 		FROM uninadelivery.ORDINE AS O JOIN uninadelivery.DETTAGLI_ORDINE AS D ON O.IdOrdine = D.IdOrdine
 		WHERE O.idordine = ordine
-	) AS Q;
-
-	RETURN ris;
+	);
 END;
 $$;
 
@@ -902,17 +915,21 @@ CREATE FUNCTION uninadelivery.nuovi_dettagli_per_ordine() RETURNS trigger
 DECLARE
 	s uninadelivery.ORDINE.stato%TYPE;
 	ids uninadelivery.ORDINE.idsede%TYPE;
+	idsedeOLD uninadelivery.ORDINE.idsede%TYPE;
 BEGIN
 	SELECT stato, idsede INTO s, ids FROM uninadelivery.ORDINE AS O WHERE O.idordine = NEW.idordine;
+	SELECT idsede INTO idsedeOLD FROM uninadelivery.ORDINE AS O WHERE O.idordine = NEW.idordine;
+	
 	IF s <> 'In elaborazione' THEN
 		RAISE 'Impossibile aggiungere prodotti ad un ordine che non sia in elaborazione';
-		RETURN OLD;
 	END IF;
 	
+	UPDATE uninadelivery.disponibilità AS D SET quantità = quantità + OLD.quantità
+		WHERE D.idprodotto = OLD.idprodotto AND D.idsede = idsedeOLD;
+
 	IF (SELECT quantità FROM uninadelivery.disponibilità AS D
 		WHERE D.idprodotto = NEW.idprodotto AND D.idsede = ids) < NEW.quantità THEN
 		RAISE 'Impossibile aggiungere prodotti all''ordine per mancanza di disponibilità';
-		RETURN OLD;
 	END IF;
 	
 	UPDATE uninadelivery.disponibilità AS D SET quantità = quantità - NEW.quantità
@@ -1848,7 +1865,7 @@ INSERT INTO uninadelivery.ordine VALUES
 	(38, 'Confermato', '2024-01-15', '17:00:00', '19:30:00', NULL, 'tur1ng@libero.it', '2023-12-01', 3, '12345', 'nomecittà', 'via pinco', '1', NULL),
 	(52, 'Confermato', '2024-01-14', '17:00:00', '21:00:00', NULL, 'lucarosso@gmail.com', '2024-01-05', 1, '80065', 'Sant''Agnello', 'Corso Italia', '19', 'a'),
 	(53, 'Confermato', '2024-01-15', '18:00:00', '21:30:00', NULL, 'lovelace@yahoo.com', '2024-01-13', 1, '80063', 'Piano di Sorrento', 'Via delle Rose', '23', NULL),
-	(28, 'Confermato', '2024-01-15', '08:00:00', '12:00:00', 1, 'lucarosso@gmail.com', '2024-01-01', 1, '12345', 'Napoli', 'via pinco', '1', NULL),
+	(28, 'Confermato', '2024-01-15', '08:00:00', '12:00:00', NULL, 'lucarosso@gmail.com', '2024-01-01', 1, '12345', 'Napoli', 'via pinco', '1', NULL),
 	(29, 'Confermato', '2024-01-15', '09:00:00', '13:00:00', NULL, 'sangiovanni.mara@yahoo.com', '2024-01-01', 3, '12345', 'Palermo', 'via pinco', '1', NULL),
 	(46, 'Confermato', '2024-01-15', '15:00:00', '17:00:00', NULL, 'billy@outlook.com', '2024-01-05', 1, '12345', 'Castellammare', 'Viale Europa', '2', NULL),
 	(48, 'Confermato', '2024-01-16', '08:00:00', '15:00:00', NULL, 'fab@gmail.com', '2024-01-05', 1, '80065', 'Sant''Agnello', 'Via Bagnulo', '43', NULL),
@@ -2126,7 +2143,7 @@ CREATE TRIGGER ordine_ricevuto BEFORE INSERT OR UPDATE OF stato ON uninadelivery
 -- Name: dettagli_ordine dettagli_ordine_eliminato; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE TRIGGER dettagli_ordine_eliminato BEFORE DELETE ON uninadelivery.dettagli_ordine FOR EACH ROW EXECUTE FUNCTION uninadelivery.non_cancellare_dettagli_ordini();
+CREATE TRIGGER dettagli_ordine_eliminato BEFORE DELETE ON uninadelivery.dettagli_ordine FOR EACH ROW EXECUTE FUNCTION uninadelivery.dettagli_ordini_cancellati();
 
 
 --
@@ -2142,7 +2159,7 @@ CREATE TRIGGER dettagli_ordine_modificato_attributi_costanti BEFORE UPDATE ON un
 -- Name: dettagli_ordine inserimento_dettagli_ordine; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE TRIGGER inserimento_dettagli_ordine BEFORE INSERT ON uninadelivery.dettagli_ordine FOR EACH ROW EXECUTE FUNCTION uninadelivery.nuovi_dettagli_per_ordine();
+CREATE TRIGGER inserimento_dettagli_ordine BEFORE INSERT OR UPDATE ON uninadelivery.dettagli_ordine FOR EACH ROW EXECUTE FUNCTION uninadelivery.nuovi_dettagli_per_ordine();
 
 
 --
