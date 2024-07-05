@@ -261,10 +261,10 @@ ALTER FUNCTION uninadelivery.controlla_ordine_ricevuto() OWNER TO postgres;
 
 --
 -- TOC entry 254 (class 1255 OID 17988)
--- Name: controllo_capienza_e_tempi_ordine_aggiunto_a_spedizione(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
+-- Name: controllo_capienza_sede_e_tempi_ordine_aggiunto_a_spedizione(); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE FUNCTION uninadelivery.controllo_capienza_e_tempi_ordine_aggiunto_a_spedizione() RETURNS trigger
+CREATE FUNCTION uninadelivery.controllo_capienza_sede_e_tempi_ordine_aggiunto_a_spedizione() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 DECLARE
@@ -273,9 +273,10 @@ DECLARE
   arrivostimato uninadelivery.SPEDIZIONE.arrivostimato%TYPE;
   partenza uninadelivery.SPEDIZIONE.partenza%TYPE;
   targamezzo uninadelivery.MEZZO_DI_TRASPORTO.targa%TYPE;
+  sede_mezzo uninadelivery.MEZZO_DI_TRASPORTO.idsede%TYPE;
 BEGIN
-  -- esci se spedizione null o non è cambiata
-  IF NEW.idspedizione IS NULL OR OLD.idspedizione = NEW.idspedizione THEN
+  -- esci se spedizione non è cambiata
+  IF OLD.idspedizione = NEW.idspedizione THEN
     RETURN NEW;
   END IF;
 
@@ -283,21 +284,27 @@ BEGIN
   FROM uninadelivery.SPEDIZIONE AS S
   WHERE S.idspedizione = NEW.idspedizione;
 
+  -- controllo sede
+  SELECT M.idsede INTO sede_mezzo FROM uninadelivery.MEZZO_DI_TRASPORTO AS M WHERE M.targa = targamezzo;
+
+  IF (sede_mezzo <> NEW.idsede) THEN
+	RAISE 'Impossibile aggiungere un ordine ad una spedizione associata ad una sede differente';
+  END IF;
+
   -- calcola il peso totale per la spedizione
   SELECT SUM(P.peso * D.quantità) INTO peso_totale
   FROM (uninadelivery.ORDINE AS O JOIN uninadelivery.DETTAGLI_ORDINE AS D ON O.idordine = D.idordine)
       JOIN uninadelivery.PRODOTTO AS P ON P.idprodotto = D.idprodotto
   WHERE O.idspedizione = NEW.idspedizione;
 
-  peso_ordine := uninadelivery.get_peso_totale(NEW.idordine);
-
-  peso_totale := peso_totale + peso_ordine;
+  peso_totale := peso_totale + uninadelivery.get_peso_totale(NEW.idordine);
 
   -- controlla se è stata superata la capienza massima del mezzo (raise exception)
   IF peso_totale > (SELECT capienza FROM uninadelivery.MEZZO_DI_TRASPORTO AS M WHERE M.targa = targamezzo) THEN
     RAISE 'In seguito all''inserimento dell''ordine nella spedizione, è stata superata la capienza massima del mezzo di trasporto selezionato.';
-    RETURN OLD;
   END IF;
+
+  -- controlla gli intervalli (raise notice)
   IF NEW.data + NEW.orarioinizio > arrivostimato OR NEW.data + NEW.orariofine < partenza THEN
     RAISE NOTICE 'Attenzione, l''ordine è stato inserito in una spedizione che non lo consegnerà in orario, avvisare il destinatario.';
   END IF;
@@ -306,7 +313,7 @@ END;
 $$;
 
 
-ALTER FUNCTION uninadelivery.controllo_capienza_e_tempi_ordine_aggiunto_a_spedizione() OWNER TO postgres;
+ALTER FUNCTION uninadelivery.controllo_capienza_sede_e_tempi_ordine_aggiunto_a_spedizione() OWNER TO postgres;
 
 --
 -- TOC entry 256 (class 1255 OID 17990)
@@ -628,11 +635,11 @@ BEGIN
 	primo_giorno_mese_successivo := primo_giorno_di_mese + interval '1 month';
 	RETURN QUERY(
 		SELECT O.*
-		FROM uninadelivery.ORDINE AS O JOIN (
-			SELECT MAX(uninadelivery.numero_prodotti_in_ordine(O.idordine)) AS num_ordini
-			FROM uninadelivery.get_ordini_validi(primo_giorno_di_mese, primo_giorno_mese_successivo, null) AS O
-			WHERE O.idsede = sede
-		) ON uninadelivery.numero_prodotti_in_ordine(O.idordine) = num_ordini
+		FROM uninadelivery.get_ordini_validi(primo_giorno_di_mese, primo_giorno_mese_successivo, null) AS O JOIN (
+			SELECT MAX(uninadelivery.numero_prodotti_in_ordine(ORDINE_VALIDO.idordine)) AS MAX_NUMERO_PRODOTTI
+			FROM uninadelivery.get_ordini_validi(primo_giorno_di_mese, primo_giorno_mese_successivo, null) AS ORDINE_VALIDO
+			WHERE ORDINE_VALIDO.idsede = sede
+		) AS MAXS ON uninadelivery.numero_prodotti_in_ordine(O.idordine) = MAXS.MAX_NUMERO_PRODOTTI AND O.idsede = sede
 	);
 END;
 $$;
@@ -654,16 +661,19 @@ DECLARE
 BEGIN
 	primo_giorno_di_mese := date_trunc('month', dataInput)::date;
 	primo_giorno_mese_successivo := primo_giorno_di_mese + interval '1 month';
+	
 	RETURN QUERY(
 		SELECT O.*
-		FROM uninadelivery.ORDINE AS O JOIN (
-			SELECT MIN(uninadelivery.numero_prodotti_in_ordine(O.idordine)) AS num_ordini
-			FROM uninadelivery.get_ordini_validi(primo_giorno_di_mese, primo_giorno_mese_successivo, null) AS O
-			WHERE O.idsede = sede
-		) ON uninadelivery.numero_prodotti_in_ordine(O.idordine) = num_ordini
+		FROM uninadelivery.get_ordini_validi(primo_giorno_di_mese, primo_giorno_mese_successivo, null) AS O JOIN (
+			SELECT MIN(uninadelivery.numero_prodotti_in_ordine(ORDINE_VALIDO.idordine)) AS MIN_NUMERO_PRODOTTI
+			FROM uninadelivery.get_ordini_validi(primo_giorno_di_mese, primo_giorno_mese_successivo, null) AS ORDINE_VALIDO
+			WHERE ORDINE_VALIDO.idsede = sede
+		) AS MINS ON uninadelivery.numero_prodotti_in_ordine(O.idordine) = MINS.MIN_NUMERO_PRODOTTI AND O.idsede = sede
 	);
 END;
 $$;
+
+
 
 
 ALTER FUNCTION uninadelivery.get_ordini_min_numero_prodotti_in_mese_per_sede(datainput date, sede integer) OWNER TO postgres;
@@ -867,12 +877,12 @@ CREATE FUNCTION uninadelivery.numero_prodotti_in_ordine(ordine integer) RETURNS 
 DECLARE
 	ris INT;
 BEGIN
-	SELECT somma INTO ris
-	FROM(
+	SELECT Q.somma INTO ris
+	FROM (
 		SELECT SUM (D.quantità) AS somma
 		FROM uninadelivery.ORDINE AS O JOIN uninadelivery.DETTAGLI_ORDINE AS D ON O.IdOrdine = D.IdOrdine
 		WHERE O.idordine = ordine
-	);
+	) AS Q;
 
 	RETURN ris;
 END;
@@ -926,12 +936,12 @@ CREATE FUNCTION uninadelivery.ordine_con_meno_prodotti_in_mese(datainput date) R
 DECLARE
 	primo_giorno_di_mese DATE;
 	ultimo_giorno_di_mese DATE;
-	idordine_massimo uninadelivery.ORDINE.idordine%TYPE;
+	idordine_minimo uninadelivery.ORDINE.idordine%TYPE;
 	ris uninadelivery.ORDINE%ROWTYPE;
 BEGIN
 	primo_giorno_di_mese := date_trunc('month', dataInput)::date;
 	ultimo_giorno_di_mese := primo_giorno_di_mese + interval '1 month';
-	SELECT idordine INTO idordine_massimo
+	SELECT idordine INTO idordine_minimo
 	FROM(
 		SELECT O.idordine, SUM (D.quantità)
 		FROM uninadelivery.ORDINE AS O JOIN uninadelivery.DETTAGLI_ORDINE AS D ON O.IdOrdine = D.IdOrdine
@@ -941,7 +951,7 @@ BEGIN
 		LIMIT 1
 	);
 	
-	SELECT * INTO ris FROM uninadelivery.ORDINE WHERE idordine = idordine_massimo;
+	SELECT * INTO ris FROM uninadelivery.ORDINE WHERE idordine = idordine_minimo;
 	RETURN ris;
 END;
 $$;
@@ -2140,7 +2150,7 @@ CREATE TRIGGER inserimento_dettagli_ordine BEFORE INSERT ON uninadelivery.dettag
 -- Name: ordine ordine_aggiunto_a_spedizione; Type: TRIGGER; Schema: uninadelivery; Owner: postgres
 --
 
-CREATE TRIGGER ordine_aggiunto_a_spedizione BEFORE INSERT OR UPDATE OF idspedizione ON uninadelivery.ordine FOR EACH ROW EXECUTE FUNCTION uninadelivery.controllo_capienza_e_tempi_ordine_aggiunto_a_spedizione();
+CREATE TRIGGER ordine_aggiunto_a_spedizione BEFORE INSERT OR UPDATE OF idspedizione ON uninadelivery.ordine FOR EACH ROW WHEN (NEW.idspedizione IS NOT NULL) EXECUTE FUNCTION uninadelivery.controllo_capienza_sede_e_tempi_ordine_aggiunto_a_spedizione();
 
 
 --
