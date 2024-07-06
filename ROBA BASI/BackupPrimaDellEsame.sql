@@ -315,6 +315,18 @@ $$;
 
 ALTER FUNCTION uninadelivery.controllo_capienza_sede_e_tempi_ordine_aggiunto_a_spedizione() OWNER TO postgres;
 
+CREATE FUNCTION uninadelivery.prodotto_creato() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	INSERT INTO uninadelivery.disponibilità
+	SELECT 0, NEW.idprodotto, S.idsede FROM uninadelivery.SEDE AS S;
+	RETURN NEW;
+END;
+$$;
+
+ALTER FUNCTION uninadelivery.prodotto_creato() OWNER TO postgres;
+
 --
 -- TOC entry 256 (class 1255 OID 17990)
 -- Name: corriere_puo_guidare_mezzo_di_trasporto_stessa_sede(character, character); Type: FUNCTION; Schema: uninadelivery; Owner: postgres
@@ -817,7 +829,7 @@ BEGIN
 		UPDATE uninadelivery.disponibilità AS D SET quantità = quantità + OLD.quantità
 			WHERE D.idprodotto = OLD.idprodotto AND D.idsede = sede_ordine;
 	END IF;
-	RETURN NEW;
+	RETURN OLD;
 END;
 $$;
 
@@ -2194,6 +2206,8 @@ CREATE TRIGGER ordine_modificato_attributi_costanti BEFORE UPDATE OF data, orari
 CREATE TRIGGER ordine_spedizione BEFORE INSERT OR UPDATE OF idspedizione ON uninadelivery.ordine FOR EACH ROW EXECUTE FUNCTION uninadelivery.controlla_ordine_spedizione();
 
 CREATE TRIGGER ordine_spedito BEFORE INSERT OR UPDATE OF stato ON uninadelivery.ordine FOR EACH ROW WHEN (NEW.stato = 'Spedito') EXECUTE FUNCTION uninadelivery.controlla_ordine_spedito();
+
+CREATE TRIGGER prodotto_inserito AFTER INSERT ON uninadelivery.PRODOTTO FOR EACH ROW EXECUTE FUNCTION uninadelivery.prodotto_creato();
 
 --
 -- TOC entry 4858 (class 2620 OID 18143)
