@@ -173,8 +173,8 @@ DECLARE
 BEGIN
     puo_guidare := uninadelivery.corriere_puo_guidare_mezzo_di_trasporto_stessa_sede(NEW.codicefiscalecorriere,NEW.targa);
 
-    IF uninadelivery.is_corriere_disponibile(NEW.codicefiscalecorriere,NEW.partenza,NEW.arrivostimato) AND
-        uninadelivery.is_mezzo_di_trasporto_disponibile(NEW.targa,NEW.partenza,NEW.arrivostimato) AND
+    IF (OLD.codicefiscalecorriere = NEW.codicefiscalecorriere OR uninadelivery.is_corriere_disponibile(NEW.codicefiscalecorriere,NEW.partenza,NEW.arrivostimato)) AND
+        (OLD.targa = NEW.targa OR uninadelivery.is_mezzo_di_trasporto_disponibile(NEW.targa,NEW.partenza,NEW.arrivostimato)) AND
 		puo_guidare THEN
             RETURN NEW;
     ELSEIF puo_guidare THEN
@@ -1815,6 +1815,9 @@ INSERT INTO uninadelivery."disponibilità" VALUES
 -- Data for Name: metodo_pagamento; Type: TABLE DATA; Schema: uninadelivery; Owner: postgres
 --
 
+INSERT INTO uninadelivery.metodo_pagamento VALUES
+	('1234567887654321', 'Mastercard Debit', 'fab@gmail.com'),
+	('4321876512349887', 'Visa', 'tur1ng@libero.it');
 
 
 --
@@ -2020,7 +2023,7 @@ SELECT pg_catalog.setval('uninadelivery.ordine_idspedizione_seq', 1, false);
 -- Name: prodotto_idprodotto_seq; Type: SEQUENCE SET; Schema: uninadelivery; Owner: postgres
 --
 
-SELECT pg_catalog.setval('uninadelivery.prodotto_idprodotto_seq', 1, false);
+SELECT pg_catalog.setval('uninadelivery.prodotto_idprodotto_seq', 26, false);
 
 
 --
