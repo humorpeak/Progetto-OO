@@ -72,8 +72,9 @@ public class OrdineDAO {
 				listaordini.add(ordine);
 			}
 		}
-		catch (SQLException e)
+		catch (Exception e)
 		{
+			JOptionPane.showMessageDialog(null, e, "Errore di comunicazione con il database", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
 		return listaordini;
@@ -96,7 +97,7 @@ public class OrdineDAO {
 		}
 		catch (Exception e)
 		{
-			JOptionPane.showMessageDialog(null, e, "Errore", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, e, "Errore di comunicazione con il database", JOptionPane.ERROR_MESSAGE);
 		}
 		
 		return averageNumberOfOrders;
@@ -125,7 +126,7 @@ public class OrdineDAO {
 		}
 		catch (Exception e)
 		{
-			JOptionPane.showMessageDialog(null, e, "Errore", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, e, "Errore di comunicazione con il database", JOptionPane.ERROR_MESSAGE);
 			return new ArrayList<Ordine>();
 		}
 	}
@@ -138,7 +139,7 @@ public class OrdineDAO {
 		}
 		catch (Exception e)
 		{
-			JOptionPane.showMessageDialog(null, e, "Errore", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, e, "Errore di comunicazione con il database", JOptionPane.ERROR_MESSAGE);
 			return new ArrayList<Ordine>();
 		}
 	}
